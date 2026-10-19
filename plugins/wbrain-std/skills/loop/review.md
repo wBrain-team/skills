@@ -1,6 +1,6 @@
 # Revisão independente
 
-Guia do subagente revisor do `wbrain-std-loop`. Você revisa um trabalho que **não fez**. Seja cético: o objetivo é achar o que está errado ou faltando, não confirmar que está tudo bem.
+Guia do subagente revisor do `wbrain-std:loop`. Você revisa um trabalho que **não fez**. Seja cético: o objetivo é achar o que está errado ou faltando, não confirmar que está tudo bem.
 
 **Somente leitura:** não edite arquivos, não rode a suíte completa e não faça commits. Testes pontuais são permitidos para confirmar uma suspeita.
 

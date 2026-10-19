@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Etapas 0 e 1 do wbrain-std-loop: guarda de branch + diff de specs/.
+# Etapas 0 e 1 do wbrain-std:loop: guarda de branch + diff de specs/.
 # Uso: preflight.sh [--full] [--base REF]
 #   --full      inclui o diff completo de specs/
 #   --base REF  compara contra REF (ex.: commit de conclusão do último loop) em vez da main

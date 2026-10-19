@@ -1,6 +1,6 @@
 # Onboarding STD
 
-Situação do projeto em relação ao fluxo wbrain-std (Spec-Test-Driven) e o que falta para ele ser desenvolvido pela `wbrain-std-loop`.
+Situação do projeto em relação ao fluxo wbrain-std (Spec-Test-Driven) e o que falta para ele ser desenvolvido pela `wbrain-std:loop`.
 
 - Data: <data>
 - Veredito: <próximo | intermediário | distante>
@@ -39,7 +39,7 @@ Em ordem de prioridade.
 - [ ] <item> — <por que só o tutor resolve>
 
 ## Gaps (mudanças futuras de spec)
-Diferenças entre o que existe e o que o tutor deseja. Não estão nas specs, que descrevem só o que existe: viram mudanças de spec feitas pelo tutor e implementadas pela `wbrain-std-loop`.
+Diferenças entre o que existe e o que o tutor deseja. Não estão nas specs, que descrevem só o que existe: viram mudanças de spec feitas pelo tutor e implementadas pela `wbrain-std:loop`.
 - <comportamento atual> → <comportamento desejado>
 
 ## Áreas sem spec
@@ -50,4 +50,4 @@ Só para projetos sem testes automáticos. O tutor decide se e quando.
 - <regra crítica> — <tipo de teste sugerido>
 
 ## Próximo passo
-<ex.: revisar e commitar a base, integrar à `main` e rodar a `wbrain-std-loop` na próxima mudança de spec>
+<ex.: revisar e commitar a base, integrar à `main` e rodar a `wbrain-std:loop` na próxima mudança de spec>

@@ -1,6 +1,6 @@
 # Guia de escrita de specs
 
-Cola para o agente consultar e citar ao orientar o tutor. As regras completas (e o que o loop bloqueia) estão em `../wbrain-std-loop/spec-lint.md`; este guia não as substitui.
+Cola para o agente consultar e citar ao orientar o tutor. As regras completas (e o que o loop bloqueia) estão em `../loop/spec-lint.md`; este guia não as substitui.
 
 ## A ideia em uma frase
 Uma spec diz **o que a aplicação faz agora**, em um arquivo pequeno, com regras que um teste consegue verificar.

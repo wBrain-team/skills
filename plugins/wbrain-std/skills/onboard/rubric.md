@@ -1,6 +1,6 @@
 # Régua de aderência STD
 
-Usada no diagnóstico (etapa 2) para medir a distância entre o projeto e o padrão STD (`../wbrain-std-init/template/`). Cada dimensão recebe um nível:
+Usada no diagnóstico (etapa 2) para medir a distância entre o projeto e o padrão STD (`../init/template/`). Cada dimensão recebe um nível:
 
 - **ok**: já atende, ou atende com ajustes triviais.
 - **ajuste**: não atende, mas o agente consegue resolver com aprovação do tutor.

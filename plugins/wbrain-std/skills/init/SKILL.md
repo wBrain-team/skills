@@ -1,10 +1,10 @@
 ---
-name: wbrain-std-init
+name: init
 description: Inicializa um novo projeto a partir do boilerplate wbrain-std numa pasta vazia — entrevista o usuário sobre o projeto, copia a base (README, AGENTS, docs, specs) e a adapta às respostas. Use apenas quando o usuário pedir explicitamente para iniciar/criar um projeto com o boilerplate wbrain.
 disable-model-invocation: true
 ---
 
-# wbrain-std-init
+# wbrain-std:init
 
 Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido por humanos) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele. Esta skill prepara o terreno para esse fluxo.
 

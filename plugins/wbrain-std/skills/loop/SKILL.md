@@ -1,10 +1,10 @@
 ---
-name: wbrain-std-loop
+name: loop
 description: Executa o ciclo de implementação de uma modificação (feature, ajuste de regra, refactor ou remoção) a partir do que mudou em `specs/` — descobre o contexto com subagentes, planeja em TDD, implementa, atualiza `docs/` e valida com a suíte completa no final. Use apenas quando o usuário pedir explicitamente para rodar o loop wbrain-std.
 disable-model-invocation: true
 ---
 
-# wbrain-std-loop
+# wbrain-std:loop
 
 Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido por humanos) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
@@ -45,7 +45,7 @@ Ao encontrar qualquer uma delas:
 - `templates/state.md` e `templates/plan-summary.md`: modelos do arquivo de estado e do resumo de aprovação do plano.
 - `preflight.sh --base <ref>`: compara contra outra base (ex.: commit de conclusão do loop anterior); a saída inclui `fingerprint` e o caminho do arquivo de `state`.
 
-Os caminhos são relativos à pasta desta skill (`.claude/skills/wbrain-std-loop/`).
+Os caminhos são relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/loop/`).
 
 ### Estado do loop (`.std/loop/<branch>.md`)
 Cada branch tem um arquivo de estado, cujo caminho o `preflight.sh` informa na linha `state:`. A pasta `.std/` fica fora do git (`.gitignore`). O arquivo permite retomar um loop interrompido e auditar o que foi feito.
@@ -70,7 +70,7 @@ Ao atingir um limite: pare, registre `status: bloqueado` no arquivo de estado e 
 ## 0. Guarda de branch (obrigatória)
 
 ```bash
-.claude/skills/wbrain-std-loop/scripts/preflight.sh
+${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/preflight.sh
 ```
 
 O script cobre esta etapa e a próxima.
@@ -96,8 +96,8 @@ Sem arquivo de estado → crie-o com `status: em andamento`, a base e o fingerpr
 
 Antes de gastar subagentes com exploração, verifique se **as mudanças** nas specs estão bem escritas. O lint vale **só para o diff**: problemas antigos em trechos não alterados ficam fora. O agente **não corrige** a spec; só aponta o problema e sugere a reescrita ao tutor humano.
 
-1. Rode `.claude/skills/wbrain-std-loop/scripts/check-doc-links.sh <arquivos>` passando só os arquivos de spec adicionados ou modificados, para achar links e `extends` quebrados neles.
-2. Dispare **um subagente `Explore`** com: a base do preflight, a lista de arquivos alterados e a instrução de rodar `preflight.sh --full --base <base>` para ver o diff, ler `.claude/skills/wbrain-std-loop/spec-lint.md` e consultar os arquivos alterados, o pai deles (`Extends:`) e, se algum for pai, as filhas. Os arquivos completos, o pai e as filhas entram só como contexto; o lint vale para as linhas adicionadas ou alteradas. Para as regras de termos, duplicação e órfãs, o subagente consulta as demais specs só no necessário. Retorno exigido no formato definido em `spec-lint.md`.
+1. Rode `${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/check-doc-links.sh <arquivos>` passando só os arquivos de spec adicionados ou modificados, para achar links e `extends` quebrados neles.
+2. Dispare **um subagente `Explore`** com: a base do preflight, a lista de arquivos alterados e a instrução de rodar `preflight.sh --full --base <base>` para ver o diff, ler `${CLAUDE_PLUGIN_ROOT}/skills/loop/spec-lint.md` e consultar os arquivos alterados, o pai deles (`Extends:`) e, se algum for pai, as filhas. Os arquivos completos, o pai e as filhas entram só como contexto; o lint vale para as linhas adicionadas ou alteradas. Para as regras de termos, duplicação e órfãs, o subagente consulta as demais specs só no necessário. Retorno exigido no formato definido em `spec-lint.md`.
 
 Se houver **qualquer achado** (do script ou do subagente) → **pare o loop**. Apresente os achados agrupados por arquivo, cada um com a regra violada e a sugestão de reescrita, e peça ao tutor que corrija `specs/` e invoque a skill de novo. Valem as mesmas regras da guarda de ambiguidade: não aceite respostas em texto e nunca edite a spec. Registre o bloqueio no arquivo de estado (`status: bloqueado`).
 
@@ -184,7 +184,7 @@ Só agora, com tudo implementado, rode a **suíte completa** uma única vez (`ma
 
 ## 10. Revisão independente (subagente revisor)
 
-Dispare um subagente `general-purpose` **somente leitura** (instrua-o a não editar arquivos nem fazer commits) com: a base do preflight, o resumo da modificação, o plano do arquivo de estado e a instrução de seguir `.claude/skills/wbrain-std-loop/review.md`. O revisor compara o diff de `specs/` com o diff de código, testes e docs, e devolve os achados no formato do guia.
+Dispare um subagente `general-purpose` **somente leitura** (instrua-o a não editar arquivos nem fazer commits) com: a base do preflight, o resumo da modificação, o plano do arquivo de estado e a instrução de seguir `${CLAUDE_PLUGIN_ROOT}/skills/loop/review.md`. O revisor compara o diff de `specs/` com o diff de código, testes e docs, e devolve os achados no formato do guia.
 
 - Achados **bloqueantes** → corrija (testes pontuais), rode a suíte completa de novo e dispare **uma** nova revisão. Se ainda houver bloqueantes, pare e reporte ao tutor.
 - Achados **sugestões** → aplique se forem baratos e dentro do escopo; senão, liste-os no relatório final.
