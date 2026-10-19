@@ -1,0 +1,15 @@
+# Opcional: copie para config/terraform.tfvars (não versionado) para ajustar a infra. Sem o arquivo valem os
+# defaults de infra/variables.tf. name, environment e suffix vêm do config.yaml; não repita aqui.
+aws_region       = "sa-east-1"
+instance_type    = "t3.small"
+architecture     = "x86_64" # ou "arm64" (com instance_type t4g.*)
+# ami_id         = ""       # fixa a AMI na criação; vazio = mais recente da Canonical
+# alarm_sns_topic_arn = ""  # tópico SNS que recebe o alarme de falha de status; vazio = sem notificação
+root_volume_size = 20
+data_volume_size = 30
+swap_size_gb     = 4 # 0 desativa o swap
+# availability_zone = ""   # vazio = <aws_region>a; fixa a AZ do volume de dados
+# vpc_id         = ""
+# subnet_id      = ""
+backup_retention_days = 7
+ssm_log_retention_days = 30

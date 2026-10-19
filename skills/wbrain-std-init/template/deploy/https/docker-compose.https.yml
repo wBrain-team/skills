@@ -1,0 +1,27 @@
+# HTTPS público opcional. O remote-deploy.sh anexa este arquivo ao COMPOSE só com https.enabled: true
+# (config.yaml). Caminhos relativos resolvem a partir do primeiro arquivo do compose (raiz do projeto na instância).
+# Não depende do projeto: só precisa de uma rede com o serviço de entrada (proxy_service) e da porta dele.
+# Os envs vêm de .https.env (gravado pelo remote-deploy.sh): um `docker compose` manual na instância também funciona.
+services:
+  https-proxy:
+    image: nginx:alpine
+    restart: unless-stopped
+    entrypoint: ["/bin/sh", "/opt/https/proxy/entrypoint.sh"]
+    ports:
+      - "80:80"
+      - "443:443"
+    env_file: ./deploy/https/.https.env
+    volumes:
+      - ./deploy/https:/opt/https:ro
+      - /ext-vol/letsencrypt:/etc/letsencrypt:ro
+      - /ext-vol/acme-webroot:/var/www/acme:ro
+
+  cert-renewer:
+    build:
+      context: ./deploy/https
+      dockerfile: renewer/Dockerfile
+    restart: unless-stopped
+    env_file: ./deploy/https/.https.env
+    volumes:
+      - /ext-vol/letsencrypt:/etc/letsencrypt
+      - /ext-vol/acme-webroot:/var/www/acme

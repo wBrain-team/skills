@@ -1,0 +1,51 @@
+# Copie para config.yaml e preencha. config.yaml não é versionado.
+# Nome do projeto: prefixo dos recursos AWS e dos nomes no host (chave SSH, lock do deploy).
+name: your-project
+
+# Nome do ambiente (ex.: prod, staging): compõe os nomes e as tags de todos os recursos.
+environment: prod
+
+# Sufixo opcional (ex.: cliente-a, 01): nomes ficam <name>-<environment>-<suffix>. Deixe vazio ou remova para não usar.
+suffix: ""
+
+# Bucket S3 (já existente, com versionamento e criptografia ativos) que guarda o state do Terraform.
+state:
+  bucket: your-project-tfstate-<account-id>
+  key: your-project/prod/terraform.tfstate
+  region: sa-east-1
+
+# Código implantado pela ação deploy: a EC2 faz git pull deste repositório (SSH, via deploy key) nesta branch.
+deploy:
+  repo: git@github.com:magmalab/your-project.git
+  branch: main
+  auto_rollback: false   # true: se a subida ou o health falhar, volta ao SHA anterior (não reverte migrations)
+
+# Pins do host (usados pelo setup). Docker já instalado nunca é atualizado sem docker_version. Ver deploy/host-setup.sh.
+host:
+  git_host_fingerprint: "SHA256:+DiY3wvvV6TuJJhbpZisF/zLDA0zPMSvHdkr4UvCOqU" # ed25519 do host de deploy.repo; confira em docs.github.com (SSH key fingerprints)
+  docker_version: ""      # vazio = mantém o Docker atual. Preencher (ex.: 5:28.3.0-1~ubuntu.24.04~noble, de apt-cache madison docker-ce) instala essa versão no setup
+  awscli_version: ""      # ex.: 2.27.0; exige awscli_sha256
+  awscli_sha256: ""       # sha256 do zip awscli-exe-linux-<arch>-<versão>.zip
+
+# Como o projeto é executado na instância (ver deploy/CONTRACT.md para o que o projeto deve fornecer).
+app:
+  dir: /ext-vol/app                                   # onde o repositório é clonado
+  compose_files: docker-compose.yml docker-compose.prod.yml  # separados por espaço, na ordem do `docker compose -f`
+  env_file: .env                                      # gerado a partir do secret <name>-<environment>[-suffix]-env
+  data_dirs: /ext-vol/pgdata                          # diretórios de dados criados antes do primeiro `up`, separados por espaço
+  proxy_service: nginx                                # serviço de entrada (recriado a cada deploy, ver CONTRACT.md)
+  health_url: http://localhost:8084/health            # validado após o deploy
+  health_timeout: 60                                  # segundos
+
+# HTTPS público opcional (Let's Encrypt, HTTP-01 pela porta 80). Desligado, nada disto é usado.
+# Ver deploy/https/ e docs/stack/deploy.md. Pré-requisito: DNS de cada domínio apontando para o elastic_ip.
+https:
+  enabled: false
+  email: ops@example.com     # contato do Let's Encrypt (avisos de expiração)
+  staging: false             # true = CA de teste do Let's Encrypt (sem limite de emissão, certificado não confiável)
+  renew_day: 1               # dia do mês (1-28) em que a renovação mensal roda; também roda a cada deploy
+  domains:                   # n domínios, cada um com o seu destino na rede do compose
+    - domain: api.example.com
+      upstream: nginx:8084   # servico:porta
+    - domain: admin.example.com
+      upstream: other-svc:9000

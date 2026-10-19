@@ -1,0 +1,2 @@
+# Gerado pelo remote-deploy.sh a cada deploy (envs dos containers do HTTPS).
+.https.env

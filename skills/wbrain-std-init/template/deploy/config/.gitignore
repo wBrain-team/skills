@@ -1,0 +1,4 @@
+config.yaml
+*.env.backup
+*.tfvars
+!*.tfvars.example

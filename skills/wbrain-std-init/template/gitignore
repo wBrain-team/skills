@@ -1,0 +1,10 @@
+memory
+__pycache__
+workspace
+.claude-config/*
+!.claude-config/settings.json
+!.claude-config/CLAUDE.md
+.env
+scheduled_tasks.lock
+.coverage
+.std/
