@@ -14,6 +14,10 @@
 - [x] 1. <tarefa> — teste: `<comando pontual>`
 - [ ] 2. <tarefa> — teste: `<comando pontual>`
 
+## Premissas
+<imprecisões toleráveis da spec, deduzidas do contexto; uma por linha>
+- specs/<arquivo>.md:<linha> — "<trecho>" — leitura adotada: <...> — evidência: <...>
+
 ## Registro
 - <data> etapa <n>: <resultado em uma linha>
 

@@ -71,11 +71,32 @@ Exceção: specs explicitamente técnicas (ex.: um refactor) podem tratar de imp
 ## Escopo
 O lint vale **só para o diff**: linhas adicionadas ou alteradas e arquivos novos. Problemas antigos em trechos não alterados não são reportados. Regras de arquivo inteiro (4 e 9) entram só quando a mudança causa o problema: arquivo novo órfão, ou arquivo que passou a tratar de mais de um assunto por causa do trecho adicionado.
 
+## Severidade
+Todo achado é **bloqueante** ou **observação**. O lint não deve travar o loop por deslizes que o contexto resolve.
+
+**Observação** (o loop segue; o agente assume a leitura óbvia): o problema é de forma e a intenção é clara pelo contexto (mesma spec, pai/filhas, outras specs ou `docs/`). Exemplos:
+- regras 1, 2 e 3 (passado, futuro, tempo verbal) quando o comportamento atual é inequívoco ("deverá abrir" → "abre");
+- regra 7: sinônimo ocasional para um conceito já definido, ou pequena repetição de regra que não diverge da fonte;
+- regra 8: menção incidental a um detalhe técnico que não define comportamento;
+- regra 6: adjetivo vago ("rápido") quando há critério claro em outro trecho ou num padrão de `docs/`;
+- regra 9: link com erro de digitação cujo alvo é óbvio; spec nova sem link a partir de `specs/specs.md`; "etc." no fim de uma lista que já enumera o essencial;
+- regra 4: arquivo um pouco extenso ou com assunto levemente misturado, mas sem ambiguidade.
+
+**Bloqueante** (o loop para): o problema muda ou esconde o comportamento. Exemplos:
+- regra 6 ou 9: regra sem valor/critério que não dá para deduzir; `TODO`/`TBD`/"a definir" no lugar de regra; caso de erro, borda ou permissão relevante ausente que não se deduz;
+- regra 7: mesmo termo para conceitos diferentes, ou regra duplicada com **conteúdo divergente**;
+- regra 5: `extends` com alvo inexistente ou indeterminável, mais de um pai, mais de um nível; sobrescrita implícita que muda comportamento;
+- regra 8: spec que dita implementação onde isso altera o que será construído (tabelas, bibliotecas, endpoints) sem se declarar técnica;
+- regra 1 ou 2: o texto deixa duvidoso qual é o comportamento vigente ("agora 10%, mas pode voltar a 5%");
+- links quebrados com alvo indeterminável.
+
+Na dúvida, **bloqueante**.
+
 ## Formato do retorno do lint
 Um achado por linha:
 
 ```
-specs/arquivo.md:linha — regra N — "trecho curto" — sugestão de reescrita
+[bloqueante|observação] specs/arquivo.md:linha — regra N — "trecho curto" — sugestão de reescrita (observação: inclua a leitura que o agente vai assumir)
 ```
 
-Agrupe por arquivo. Se não houver nenhum achado, retorne apenas `OK`.
+Agrupe por arquivo, bloqueantes primeiro. Se não houver nenhum achado, retorne apenas `OK`.

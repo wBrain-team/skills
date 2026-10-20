@@ -21,15 +21,37 @@ Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` ante
 - Ao apontar um trecho específico, o subagente usa `caminho:linha` ou `caminho:início-fim` (ex.: `backend/app/services/user.py:42-67`). Assim o principal lê só aquele intervalo (Read com `offset`/`limit`) e não o arquivo inteiro. Se a referência é ao arquivo todo, basta o caminho; não procure linhas só para cumprir o formato.
 - Dispare em paralelo (uma única mensagem) os subagentes que não dependem uns dos outros.
 
-### Guarda de ambiguidade (interrompe o loop)
+### Guarda de ambiguidade (classifica; só o bloqueante interrompe o loop)
 Fique atento a ambiguidades em todas as etapas: instruções que não fazem sentido, que admitem mais de uma leitura, que conflitam com outra spec ou com `docs/`, ou que não trazem as informações necessárias para uma implementação robusta.
 
-Ao encontrar qualquer uma delas:
+Para cada uma, classifique antes de agir. A spec é a fonte da verdade, mas pequenos deslizes de escrita não devem travar o loop.
+
+**Tolerável (siga e registre como premissa)** — só quando **todas** as condições valem:
+- a leitura correta é deduzível com alta confiança do contexto: o resto da mesma spec, o pai/filhas (`Extends:`), outras specs, `docs/` ou o código atual;
+- só existe uma leitura razoável, ou as leituras possíveis levam ao mesmo comportamento observável;
+- errar seria barato e reversível, sem tocar em dados, segurança, permissões, dinheiro, contrato público de API ou remoção de dados.
+
+Exemplos: erro de digitação ou nome ligeiramente diferente de um termo/campo/rota já definido noutro ponto; sinônimo usado por descuido; link ou referência cruzada imprecisa cujo alvo é óbvio; detalhe omitido que o padrão de `docs/` ou de funcionalidades equivalentes já define; redação vaga mas com número ou critério claro em outro trecho; divergência só de forma (maiúsculas, plural, ordem) entre spec e `docs/`.
+
+**Bloqueante (pare o loop)** — qualquer uma das condições:
+- duas ou mais leituras plausíveis com **comportamento observável diferente**;
+- contradição de **regra de negócio** entre specs, ou entre spec e `docs/`/código atual sem que a spec deixe claro que é uma mudança intencional;
+- valor ou regra necessária ausente e **não deduzível** (limite, prazo, status, permissão, fórmula, caso de erro relevante);
+- impacto em dados, migração, segurança, permissões, dinheiro, contrato de API ou remoção de funcionalidade;
+- o palpite exigiria inventar regra de negócio.
+
+**Na dúvida entre as duas classes, trate como bloqueante.**
+
+**Tolerável → premissa.** Não pare. Registre na seção **Premissas** do arquivo de estado, uma linha por item: `specs/...:linha — trecho — leitura adotada — por quê (evidência)`. Implemente conforme a leitura adotada e apresente as premissas na etapa 6 para o tutor ver. Nunca edite a spec.
+
+**Bloqueante → interrompa:**
 1. **Pare o loop imediatamente** e registre no arquivo de estado `status: bloqueado` e o motivo. Não implemente "o mais provável".
 2. Liste cada dúvida citando o arquivo e o trecho da spec (`specs/...:linha`), explique por que é um problema e sugira caminhos possíveis.
 3. Peça ao tutor humano que **atualize `specs/`** para resolver as dúvidas e invoque a skill de novo.
 
-**Não** use `AskUserQuestion` e **não** aceite decisões ou respostas em texto como substitutas da spec, mesmo que o usuário insista. Respostas diretas geram drift entre a spec e a implementação. Se o usuário responder em texto, recuse com gentileza e reforce que a resposta precisa ir para a spec.
+Se, ao implementar, uma premissa se mostrar mais arriscada do que parecia (a evidência não se sustenta ou o impacto é maior), promova-a a bloqueante.
+
+Para os bloqueantes, **não** use `AskUserQuestion` e **não** aceite decisões ou respostas em texto como substitutas da spec, mesmo que o usuário insista. Respostas diretas geram drift entre a spec e a implementação. Se o usuário responder em texto, recuse com gentileza e reforce que a resposta precisa ir para a spec.
 
 ### Fonte da verdade e documentação
 - **Nunca** modifique nada em `specs/`.
@@ -99,7 +121,10 @@ Antes de gastar subagentes com exploração, verifique se **as mudanças** nas s
 1. Rode `${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/check-doc-links.sh <arquivos>` passando só os arquivos de spec adicionados ou modificados, para achar links e `extends` quebrados neles.
 2. Dispare **um subagente `Explore`** com: a base do preflight, a lista de arquivos alterados e a instrução de rodar `preflight.sh --full --base <base>` para ver o diff, ler `${CLAUDE_PLUGIN_ROOT}/skills/loop/spec-lint.md` e consultar os arquivos alterados, o pai deles (`Extends:`) e, se algum for pai, as filhas. Os arquivos completos, o pai e as filhas entram só como contexto; o lint vale para as linhas adicionadas ou alteradas. Para as regras de termos, duplicação e órfãs, o subagente consulta as demais specs só no necessário. Retorno exigido no formato definido em `spec-lint.md`.
 
-Se houver **qualquer achado** (do script ou do subagente) → **pare o loop**. Apresente os achados agrupados por arquivo, cada um com a regra violada e a sugestão de reescrita, e peça ao tutor que corrija `specs/` e invoque a skill de novo. Valem as mesmas regras da guarda de ambiguidade: não aceite respostas em texto e nunca edite a spec. Registre o bloqueio no arquivo de estado (`status: bloqueado`).
+Cada achado vem classificado como **bloqueante** ou **observação** (critérios em `spec-lint.md` e na guarda de ambiguidade). Link ou `extends` quebrado cujo alvo correto é óbvio (ex.: erro de digitação no caminho) é observação; alvo inexistente ou indeterminável é bloqueante.
+
+- Se houver **qualquer achado bloqueante** → **pare o loop**. Apresente os bloqueantes agrupados por arquivo, cada um com a regra violada e a sugestão de reescrita, e peça ao tutor que corrija `specs/` e invoque a skill de novo. Valem as mesmas regras da guarda de ambiguidade: não aceite respostas em texto e nunca edite a spec. Registre o bloqueio no arquivo de estado (`status: bloqueado`). Inclua as observações na mesma mensagem, para o tutor corrigir tudo de uma vez.
+- Se houver **só observações** → não pare. Registre-as na seção **Premissas** do arquivo de estado (com a leitura adotada, quando houver) e siga. Elas aparecem na etapa 6.
 
 ## 3. Estado atual da aplicação (subagentes Explore, um por camada)
 
@@ -127,7 +152,7 @@ Dispare (em paralelo com a etapa 3) um subagente `Explore` que parte de `docs/do
 - conflitos ou divergências entre `docs/` e a spec;
 - docs que provavelmente precisarão ser atualizados.
 
-Depois das etapas 3 e 4, **aplique a guarda de ambiguidade**.
+Depois das etapas 3 e 4, **aplique a guarda de ambiguidade** (só o que for bloqueante para; o tolerável vira premissa).
 
 ## 5. Plano de ação (subagente Plan)
 
@@ -138,7 +163,7 @@ Dispare um subagente `Plan` com o resumo do diff e os retornos das etapas 3 e 4.
 - incluir a atualização de `docs/` (o que criar, atualizar ou remover);
 - dividir o trabalho em tarefas pequenas, marcando quais são **paralelizáveis** (arquivos disjuntos) e quais são **sequenciais**;
 - indicar, por tarefa, o **comando de teste pontual** que valida o progresso;
-- terminar com a seção **"Dúvidas/ambiguidades"**. Se ela não estiver vazia → **guarda de ambiguidade**.
+- terminar com a seção **"Dúvidas/ambiguidades"**, separando **bloqueantes** de **premissas** (toleráveis, com a leitura adotada). Se houver bloqueantes → **guarda de ambiguidade**. As premissas seguem para a etapa 6.
 
 Retorno exigido: o plano em lista numerada, enxuto, com `caminho:linha` quando couber. Grave as tarefas na seção **Plano** do arquivo de estado, como checkboxes. Peça ao subagente também a relação **mudança na spec → teste(s) que a garantem**, usada na etapa 6.
 
@@ -146,9 +171,11 @@ Retorno exigido: o plano em lista numerada, enxuto, com `caminho:linha` quando c
 
 Antes de implementar, apresente o plano ao tutor e **pare**, aguardando a resposta. Registre `status: aguardando aprovação`. A apresentação é enxuta, para ser revisada em 1 ou 2 minutos. Use o modelo em `templates/plan-summary.md`.
 
+O resumo inclui as **premissas** assumidas (deduções de pequenas imprecisões da spec), para o tutor conferir. Elas não bloqueiam, mas o tutor pode contestá-las. Recomende ao tutor corrigir a redação na spec depois, sem urgência.
+
 O plano completo fica no arquivo de estado para quem quiser abrir. A resposta é **binária**:
-- **Seguir** → registre `plano aprovado: <data>` e `status: em andamento`, e vá para a etapa 7.
-- **Discordância de comportamento** (entendimento errado, regra faltando ou a mais) → **guarda de ambiguidade**: a correção vai para `specs/`, e o loop recomeça pelo fingerprint novo.
+- **Seguir** → (as premissas também ficam aceitas) registre `plano aprovado: <data>` e `status: em andamento`, e vá para a etapa 7.
+- **Discordância de comportamento** (entendimento errado, regra faltando ou a mais, ou premissa contestada) → **guarda de ambiguidade**: a correção vai para `specs/`, e o loop recomeça pelo fingerprint novo.
 - **Discordância técnica** (abordagem, biblioteca, estrutura) → não é assunto da spec. Registre a orientação em `docs/` (guideline no guia temático ou ADR em `docs/decisions/`), mostre ao tutor o que foi registrado e volte à etapa 5 para replanejar com base nos docs atualizados. Nunca guarde a orientação só no chat.
 - Resposta que não seja nenhuma dessas → peça que o tutor diga se segue, ou qual o tipo de ajuste.
 
@@ -167,7 +194,7 @@ Ciclo por tarefa: **teste vermelho → implementação mínima → teste verde �
 
 O prompt de cada subagente traz a tarefa, os arquivos envolvidos, as regras de `docs/` aplicáveis, o comando de teste pontual e se ele pode ou não rodar testes. Nunca dois subagentes no mesmo arquivo. Retorno exigido: arquivos alterados, testes rodados e resultado (se rodou), pendências ou dúvidas.
 - Ao concluir cada tarefa, marque o checkbox no arquivo de estado e registre o resultado do teste pontual.
-- Se surgir uma ambiguidade durante a implementação → **guarda de ambiguidade**.
+- Se surgir uma ambiguidade durante a implementação → **guarda de ambiguidade** (classifique: tolerável vira premissa, bloqueante para).
 
 ## 8. Documentação
 
@@ -188,7 +215,7 @@ Dispare um subagente `general-purpose` **somente leitura** (instrua-o a não edi
 
 - Achados **bloqueantes** → corrija (testes pontuais), rode a suíte completa de novo e dispare **uma** nova revisão. Se ainda houver bloqueantes, pare e reporte ao tutor.
 - Achados **sugestões** → aplique se forem baratos e dentro do escopo; senão, liste-os no relatório final.
-- Se o revisor apontar ambiguidade ou conflito na spec → **guarda de ambiguidade**.
+- Se o revisor apontar ambiguidade ou conflito **bloqueante** na spec → **guarda de ambiguidade**. Observações de spec viram premissas no relatório final.
 
 ## 11. Commits e relatório
 
@@ -196,4 +223,4 @@ Dispare um subagente `general-purpose` **somente leitura** (instrua-o a não edi
 - Siga `docs/guidelines/git.md` (Conventional Commits: `<tipo>(escopo): descrição curta`). Faça commits granulares, um por tarefa coerente.
 - Nunca use `--no-verify` e não faça push sem pedido.
 - Ao terminar, atualize o arquivo de estado: `status: concluído` e `commit de conclusão: <hash do HEAD>`.
-- Relatório final curto: o que mudou (por camada), testes criados/alterados e resultado da suíte, docs atualizados, commits feitos.
+- Relatório final curto: o que mudou (por camada), testes criados/alterados e resultado da suíte, docs atualizados, commits feitos e **premissas assumidas** (com a sugestão de ajuste na spec para o tutor).

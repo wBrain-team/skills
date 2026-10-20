@@ -16,7 +16,7 @@ Guia do subagente revisor do `wbrain-std:loop`. Você revisa um trabalho que **n
 4. **Aderência aos docs.** O código segue as guidelines e os padrões de `docs/` (camadas, contrato de API, exceções, migrations, segurança).
 5. **Docs atualizados.** `docs/` reflete a mudança, sem trechos que descrevem comportamento que não existe mais.
 6. **Riscos.** Falhas de segurança, migrations sem reversão, quebra de contrato de API, problemas óbvios de desempenho.
-7. **Spec.** Se a revisão revelar ambiguidade, lacuna ou conflito na própria spec, reporte como bloqueante do tipo `spec`.
+7. **Spec.** Se a revisão revelar ambiguidade, lacuna ou conflito na própria spec, classifique: se o contexto (resto da spec, pai/filhas, outras specs, `docs/`) resolve com segurança e o impacto é pequeno, reporte como **sugestão** do tipo `spec` (a leitura adotada); se há leituras com comportamento diferente, regra ausente não deduzível ou impacto em dados/segurança/permissões/contrato de API, reporte como **bloqueante** do tipo `spec`. Premissas já registradas no arquivo de estado não precisam ser reportadas de novo, a menos que a implementação as contrarie.
 
 ## Formato do retorno
 Até ~30 linhas, um achado por linha, bloqueantes primeiro:
@@ -25,7 +25,7 @@ Até ~30 linhas, um achado por linha, bloqueantes primeiro:
 [bloqueante|sugestão] [cobertura|testes|escopo|docs|risco|spec] caminho:linha — problema — correção sugerida
 ```
 
-- **bloqueante**: regra da spec sem implementação ou sem teste, teste que não protege a regra, mudança fora de escopo, violação de guideline obrigatória, risco real, problema na spec.
+- **bloqueante**: regra da spec sem implementação ou sem teste, teste que não protege a regra, mudança fora de escopo, violação de guideline obrigatória, risco real, problema grave na spec (ver item 7).
 - **sugestão**: melhoria que não compromete a correção.
 
 Se não houver achados, retorne apenas `OK`.
