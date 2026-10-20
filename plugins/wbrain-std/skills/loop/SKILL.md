@@ -92,7 +92,7 @@ Ao atingir um limite: pare, registre `status: bloqueado` no arquivo de estado e 
 ## 0. Guarda de branch (obrigatória)
 
 ```bash
-${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/preflight.sh
+bash ${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/preflight.sh
 ```
 
 O script cobre esta etapa e a próxima.
@@ -118,7 +118,7 @@ Sem arquivo de estado → crie-o com `status: em andamento`, a base e o fingerpr
 
 Antes de gastar subagentes com exploração, verifique se **as mudanças** nas specs estão bem escritas. O lint vale **só para o diff**: problemas antigos em trechos não alterados ficam fora. O agente **não corrige** a spec; só aponta o problema e sugere a reescrita ao tutor humano.
 
-1. Rode `${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/check-doc-links.sh <arquivos>` passando só os arquivos de spec adicionados ou modificados, para achar links e `extends` quebrados neles.
+1. Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/check-doc-links.sh <arquivos>` passando só os arquivos de spec adicionados ou modificados, para achar links e `extends` quebrados neles.
 2. Dispare **um subagente `Explore`** com: a base do preflight, a lista de arquivos alterados e a instrução de rodar `preflight.sh --full --base <base>` para ver o diff, ler `${CLAUDE_PLUGIN_ROOT}/skills/loop/spec-lint.md` e consultar os arquivos alterados, o pai deles (`Extends:`) e, se algum for pai, as filhas. Os arquivos completos, o pai e as filhas entram só como contexto; o lint vale para as linhas adicionadas ou alteradas. Para as regras de termos, duplicação e órfãs, o subagente consulta as demais specs só no necessário. Retorno exigido no formato definido em `spec-lint.md`.
 
 Cada achado vem classificado como **bloqueante** ou **observação** (critérios em `spec-lint.md` e na guarda de ambiguidade). O lint é um **apoio à qualidade da spec, não um portão rígido**: a regra é tratar como observação e só bloquear o que impede de saber o que implementar. Link ou `extends` quebrado cujo alvo correto é óbvio é observação; alvo inexistente ou indeterminável é bloqueante.

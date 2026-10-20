@@ -19,7 +19,7 @@ Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` ante
 Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/spec/`):
 - `guia-de-escrita.md`: exemplos certo/errado e esqueleto sugerido de spec, para consultar e citar.
 - `../loop/spec-lint.md`: as regras que o loop aplica ao diff de `specs/`. É o que direciona o conteúdo das specs.
-- `../loop/scripts/check-doc-links.sh`: verificação de links internos (opcional, na revisão de um rascunho).
+- `bash ../loop/scripts/check-doc-links.sh`: verificação de links internos (opcional, na revisão de um rascunho).
 - `../init/SKILL.md` e `../onboard/SKILL.md`: referência da condução de entrevista.
 
 ## Regras transversais (valem em todas as etapas)
@@ -89,7 +89,7 @@ Termine dizendo que **quem grava os arquivos é o usuário**, e convide-o a volt
 
 ## 5. Revisão assistida (quando o usuário voltar com o rascunho)
 
-- Leia o que ele escreveu (somente leitura). Se for útil, rode `../loop/scripts/check-doc-links.sh` para achar links quebrados.
+- Leia o que ele escreveu (somente leitura). Se for útil, rode `bash ../loop/scripts/check-doc-links.sh` para achar links quebrados.
 - Aplique as regras do `spec-lint.md` **como feedback educativo**, no formato `specs/arquivo.md:linha — regra N — "trecho curto" — sugestão de reescrita`, explicando o porquê de cada ponto. Não edite o arquivo.
 - Reconheça o que está bom. Repita a revisão quantas vezes o usuário quiser, até ele se sentir seguro.
 

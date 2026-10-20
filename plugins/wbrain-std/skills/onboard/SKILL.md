@@ -25,7 +25,7 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/onboard/`
 - `../init/template/`: **o padrão STD** (AGENTS.md, CLAUDE.md, `docs/`, `specs/specs.md`, `deploy/`, `gitignore`). É o modelo para o qual o projeto deve convergir.
 - `../loop/spec-lint.md`: regras de escrita das specs.
 - `../loop/templates/plan-summary.md`: formato enxuto de apresentação de plano.
-- `../loop/scripts/check-doc-links.sh`: verificação de links internos.
+- `bash ../loop/scripts/check-doc-links.sh`: verificação de links internos.
 
 ## Regras transversais (valem em todas as etapas)
 
@@ -195,7 +195,7 @@ Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), p
 
 ## 10. Verificação e relatório
 
-- Rode `../loop/scripts/check-doc-links.sh docs specs` (caminho relativo a esta skill) e corrija os links quebrados.
+- Rode `bash ../loop/scripts/check-doc-links.sh docs specs` (caminho relativo a esta skill) e corrija os links quebrados.
 - Dispare um subagente `Explore` para um lint final de **todas** as specs criadas, com `../loop/spec-lint.md`, no formato de retorno do guia. Achados → corrija com o tutor (cada correção aprovada por ele).
 - Se há Docker, rode a suíte via Docker uma vez (`make test` ou equivalente) e registre o resultado. Se `deploy/` foi copiado, rode `bash deploy/tests/config-test.sh` (só valida a configuração; não faz deploy).
 - Atualize `docs/std-onboarding.md` (modelo `templates/report.md`) com: veredito por dimensão antes e depois, o que foi feito, ADRs criados, **pendências do tutor**, **Gaps** e áreas sem spec.
