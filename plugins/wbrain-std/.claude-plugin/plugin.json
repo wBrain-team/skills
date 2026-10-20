@@ -1,7 +1,7 @@
 {
   "name": "wbrain-std",
   "description": "Skills da wbrain para a técnica Spec-Test-Driven (STD): init, spec, loop e onboard.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": { "name": "wBrain" },
   "homepage": "https://github.com/wBrain-team/skills",
   "repository": "https://github.com/wBrain-team/skills"

@@ -7,7 +7,7 @@
       "name": "wbrain-std",
       "source": "./plugins/wbrain-std",
       "description": "Skills da wbrain para a técnica Spec-Test-Driven (STD): init, spec, loop e onboard.",
-      "version": "0.1.0"
+      "version": "0.1.1"
     }
   ]
 }
