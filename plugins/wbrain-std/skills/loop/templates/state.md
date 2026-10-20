@@ -16,7 +16,7 @@
 
 ## Premissas
 <imprecisões toleráveis da spec, deduzidas do contexto; uma por linha>
-- specs/<arquivo>.md:<linha> — "<trecho>" — leitura adotada: <...> — evidência: <...>
+- [tolerável|a confirmar] specs/<arquivo>.md:<linha> — "<trecho>" — leitura adotada: <...> — evidência: <...> — alternativa descartada: <só a confirmar>
 
 ## Registro
 - <data> etapa <n>: <resultado em uma linha>

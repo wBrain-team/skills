@@ -16,7 +16,7 @@ Guia do subagente revisor do `wbrain-std:loop`. Você revisa um trabalho que **n
 4. **Aderência aos docs.** O código segue as guidelines e os padrões de `docs/` (camadas, contrato de API, exceções, migrations, segurança).
 5. **Docs atualizados.** `docs/` reflete a mudança, sem trechos que descrevem comportamento que não existe mais.
 6. **Riscos.** Falhas de segurança, migrations sem reversão, quebra de contrato de API, problemas óbvios de desempenho.
-7. **Spec.** Se a revisão revelar ambiguidade, lacuna ou conflito na própria spec, classifique: se o contexto (resto da spec, pai/filhas, outras specs, `docs/`) resolve com segurança e o impacto é pequeno, reporte como **sugestão** do tipo `spec` (a leitura adotada); se há leituras com comportamento diferente, regra ausente não deduzível ou impacto em dados/segurança/permissões/contrato de API, reporte como **bloqueante** do tipo `spec`. Premissas já registradas no arquivo de estado não precisam ser reportadas de novo, a menos que a implementação as contrarie.
+7. **Spec.** Se a revisão revelar ambiguidade, lacuna ou conflito na própria spec, classifique: por padrão, reporte como **sugestão** do tipo `spec`, com a leitura adotada, sempre que o contexto (resto da spec, pai/filhas, outras specs, `docs/`) indicar uma leitura razoável; reporte como **bloqueante** do tipo `spec` apenas se a regra for essencial e não deduzível, ou se houver leituras divergentes com impacto em dados/segurança/permissões/dinheiro/contrato de API. Premissas já registradas no arquivo de estado não precisam ser reportadas de novo, a menos que a implementação as contrarie.
 
 ## Formato do retorno
 Até ~30 linhas, um achado por linha, bloqueantes primeiro:

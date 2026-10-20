@@ -6,8 +6,11 @@ Entendimento da spec
 Mudança na spec → como será garantida
 - "<trecho da spec>" → teste: <cenário(s)>
 
-Premissas assumidas (imprecisões da spec deduzidas do contexto; "nenhuma" se não houver)
-- specs/<arquivo>.md:<linha> — "<trecho>" → li como: <leitura adotada> (<evidência>)
+A confirmar (leitura adotada com alternativa de comportamento diferente; "nenhuma" se não houver)
+- specs/<arquivo>.md:<linha> — "<trecho>" → li como: <leitura adotada> (<evidência>); alternativa descartada: <...>
+
+Premissas toleráveis (imprecisões deduzidas do contexto; "nenhuma" se não houver)
+- specs/<arquivo>.md:<linha> — "<trecho>" → <leitura adotada>
 
 Tarefas (<n>): <x> paralelas, <y> sequenciais
 Camadas: <camadas>

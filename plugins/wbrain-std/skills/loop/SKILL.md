@@ -24,32 +24,32 @@ Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` ante
 ### Guarda de ambiguidade (classifica; só o bloqueante interrompe o loop)
 Fique atento a ambiguidades em todas as etapas: instruções que não fazem sentido, que admitem mais de uma leitura, que conflitam com outra spec ou com `docs/`, ou que não trazem as informações necessárias para uma implementação robusta.
 
-Para cada uma, classifique antes de agir. A spec é a fonte da verdade, mas pequenos deslizes de escrita não devem travar o loop.
+Para cada uma, classifique antes de agir. **O padrão é seguir em frente**: a spec é a fonte da verdade, mas o agente deve ser colaborativo, usar bom senso e o contexto para preencher lacunas, e reservar o bloqueio para o que realmente não dá para decidir sozinho. Há três classes.
 
-**Tolerável (siga e registre como premissa)** — só quando **todas** as condições valem:
-- a leitura correta é deduzível com alta confiança do contexto: o resto da mesma spec, o pai/filhas (`Extends:`), outras specs, `docs/` ou o código atual;
-- só existe uma leitura razoável, ou as leituras possíveis levam ao mesmo comportamento observável;
-- errar seria barato e reversível, sem tocar em dados, segurança, permissões, dinheiro, contrato público de API ou remoção de dados.
+**1. Tolerável (siga e registre como premissa)** — a leitura mais provável é clara pelo contexto (resto da spec, pai/filhas `Extends:`, outras specs, `docs/`, código atual, padrões de funcionalidades equivalentes), **ou** as leituras possíveis diferem só em detalhe menor, fácil de ajustar depois.
 
-Exemplos: erro de digitação ou nome ligeiramente diferente de um termo/campo/rota já definido noutro ponto; sinônimo usado por descuido; link ou referência cruzada imprecisa cujo alvo é óbvio; detalhe omitido que o padrão de `docs/` ou de funcionalidades equivalentes já define; redação vaga mas com número ou critério claro em outro trecho; divergência só de forma (maiúsculas, plural, ordem) entre spec e `docs/`.
+Exemplos: erro de digitação ou nome parecido com termo/campo/rota já definido; sinônimo por descuido; link ou referência cruzada imprecisa com alvo óbvio; detalhe omitido que `docs/` ou funcionalidades equivalentes já definem (paginação, ordenação, mensagens, formatos, validações comuns); redação vaga com critério em outro trecho; tempo verbal ou estilo; divergência de forma entre spec e `docs/`; lacuna de caso de borda comum que o padrão do projeto já resolve.
 
-**Bloqueante (pare o loop)** — qualquer uma das condições:
-- duas ou mais leituras plausíveis com **comportamento observável diferente**;
-- contradição de **regra de negócio** entre specs, ou entre spec e `docs/`/código atual sem que a spec deixe claro que é uma mudança intencional;
-- valor ou regra necessária ausente e **não deduzível** (limite, prazo, status, permissão, fórmula, caso de erro relevante);
-- impacto em dados, migração, segurança, permissões, dinheiro, contrato de API ou remoção de funcionalidade;
-- o palpite exigiria inventar regra de negócio.
+**2. A confirmar (siga até o plano e peça validação na etapa 6)** — há uma leitura **mais razoável**, apoiada em evidência do contexto, mas as alternativas teriam comportamento observável diferente. Não pare. Planeje com a leitura adotada e, na etapa 6, destaque o item com a alternativa descartada: o tutor valida com "seguir" ou contesta. Vale quando o impacto é limitado e reversível.
 
-**Na dúvida entre as duas classes, trate como bloqueante.**
+Exemplos: regra de negócio omitida que o comportamento de telas/fluxos parecidos indica com clareza; dois trechos da spec que divergem em detalhe, mas um deles é claramente o mais específico ou o mais recente; valor numérico ausente com padrão claro no projeto.
 
-**Tolerável → premissa.** Não pare. Registre na seção **Premissas** do arquivo de estado, uma linha por item: `specs/...:linha — trecho — leitura adotada — por quê (evidência)`. Implemente conforme a leitura adotada e apresente as premissas na etapa 6 para o tutor ver. Nunca edite a spec.
+**3. Bloqueante (pare o loop)** — só quando **não há como decidir com segurança** e o erro seria caro:
+- contradição real de **regra de negócio** (entre specs, ou entre spec e `docs/`/código sem indicar mudança intencional) em que **nenhum** critério de contexto diz qual vale;
+- valor ou regra essencial ausente, sem **nenhuma** evidência no contexto, e que o agente teria de **inventar** (fórmula, permissão, status, prazo, valor monetário);
+- duas ou mais leituras com comportamento diferente **e** impacto em dados/migração, segurança, permissões, dinheiro, contrato público de API ou remoção de funcionalidade;
+- texto ininteligível (não dá para dizer o que a spec pede).
+
+**Na dúvida entre tolerável e a confirmar, escolha tolerável. Na dúvida entre a confirmar e bloqueante, escolha a confirmar**, exceto se o impacto atingir dados, segurança, permissões, dinheiro ou contrato de API: nesses casos, bloqueante.
+
+**Tolerável e a confirmar → premissa.** Não pare. Registre na seção **Premissas** do arquivo de estado, uma linha por item: `[tolerável|a confirmar] specs/...:linha — trecho — leitura adotada — por quê (evidência) — alternativa descartada (só a confirmar)`. Implemente conforme a leitura adotada e apresente as premissas na etapa 6. Nunca edite a spec.
 
 **Bloqueante → interrompa:**
 1. **Pare o loop imediatamente** e registre no arquivo de estado `status: bloqueado` e o motivo. Não implemente "o mais provável".
 2. Liste cada dúvida citando o arquivo e o trecho da spec (`specs/...:linha`), explique por que é um problema e sugira caminhos possíveis.
 3. Peça ao tutor humano que **atualize `specs/`** para resolver as dúvidas e invoque a skill de novo.
 
-Se, ao implementar, uma premissa se mostrar mais arriscada do que parecia (a evidência não se sustenta ou o impacto é maior), promova-a a bloqueante.
+Se, ao implementar, uma premissa se mostrar bem mais arriscada do que parecia (a evidência não se sustenta ou o impacto é grande), promova-a a bloqueante.
 
 Para os bloqueantes, **não** use `AskUserQuestion` e **não** aceite decisões ou respostas em texto como substitutas da spec, mesmo que o usuário insista. Respostas diretas geram drift entre a spec e a implementação. Se o usuário responder em texto, recuse com gentileza e reforce que a resposta precisa ir para a spec.
 
@@ -121,7 +121,7 @@ Antes de gastar subagentes com exploração, verifique se **as mudanças** nas s
 1. Rode `${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/check-doc-links.sh <arquivos>` passando só os arquivos de spec adicionados ou modificados, para achar links e `extends` quebrados neles.
 2. Dispare **um subagente `Explore`** com: a base do preflight, a lista de arquivos alterados e a instrução de rodar `preflight.sh --full --base <base>` para ver o diff, ler `${CLAUDE_PLUGIN_ROOT}/skills/loop/spec-lint.md` e consultar os arquivos alterados, o pai deles (`Extends:`) e, se algum for pai, as filhas. Os arquivos completos, o pai e as filhas entram só como contexto; o lint vale para as linhas adicionadas ou alteradas. Para as regras de termos, duplicação e órfãs, o subagente consulta as demais specs só no necessário. Retorno exigido no formato definido em `spec-lint.md`.
 
-Cada achado vem classificado como **bloqueante** ou **observação** (critérios em `spec-lint.md` e na guarda de ambiguidade). Link ou `extends` quebrado cujo alvo correto é óbvio (ex.: erro de digitação no caminho) é observação; alvo inexistente ou indeterminável é bloqueante.
+Cada achado vem classificado como **bloqueante** ou **observação** (critérios em `spec-lint.md` e na guarda de ambiguidade). O lint é um **apoio à qualidade da spec, não um portão rígido**: a regra é tratar como observação e só bloquear o que impede de saber o que implementar. Link ou `extends` quebrado cujo alvo correto é óbvio é observação; alvo inexistente ou indeterminável é bloqueante.
 
 - Se houver **qualquer achado bloqueante** → **pare o loop**. Apresente os bloqueantes agrupados por arquivo, cada um com a regra violada e a sugestão de reescrita, e peça ao tutor que corrija `specs/` e invoque a skill de novo. Valem as mesmas regras da guarda de ambiguidade: não aceite respostas em texto e nunca edite a spec. Registre o bloqueio no arquivo de estado (`status: bloqueado`). Inclua as observações na mesma mensagem, para o tutor corrigir tudo de uma vez.
 - Se houver **só observações** → não pare. Registre-as na seção **Premissas** do arquivo de estado (com a leitura adotada, quando houver) e siga. Elas aparecem na etapa 6.
@@ -171,7 +171,7 @@ Retorno exigido: o plano em lista numerada, enxuto, com `caminho:linha` quando c
 
 Antes de implementar, apresente o plano ao tutor e **pare**, aguardando a resposta. Registre `status: aguardando aprovação`. A apresentação é enxuta, para ser revisada em 1 ou 2 minutos. Use o modelo em `templates/plan-summary.md`.
 
-O resumo inclui as **premissas** assumidas (deduções de pequenas imprecisões da spec), para o tutor conferir. Elas não bloqueiam, mas o tutor pode contestá-las. Recomende ao tutor corrigir a redação na spec depois, sem urgência.
+O resumo inclui as **premissas** assumidas, para o tutor conferir: as **a confirmar** em destaque, com a alternativa descartada, e as **toleráveis** em lista curta. Nenhuma bloqueia, mas o tutor pode contestá-las. Recomende ao tutor corrigir a redação na spec depois, sem urgência.
 
 O plano completo fica no arquivo de estado para quem quiser abrir. A resposta é **binária**:
 - **Seguir** → (as premissas também ficam aceitas) registre `plano aprovado: <data>` e `status: em andamento`, e vá para a etapa 7.
