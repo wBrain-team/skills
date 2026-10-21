@@ -57,6 +57,7 @@ Para os bloqueantes, **não** use `AskUserQuestion` e **não** aceite decisões 
 ### Ferramentas da skill (`scripts/`)
 - `scripts/preflight.sh [--full]`: guarda de branch + diff de `specs/` (etapas 0 e 1). Códigos de saída: `0` há modificação, `1` recusado/erro, `3` nada a implementar.
 - `scripts/check-doc-links.sh [caminho...]`: lista links internos quebrados em `docs/` e `specs/` (etapas 2 e 8).
+- `scripts/spec-coverage.sh [spec...]`: relaciona specs aos testes pelo marcador `spec:` (etapas 7 e 10). Convenção em `../shared/rastreabilidade.md`.
 
 - `../shared/spec-lint.md`: regras de escrita das specs, usadas no lint da etapa 2.
 - `review.md`: guia do subagente revisor (etapa 10).
@@ -161,7 +162,7 @@ Dispare um subagente `Plan` com o resumo do diff e os retornos das etapas 3 e 4.
 - indicar, por tarefa, o **comando de teste pontual** que valida o progresso;
 - terminar com a seção **"Dúvidas/ambiguidades"**, separando **bloqueantes** de **premissas** (toleráveis, com a leitura adotada). Se houver bloqueantes → **guarda de ambiguidade**. As premissas seguem para a etapa 6.
 
-Retorno exigido: o plano em lista numerada, enxuto, com `caminho:linha` quando couber. Grave as tarefas na seção **Plano** do arquivo de estado, como checkboxes. Peça ao subagente também a relação **mudança na spec → teste(s) que a garantem**, usada na etapa 6.
+Retorno exigido: o plano em lista numerada, enxuto, com `caminho:linha` quando couber. Grave as tarefas na seção **Plano** do arquivo de estado, como checkboxes. Peça ao subagente também a relação **mudança na spec → teste(s) que a garantem**, usada na etapa 6. Esses testes levam o marcador `spec:` (ver `${CLAUDE_PLUGIN_ROOT}/skills/shared/rastreabilidade.md`); em remoções, a relação inclui os testes marcados com a spec removida.
 
 ## 6. Aprovação do plano (sempre)
 
@@ -179,7 +180,7 @@ Ao retomar com o mesmo fingerprint e o plano já aprovado, não pergunte de novo
 
 ## 7. Implementação
 
-Ciclo por tarefa: **teste vermelho → implementação mínima → teste verde → refactor**, rodando só os testes pontuais da tarefa.
+Ciclo por tarefa: **teste vermelho → implementação mínima → teste verde → refactor**, rodando só os testes pontuais da tarefa. Todo teste de regra de negócio nasce com o marcador `spec:`.
 
 **Tarefas sequenciais:** o agente principal implementa, ou dispara um único subagente `general-purpose` que pode rodar os testes pontuais da tarefa.
 

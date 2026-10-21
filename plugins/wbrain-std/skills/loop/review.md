@@ -10,7 +10,7 @@ Guia do subagente revisor do `wbrain-std:loop`. Você revisa um trabalho que **n
 - Ao ler uma spec, carregue também o pai dela (`Extends:`). Se uma spec alterada for pai de outras, verifique também as filhas: a mudança no pai vale para elas.
 
 ## O que verificar
-1. **Cobertura da spec.** Cada regra nova ou alterada no diff da spec está implementada **e** tem teste. Regras removidas tiveram o código e os testes correspondentes removidos.
+1. **Cobertura da spec.** Cada regra nova ou alterada no diff da spec está implementada **e** tem teste. Regras removidas tiveram o código e os testes correspondentes removidos. Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/spec-coverage.sh <specs do diff>`: spec nova ou alterada sem nenhum teste marcado é **bloqueante** `cobertura`; marcador apontando para spec inexistente é **sugestão** `testes` (ou bloqueante, se a spec foi removida neste diff e o teste continua lá). Convenção em `${CLAUDE_PLUGIN_ROOT}/skills/shared/rastreabilidade.md`.
 2. **Qualidade dos testes.** Os testes verificam a regra de negócio pelo comportamento observável, não detalhes de implementação. Não são tautológicos (testes que passariam sem a implementação), cobrem casos de borda, erro e permissão descritos na spec, e seguem `docs/testing/`.
 3. **Fidelidade ao escopo.** Nada foi implementado além do que a spec pede. Nenhum comportamento existente foi alterado sem respaldo da spec.
 4. **Aderência aos docs.** O código segue as guidelines e os padrões de `docs/` (camadas, contrato de API, exceções, migrations, segurança).

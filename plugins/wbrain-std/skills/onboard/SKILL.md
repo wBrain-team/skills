@@ -169,6 +169,7 @@ O loop depende de TDD: precisa de um jeito confiável de escrever e rodar testes
   - banco de teste isolado, se houver banco (ver `template/docs/testing/test-database.md`);
   - pastas e convenções de fixtures e factories;
   - **um teste de fumaça** que só prova que a infraestrutura de testes funciona.
+- Documente em `docs/testing/testing.md` a convenção de rastreabilidade de `../shared/rastreabilidade.md` (marcador `spec:` nos testes de regra de negócio). Testes existentes **não** são marcados em massa; depois da etapa 9, rode `bash ../loop/scripts/spec-coverage.sh` e registre no relatório a cobertura inicial como linha de base.
 - Registre em `docs/testing/` e `docs/stack/makefile.md`.
 
 ## 9. Specs
