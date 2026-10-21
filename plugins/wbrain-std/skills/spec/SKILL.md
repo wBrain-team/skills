@@ -69,7 +69,9 @@ Ao ter uma compreensão razoável, **devolva um resumo** do objetivo e peça con
 ## 3. Mapear a spec em arquivos
 
 Proponha, no chat, **onde** a spec deve viver, em três listas:
-- **Criar:** novos arquivos, com o caminho sugerido (ex.: `specs/frontend/order-list.md`).
+- **Criar:** novos arquivos, com o caminho sugerido (ex.: `specs/pedidos/lista.md`).
+
+Antes de propor caminhos, localize o domínio de negócio em que o assunto se encaixa e siga o eixo declarado em `specs/specs.md` (telas, endpoints ou eventos). Só proponha domínio novo se nenhum existente servir. Regra de negócio fica no domínio; specs de tela ou endpoint apontam para ela. Veja "Como organizar `specs/`" no guia de escrita.
 - **Editar:** arquivos existentes e qual parte muda.
 - **Remover:** arquivos ou trechos que deixaram de valer. Lembre que o histórico fica no git, então a spec não guarda o que foi removido.
 

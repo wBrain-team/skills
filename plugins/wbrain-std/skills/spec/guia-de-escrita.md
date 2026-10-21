@@ -52,18 +52,38 @@ Notas sobre o esqueleto:
 - Qual é o número (limite, prazo, tamanho) por trás de "rápido", "muitos", "grande"?
 - Existe outra spec que já define parte disso? (Então use um link.)
 
+## Como organizar `specs/`
+
+A árvore segue o modelo mental de quem conhece a aplicação: qualquer pessoa que conhece o sistema deve achar onde cada detalhe está descrito.
+
+- **Domínio de negócio no primeiro nível.** Uma pasta por domínio (`pedidos/`, `catalogo/`, `faturamento/`), não por camada técnica (`frontend/`, `backend/`).
+- **Um eixo dentro do domínio, escolhido por projeto:** telas (aplicação com interface), endpoints ou recursos (microsserviço de API), eventos ou jobs (workers e filas). O eixo escolhido fica declarado no topo de `specs/specs.md`.
+- **A regra de negócio vive uma vez, no domínio.** Specs de tela e de endpoint apontam para ela com link em vez de repeti-la.
+- **Transversais em pastas próprias:** `base/` (pais de `Extends`), `permissoes/`, e no frontend `componentes/`, com uma spec por componente visual.
+- **Nomes vêm do glossário.** Se o negócio diz "pedido", a pasta é `pedidos/`.
+- **Teste de descoberta:** quem conhece o sistema chega à regra a partir do índice em até dois cliques.
+
 ## Árvore de exemplo
 
 ```
 specs/
-├── specs.md                 # índice: links para todas as specs
+├── specs.md                 # índice: eixo de organização + links por domínio
 ├── base/
 │   └── data-list.md         # comportamento comum das listas
-└── frontend/
-    ├── header.md
-    ├── order-list.md        # Extends: ../base/data-list.md
-    └── signup-form.md
+├── componentes/
+│   ├── header.md
+│   └── date-picker.md
+├── pedidos/
+│   ├── pedidos.md           # índice do domínio
+│   ├── regras.md            # regras de negócio do pedido
+│   ├── lista.md             # tela; Extends: ../base/data-list.md
+│   └── checkout.md          # tela; aponta para regras.md
+└── contas/
+    ├── contas.md
+    └── cadastro.md
 ```
+
+Num microsserviço, o mesmo domínio teria `pedidos/criar-pedido.md` e `pedidos/consultar-pedido.md` no lugar das telas.
 
 ## Lembretes
 - Um termo para um conceito (não alterne "cliente", "usuário", "comprador").
