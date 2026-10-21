@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # wbrain-std:loop
 
-Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido por humanos) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
+Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `spec`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
 Esta skill implementa uma **modificação**: nova feature, novo recurso, ajuste de comportamento ou regra de negócio, refactor técnico ou remoção. O escopo é **exatamente** o que houver de novo em `specs/`.
 
@@ -54,7 +54,7 @@ Se, ao implementar, uma premissa se mostrar bem mais arriscada do que parecia (a
 Para os bloqueantes, **não** use `AskUserQuestion` e **não** aceite decisões ou respostas em texto como substitutas da spec, mesmo que o usuário insista. Respostas diretas geram drift entre a spec e a implementação. Se o usuário responder em texto, recuse com gentileza e reforce que a resposta precisa ir para a spec.
 
 ### Fonte da verdade e documentação
-- **Nunca** modifique nada em `specs/`.
+- **Nunca** modifique nada em `specs/` durante esta skill. Esta restrição é própria da `loop` e prevalece sobre a regra geral do `AGENTS.md`: a missão aqui é implementar o que a spec descreve, sem ajustá-la. Diante de ambiguidade, lacuna ou divergência, pare ou registre em **Premissas** e oriente o tutor a corrigir `specs/` por conta própria ou com a skill `wbrain-std:spec`.
 - **Herança de specs:** uma spec pode estender outra (`Extends: [nome](caminho.md)` na primeira linha, ver `spec-lint.md`). Sempre que ler uma spec, o agente e os subagentes carregam também o pai: a spec efetiva é pai + filha. A herança tem no máximo um nível (o pai não estende outra spec). Quando uma spec alterada é **pai** de outras, as filhas entram no escopo da exploração, do plano e da revisão, mesmo sem aparecer no diff. Para listá-las: `grep -rl "^Extends: .*(<caminho-relativo-do-pai>)" specs/`.
 - Manter `docs/` atualizado é responsabilidade do agente (etapa 8).
 

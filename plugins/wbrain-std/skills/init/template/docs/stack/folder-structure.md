@@ -7,7 +7,7 @@ Todo diretório com código-fonte de um serviço usa o prefixo `src-` (ex.: `src
 ```
 /
 ├── docs/                  # Esta documentação
-├── specs/                 # Fonte da verdade do produto (mantida por pessoas)
+├── specs/                 # Fonte da verdade do produto (alterações aprovadas pelo tutor)
 ├── src-backend/
 │   ├── app/
 │   │   ├── api/           # Routers FastAPI + deps.py, pagination.py

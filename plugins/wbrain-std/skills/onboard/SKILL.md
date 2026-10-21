@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # wbrain-std:onboard
 
-Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido por humanos) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
+Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `spec`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
 A `wbrain-std:init` cria projetos novos e a `wbrain-std:loop` implementa mudanças a partir do diff de `specs/`. Esta skill fica entre as duas: pega um projeto **que já existe** e o deixa pronto para o loop. Ela mede a distância até o padrão STD e decide a rota:
 - **distante**: documenta os principais problemas e o que precisa ser feito, e devolve o trabalho ao tutor;
@@ -174,9 +174,9 @@ O loop depende de TDD: precisa de um jeito confiável de escrever e rodar testes
   - **um teste de fumaça** que só prova que a infraestrutura de testes funciona.
 - Registre em `docs/testing/` e `docs/stack/makefile.md`.
 
-## 9. Specs (exceção de bootstrap)
+## 9. Specs
 
-Pelo `AGENTS.md`, agentes nunca modificam `specs/`. Esta etapa é a **única exceção**: o projeto ainda não tem fonte da verdade e precisa de uma base mínima para o tutor seguir pelo loop. O agente redige, mas **só grava um arquivo depois que o tutor aprova o conteúdo dele**. Terminado o onboarding, `specs/` volta a ser exclusivamente humano.
+Gerar as specs a partir do que o projeto já tem é parte do trabalho desta skill: o projeto ainda não tem fonte da verdade e precisa de uma base mínima para o tutor seguir pelo loop. O agente redige, mas **só grava um arquivo depois que o tutor aprova o conteúdo dele**.
 
 Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), parta dela: reorganize e complete em vez de reescrever, com a mesma regra de aprovação.
 

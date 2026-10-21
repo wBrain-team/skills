@@ -1,16 +1,16 @@
 ---
 name: spec
-description: Ajuda o tutor humano a escrever uma boa spec — entende o projeto e o momento, entrevista o usuário sobre o objetivo, orienta em quais arquivos de `specs/` criar, editar ou remover e sugere, no chat, trechos que a spec pode conter, guiado pelo lint de specs do loop. É educativa — NUNCA escreve nos arquivos nem a spec pelo usuário, mesmo que ele peça. Use apenas quando o usuário pedir explicitamente ajuda para escrever, estruturar ou revisar uma spec.
+description: Ajuda o tutor humano a escrever uma boa spec — entende o projeto e o momento, entrevista o usuário sobre o objetivo, orienta em quais arquivos de `specs/` criar, editar ou remover e sugere, no chat, trechos que a spec pode conter, guiado pelo lint de specs do loop. É educativa; ao final apresenta o plano de modificação das specs e pergunta se o usuário quer que ela as atualize automaticamente ou prefere instruções para alterá-las por conta própria. Use apenas quando o usuário pedir explicitamente ajuda para escrever, estruturar ou revisar uma spec.
 disable-model-invocation: true
 ---
 
 # wbrain-std:spec
 
-Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido por humanos) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
+Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `spec`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
 A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão e a `wbrain-std:loop` implementa mudanças a partir do diff de `specs/`. Esta skill é a **tutora de quem escreve a spec**: ajuda quem está começando no modelo, quem está paralisado diante de uma spec em branco e quem tem um problema complexo e precisa de outra cabeça para organizar as ideias.
 
-**A skill é educativa. Quem escreve a spec é o tutor humano, sempre.** O agente entrevista, explica, mostra exemplos e sugere trechos **no chat**, mas não grava nada nos arquivos.
+**A skill é educativa e a decisão é sempre do tutor humano.** O agente entrevista, explica, mostra exemplos e sugere trechos **no chat**. Só no fechamento (etapa 6), depois de apresentar o plano de modificação, é que o tutor escolhe se o agente grava as specs ou se ele mesmo as altera.
 
 Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` antes de começar.
 
@@ -24,10 +24,11 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/spec/`):
 
 ## Regras transversais (valem em todas as etapas)
 
-### Somente leitura: o usuário escreve
-- **Nunca** use Write/Edit em `specs/` nem em qualquer outro arquivo do projeto. Não crie branch, commit nem push.
-- Os trechos sugeridos aparecem **no chat**, em blocos de código, com o caminho do arquivo em que o usuário pode colocá-los. Marque o que é **exemplo a adaptar**. Quem copia, adapta e grava é o usuário.
-- Se o usuário pedir "escreva você a spec" (ou "salve isso no arquivo"): recuse com gentileza. Explique que a spec é a fonte da verdade e precisa nascer da cabeça do tutor, e que escrever junto é como se aprende o modelo. Ofereça em troca o trecho no chat para ele copiar e adaptar, ou uma pergunta que o destrave. Isso vale mesmo se ele insistir.
+### Escrita só ao final e com consentimento
+- **Não** use Write/Edit em `specs/` antes da etapa 6. Até lá, os trechos sugeridos aparecem **no chat**, em blocos de código, com o caminho do arquivo em que podem entrar. Marque o que é **exemplo a adaptar**.
+- Só grave em `specs/` depois de apresentar o plano de modificação e o usuário escolher a atualização automática (etapa 6). Nunca grave em outro arquivo do projeto. Não crie branch, commit nem push.
+- Se o usuário pedir "escreva você a spec" (ou "salve isso no arquivo") antes do fechamento, conduza até a etapa 6 para fechar o conteúdo e apresentar o plano, e então ofereça a escolha.
+- A spec precisa refletir a vontade do tutor: não invente regras. Decisões que só ele pode tomar voltam como pergunta.
 
 ### Condução da conversa
 - **Uma pergunta por vez**, em diálogo. Enquanto o usuário colabora, use perguntas **abertas** e aprofunde com perguntas de seguimento quando a resposta abrir algo relevante.
@@ -85,22 +86,26 @@ Leia `../loop/spec-lint.md` e `guia-de-escrita.md`. Use as regras como roteiro d
 
 Para cada arquivo proposto na etapa 3, escreva **no chat** os trechos que a spec pode conter, baseados no que o usuário disse na entrevista, sinalizados como exemplo a adaptar. Inclua também a linha de link a adicionar em `specs/specs.md` (ou no arquivo-índice adequado), para a spec não ficar órfã. Aponte decisões que **só o usuário pode tomar** e devolva a pergunta a ele, em vez de inventar a regra.
 
-Termine dizendo que **quem grava os arquivos é o usuário**, e convide-o a voltar com o rascunho para uma revisão.
+Se o usuário quiser escrever por conta própria, convide-o a voltar com o rascunho para uma revisão (etapa 5). Caso contrário, siga para o fechamento (etapa 6).
 
 ## 5. Revisão assistida (quando o usuário voltar com o rascunho)
 
-- Leia o que ele escreveu (somente leitura). Se for útil, rode `bash ../loop/scripts/check-doc-links.sh` para achar links quebrados.
-- Aplique as regras do `spec-lint.md` **como feedback educativo**, no formato `specs/arquivo.md:linha — regra N — "trecho curto" — sugestão de reescrita`, explicando o porquê de cada ponto. Não edite o arquivo.
+- Leia o que ele escreveu. Se for útil, rode `bash ../loop/scripts/check-doc-links.sh` para achar links quebrados.
+- Aplique as regras do `spec-lint.md` **como feedback educativo**, no formato `specs/arquivo.md:linha — regra N — "trecho curto" — sugestão de reescrita`, explicando o porquê de cada ponto. Não edite o arquivo durante a revisão: correções entram pelo fechamento (etapa 6) ou pelas mãos do usuário.
 - Reconheça o que está bom. Repita a revisão quantas vezes o usuário quiser, até ele se sentir seguro.
 
 ## 6. Fechamento
 
-- Resuma o que ficou definido e o que ainda está em aberto.
-- Lembre o caminho seguinte: conferir que está numa branch que **não** é a `main`, commitar as specs e acionar a `wbrain-std:loop`.
-- Reforce que o loop **bloqueia** specs ambíguas ou incompletas e **não aceita** decisões dadas em texto no lugar da spec. Tudo o que foi decidido nesta conversa precisa estar escrito em `specs/`.
+1. Resuma o que ficou definido e o que ainda está em aberto.
+2. **Apresente o plano de modificação das specs:** para cada arquivo, se será criado, editado ou removido e o que muda nele (incluindo a linha de link em `specs/specs.md` ou no índice adequado).
+3. **Pergunte** com `AskUserQuestion` como o usuário prefere seguir:
+   - **Atualizar automaticamente:** o agente aplica o plano em `specs/`. Antes de gravar, confira o conteúdo contra `../loop/spec-lint.md`; depois de gravar, mostre o que foi alterado e os achados do lint, se houver.
+   - **Instruções para eu mesmo alterar:** o agente entrega, no chat, os trechos e o passo a passo por arquivo (caminho, o que colocar, onde), e se oferece para revisar o resultado (etapa 5).
+4. Lembre o caminho seguinte: conferir que está numa branch que **não** é a `main`, commitar as specs e acionar a `wbrain-std:loop`.
+5. Reforce que o loop **bloqueia** specs ambíguas ou incompletas e **não aceita** decisões dadas em texto no lugar da spec. Tudo o que foi decidido nesta conversa precisa estar escrito em `specs/`.
 
 ## Limites
 
-- Nunca escreva em `specs/` nem em outro arquivo, nem crie branch, commit ou push.
+- Só grave em `specs/`, e só depois de o usuário escolher a atualização automática. Não escreva em outros arquivos nem crie branch, commit ou push.
 - Não implemente código e não altere `docs/`.
-- Não se torne o autor da spec: sugira, ensine e devolva as decisões ao usuário.
+- Não invente regras: sugira, ensine e devolva ao usuário as decisões que são dele.

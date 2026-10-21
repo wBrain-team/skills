@@ -1,8 +1,8 @@
 
 Protocolo:
 - A `fonte da verdade` deste projeto está em `./specs` e o ponto de partida é o arquivo `./specs/specs.md`.
-- Um agente NUNCA deve modificar a `fonte da verdade`.
-- Apenas tutores humanos podem modificar a `fonte da verdade`.
+- Um agente só pode modificar a `fonte da verdade` com aprovação explícita do tutor humano.
+- Skills específicas podem impor restrições próprias: siga sempre as instruções da skill em execução.
 
 Documentação:
 - A documentação sobre a implementação e boas práticas está em `docs/` e o ponto de partida é o arquivo `docs/docs.md`.
