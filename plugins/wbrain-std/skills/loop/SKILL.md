@@ -15,11 +15,7 @@ Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` ante
 ## Regras transversais (valem em todas as etapas)
 
 ### Subagentes e contexto
-- O agente principal **orquestra**; subagentes fazem o trabalho pesado de leitura e exploração para poupar contexto e custo.
-- Cada subagente recebe uma tarefa **pequena, objetiva e autocontida**, com todo o contexto necessário no prompt (ele não vê esta conversa).
-- Todo prompt de subagente deve exigir um **retorno enxuto em formato fixo**: bullets, até ~30 linhas, sem colar código. Use caminhos de arquivo em vez de trechos.
-- Ao apontar um trecho específico, o subagente usa `caminho:linha` ou `caminho:início-fim` (ex.: `backend/app/services/user.py:42-67`). Assim o principal lê só aquele intervalo (Read com `offset`/`limit`) e não o arquivo inteiro. Se a referência é ao arquivo todo, basta o caminho; não procure linhas só para cumprir o formato.
-- Dispare em paralelo (uma única mensagem) os subagentes que não dependem uns dos outros.
+Siga `${CLAUDE_PLUGIN_ROOT}/skills/shared/subagentes.md`.
 
 ### Guarda de ambiguidade (classifica; só o bloqueante interrompe o loop)
 Fique atento a ambiguidades em todas as etapas: instruções que não fazem sentido, que admitem mais de uma leitura, que conflitam com outra spec ou com `docs/`, ou que não trazem as informações necessárias para uma implementação robusta.
@@ -62,7 +58,7 @@ Para os bloqueantes, **não** use `AskUserQuestion` e **não** aceite decisões 
 - `scripts/preflight.sh [--full]`: guarda de branch + diff de `specs/` (etapas 0 e 1). Códigos de saída: `0` há modificação, `1` recusado/erro, `3` nada a implementar.
 - `scripts/check-doc-links.sh [caminho...]`: lista links internos quebrados em `docs/` e `specs/` (etapas 2 e 8).
 
-- `spec-lint.md`: regras de escrita das specs, usadas no lint da etapa 2.
+- `../shared/spec-lint.md`: regras de escrita das specs, usadas no lint da etapa 2.
 - `review.md`: guia do subagente revisor (etapa 10).
 - `templates/state.md` e `templates/plan-summary.md`: modelos do arquivo de estado e do resumo de aprovação do plano.
 - `preflight.sh --base <ref>`: compara contra outra base (ex.: commit de conclusão do loop anterior); a saída inclui `fingerprint` e o caminho do arquivo de `state`.
@@ -119,7 +115,7 @@ Sem arquivo de estado → crie-o com `status: em andamento`, a base e o fingerpr
 Antes de gastar subagentes com exploração, verifique se **as mudanças** nas specs estão bem escritas. O lint vale **só para o diff**: problemas antigos em trechos não alterados ficam fora. O agente **não corrige** a spec; só aponta o problema e sugere a reescrita ao tutor humano.
 
 1. Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/check-doc-links.sh <arquivos>` passando só os arquivos de spec adicionados ou modificados, para achar links e `extends` quebrados neles.
-2. Dispare **um subagente `Explore`** com: a base do preflight, a lista de arquivos alterados e a instrução de rodar `preflight.sh --full --base <base>` para ver o diff, ler `${CLAUDE_PLUGIN_ROOT}/skills/loop/spec-lint.md` e consultar os arquivos alterados, o pai deles (`Extends:`) e, se algum for pai, as filhas. Os arquivos completos, o pai e as filhas entram só como contexto; o lint vale para as linhas adicionadas ou alteradas. Para as regras de termos, duplicação e órfãs, o subagente consulta as demais specs só no necessário. Retorno exigido no formato definido em `spec-lint.md`.
+2. Dispare **um subagente `Explore`** com: a base do preflight, a lista de arquivos alterados e a instrução de rodar `preflight.sh --full --base <base>` para ver o diff, ler `${CLAUDE_PLUGIN_ROOT}/skills/shared/spec-lint.md` e consultar os arquivos alterados, o pai deles (`Extends:`) e, se algum for pai, as filhas. Os arquivos completos, o pai e as filhas entram só como contexto; o lint vale para as linhas adicionadas ou alteradas. Para as regras de termos, duplicação e órfãs, o subagente consulta as demais specs só no necessário. Retorno exigido no formato definido em `spec-lint.md`.
 
 Cada achado vem classificado como **bloqueante** ou **observação** (critérios em `spec-lint.md` e na guarda de ambiguidade). O lint é um **apoio à qualidade da spec, não um portão rígido**: a regra é tratar como observação e só bloquear o que impede de saber o que implementar. Link ou `extends` quebrado cujo alvo correto é óbvio é observação; alvo inexistente ou indeterminável é bloqueante.
 

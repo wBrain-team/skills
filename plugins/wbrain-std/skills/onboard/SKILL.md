@@ -23,17 +23,14 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/onboard/`
 - `templates/docker-migration.md`: modelo do plano de migração para Docker.
 - `templates/deploy-migration.md`: modelo do plano de migração de deploy.
 - `../init/template/`: **o padrão STD** (AGENTS.md, CLAUDE.md, `docs/`, `specs/specs.md`, `deploy/`, `gitignore`). É o modelo para o qual o projeto deve convergir.
-- `../loop/spec-lint.md`: regras de escrita das specs.
+- `../shared/spec-lint.md`: regras de escrita das specs.
 - `../loop/templates/plan-summary.md`: formato enxuto de apresentação de plano.
 - `bash ../loop/scripts/check-doc-links.sh`: verificação de links internos.
 
 ## Regras transversais (valem em todas as etapas)
 
 ### Subagentes e contexto
-- O agente principal **orquestra e conversa**; subagentes fazem a leitura pesada do repositório para poupar contexto.
-- Cada subagente recebe uma tarefa **pequena, objetiva e autocontida**, com todo o contexto necessário no prompt (ele não vê esta conversa).
-- Todo prompt de subagente exige um **retorno enxuto em formato fixo**: bullets, até ~30 linhas, sem colar código. Para apontar trechos, `caminho:linha` ou `caminho:início-fim`; para o arquivo todo, só o caminho.
-- Dispare em paralelo (uma única mensagem) os subagentes independentes.
+Siga `../shared/subagentes.md`. Aqui o agente principal, além de orquestrar, **conversa** com o tutor.
 
 ### Condução da conversa
 - **Uma pergunta por vez**, aberta, em diálogo. Aprofunde com perguntas de seguimento quando a resposta abrir algo relevante.
@@ -180,7 +177,7 @@ Gerar as specs a partir do que o projeto já tem é parte do trabalho desta skil
 
 Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), parta dela: reorganize e complete em vez de reescrever, com a mesma regra de aprovação.
 
-1. **Mapa de specs.** Dispare um subagente `Plan` com o resumo da entrevista (funcionalidades existentes, usuários, jornadas) e os retornos da descoberta. Ele identifica os domínios de negócio e propõe, com justificativa, o eixo de organização dentro deles (telas para aplicação com interface, endpoints para microsserviço de API, eventos ou jobs para workers), conforme "Como organizar `specs/`" em `../spec/guia-de-escrita.md`. Propõe a árvore de arquivos a partir de `specs/specs.md`, com domínios no primeiro nível e transversais (`base/`, `permissoes/`, `componentes/`) em pastas próprias, seguindo `../loop/spec-lint.md`: um assunto por arquivo (cada fluxo de negócio, cada componente relevante), herança `Extends` quando houver base comum, termos do glossário do projeto. Retorno: a árvore com uma linha por arquivo descrevendo o assunto, mais "Dúvidas para o tutor". Apresente o mapa ao tutor, confirme primeiro o eixo de organização e ajuste até aprovar. O eixo escolhido abre o `specs/specs.md`. Registre no estado.
+1. **Mapa de specs.** Dispare um subagente `Plan` com o resumo da entrevista (funcionalidades existentes, usuários, jornadas) e os retornos da descoberta. Ele identifica os domínios de negócio e propõe, com justificativa, o eixo de organização dentro deles (telas para aplicação com interface, endpoints para microsserviço de API, eventos ou jobs para workers), conforme "Como organizar `specs/`" em `../spec/guia-de-escrita.md`. Propõe a árvore de arquivos a partir de `specs/specs.md`, com domínios no primeiro nível e transversais (`base/`, `permissoes/`, `componentes/`) em pastas próprias, seguindo `../shared/spec-lint.md`: um assunto por arquivo (cada fluxo de negócio, cada componente relevante), herança `Extends` quando houver base comum, termos do glossário do projeto. Retorno: a árvore com uma linha por arquivo descrevendo o assunto, mais "Dúvidas para o tutor". Apresente o mapa ao tutor, confirme primeiro o eixo de organização e ajuste até aprovar. O eixo escolhido abre o `specs/specs.md`. Registre no estado.
 2. **Um documento por vez**, na ordem do mapa (raiz e glossário primeiro):
    - dispare um subagente `Explore` para levantar o comportamento **atual** daquele assunto no código e nos testes: regras, validações, casos de borda, erros e permissões, com `caminho:linha`;
    - redija a spec seguindo **todas** as regras de `spec-lint.md`: presente, sem passado, sem futuro, comportamento testável com números, o quê e não como, termos consistentes, fonte única com links, casos de borda explícitos, sem `TODO`;
@@ -196,7 +193,7 @@ Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), p
 ## 10. Verificação e relatório
 
 - Rode `bash ../loop/scripts/check-doc-links.sh docs specs` (caminho relativo a esta skill) e corrija os links quebrados.
-- Dispare um subagente `Explore` para um lint final de **todas** as specs criadas, com `../loop/spec-lint.md`, no formato de retorno do guia. Achados → corrija com o tutor (cada correção aprovada por ele).
+- Dispare um subagente `Explore` para um lint final de **todas** as specs criadas, com `../shared/spec-lint.md`, no formato de retorno do guia. Achados → corrija com o tutor (cada correção aprovada por ele).
 - Se há Docker, rode a suíte via Docker uma vez (`make test` ou equivalente) e registre o resultado. Se `deploy/` foi copiado, rode `bash deploy/tests/config-test.sh` (só valida a configuração; não faz deploy).
 - Atualize `docs/std-onboarding.md` (modelo `templates/report.md`) com: veredito por dimensão antes e depois, o que foi feito, ADRs criados, **pendências do tutor**, **Gaps** e áreas sem spec.
 - Registre `status: concluído` no estado (ou `bloqueado`, se sobraram pendências que impedem o loop).

@@ -18,7 +18,7 @@ Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` ante
 
 Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/spec/`):
 - `guia-de-escrita.md`: exemplos certo/errado e esqueleto sugerido de spec, para consultar e citar.
-- `../loop/spec-lint.md`: as regras que o loop aplica ao diff de `specs/`. É o que direciona o conteúdo das specs.
+- `../shared/spec-lint.md`: as regras que o loop aplica ao diff de `specs/`. É o que direciona o conteúdo das specs.
 - `bash ../loop/scripts/check-doc-links.sh`: verificação de links internos (opcional, na revisão de um rascunho).
 - `../init/SKILL.md` e `../onboard/SKILL.md`: referência da condução de entrevista.
 
@@ -79,7 +79,7 @@ Ensine as regras de estrutura (lint 4, 5 e 9): um assunto por arquivo, arquivos 
 
 ## 4. Orientar a escrita, com o lint em mente
 
-Leia `../loop/spec-lint.md` e `guia-de-escrita.md`. Use as regras como roteiro do **conteúdo**:
+Leia `../shared/spec-lint.md` e `guia-de-escrita.md`. Use as regras como roteiro do **conteúdo**:
 - presente, sem passado e sem futuro (regras 1 a 3);
 - comportamento testável, com números e Dado/Quando/Então (regra 6);
 - termos consistentes e fonte única, com links no lugar de cópias (regra 7);
@@ -101,7 +101,7 @@ Se o usuário quiser escrever por conta própria, convide-o a voltar com o rascu
 1. Resuma o que ficou definido e o que ainda está em aberto.
 2. **Apresente o plano de modificação das specs:** para cada arquivo, se será criado, editado ou removido e o que muda nele (incluindo a linha de link em `specs/specs.md` ou no índice adequado).
 3. **Pergunte** com `AskUserQuestion` como o usuário prefere seguir:
-   - **Atualizar automaticamente:** o agente aplica o plano em `specs/`. Antes de gravar, confira o conteúdo contra `../loop/spec-lint.md`; depois de gravar, mostre o que foi alterado e os achados do lint, se houver.
+   - **Atualizar automaticamente:** o agente aplica o plano em `specs/`. Antes de gravar, confira o conteúdo contra `../shared/spec-lint.md`; depois de gravar, mostre o que foi alterado e os achados do lint, se houver.
    - **Instruções para eu mesmo alterar:** o agente entrega, no chat, os trechos e o passo a passo por arquivo (caminho, o que colocar, onde), e se oferece para revisar o resultado (etapa 5).
 4. Lembre o caminho seguinte: conferir que está numa branch que **não** é a `main`, commitar as specs e acionar a `wbrain-std:loop`.
 5. Reforce que o loop **bloqueia** specs ambíguas ou incompletas e **não aceita** decisões dadas em texto no lugar da spec. Tudo o que foi decidido nesta conversa precisa estar escrito em `specs/`.
