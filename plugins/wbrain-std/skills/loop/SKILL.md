@@ -111,12 +111,22 @@ Sem arquivo de estado → crie-o com `status: em andamento`, a base e o fingerpr
 - Código `3` (sem nenhuma alteração) → informe que não há modificação a implementar e **encerre**.
 - Com alterações → resuma a modificação para uso interno: o que é **novo**, o que foi **alterado** e o que foi **removido**, e quais camadas parecem afetadas. Aplique a guarda de ambiguidade já aqui, se for o caso.
 
+**Trilha.** Classifique a modificação e registre `trilha: curta|normal — <motivo>` no arquivo de estado. É **curta** só se **todos** os critérios valem:
+- toca 1 ou 2 arquivos de spec, sem arquivo novo, removido ou renomeado;
+- não altera linha `Extends:` e nenhum arquivo alterado é pai de outras specs;
+- não envolve dados/migração, segurança, permissões, dinheiro nem contrato público de API;
+- afeta uma camada só.
+
+**Na dúvida, normal.** A trilha curta reduz a cerimônia das etapas 2 a 6 (veja a nota "Trilha curta" em cada uma); as etapas 7 a 11 são iguais nas duas trilhas, e a aprovação do plano continua obrigatória. Se em qualquer etapa a modificação se mostrar maior do que parecia (outra camada, um dos critérios acima, mais de 3 tarefas), **promova para normal**: registre no estado e refaça a partir da etapa 3, aproveitando o que já foi descoberto.
+
 ## 2. Lint da spec (bloqueante)
 
 Antes de gastar subagentes com exploração, verifique se **as mudanças** nas specs estão bem escritas. O lint vale **só para o diff**: problemas antigos em trechos não alterados ficam fora. O agente **não corrige** a spec; só aponta o problema e sugere a reescrita ao tutor humano.
 
 1. Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/check-doc-links.sh <arquivos>` passando só os arquivos de spec adicionados ou modificados, para achar links e `extends` quebrados neles.
 2. Dispare **um subagente `Explore`** com: a base do preflight, a lista de arquivos alterados e a instrução de rodar `preflight.sh --full --base <base>` para ver o diff, ler `${CLAUDE_PLUGIN_ROOT}/skills/shared/spec-lint.md` e consultar os arquivos alterados, o pai deles (`Extends:`) e, se algum for pai, as filhas. Os arquivos completos, o pai e as filhas entram só como contexto; o lint vale para as linhas adicionadas ou alteradas. Para as regras de termos, duplicação e órfãs, o subagente consulta as demais specs só no necessário. Retorno exigido no formato definido em `spec-lint.md`.
+
+**Trilha curta:** sem subagente. Rode o passo 1 e o próprio principal lê o diff (`preflight.sh --full`) contra `spec-lint.md`, com o mesmo formato de retorno e os mesmos critérios.
 
 Cada achado vem classificado como **bloqueante** ou **observação** (critérios em `spec-lint.md` e na guarda de ambiguidade). O lint é um **apoio à qualidade da spec, não um portão rígido**: a regra é tratar como observação e só bloquear o que impede de saber o que implementar. Link ou `extends` quebrado cujo alvo correto é óbvio é observação; alvo inexistente ou indeterminável é bloqueante.
 
@@ -134,6 +144,8 @@ Pelo diff, escolha **só as camadas afetadas** e dispare **um subagente `Explore
 
 Se a mudança for pequena e de uma camada só, dispare um único subagente. Teto de ~4.
 
+**Trilha curta:** um único subagente `Explore`, da camada afetada, que cobre também a etapa 4 (os docs relacionados entram no mesmo retorno).
+
 Cada subagente cobre o código **e os testes da sua camada** (não há subagente só de testes). Prompt: o resumo da modificação + a camada. Retorno exigido:
 - arquivos/módulos relevantes (com `caminho:linha` quando couber);
 - comportamento atual relacionado à modificação;
@@ -142,6 +154,8 @@ Cada subagente cobre o código **e os testes da sua camada** (não há subagente
 - pontos de contato com outras camadas.
 
 ## 4. Docs relacionados (subagente Explore)
+
+**Trilha curta:** coberta pelo subagente da etapa 3.
 
 Dispare (em paralelo com a etapa 3) um subagente `Explore` que parte de `docs/docs.md` e procura o que já está registrado sobre o assunto. Retorno exigido:
 - guias e ADRs aplicáveis (caminhos);
@@ -152,6 +166,8 @@ Dispare (em paralelo com a etapa 3) um subagente `Explore` que parte de `docs/do
 Depois das etapas 3 e 4, **aplique a guarda de ambiguidade** (só o que for bloqueante para; o tolerável vira premissa).
 
 ## 5. Plano de ação (subagente Plan)
+
+**Trilha curta:** sem subagente. O principal escreve de 1 a 3 tarefas seguindo os mesmos critérios abaixo (TDD, marcador `spec:`, docs, comando de teste pontual, dúvidas). Mais de 3 tarefas → promova para normal.
 
 Dispare um subagente `Plan` com o resumo do diff e os retornos das etapas 3 e 4. O plano deve:
 - seguir as instruções de `docs/`, em especial **TDD**: para cada item, o teste vem antes da implementação;
@@ -166,7 +182,7 @@ Retorno exigido: o plano em lista numerada, enxuto, com `caminho:linha` quando c
 
 ## 6. Aprovação do plano (sempre)
 
-Antes de implementar, apresente o plano ao tutor e **pare**, aguardando a resposta. Registre `status: aguardando aprovação`. A apresentação é enxuta, para ser revisada em 1 ou 2 minutos. Use o modelo em `templates/plan-summary.md`.
+Antes de implementar, apresente o plano ao tutor e **pare**, aguardando a resposta. Registre `status: aguardando aprovação`. A apresentação é enxuta, para ser revisada em 1 ou 2 minutos. Use o modelo em `templates/plan-summary.md` (na trilha curta, a variante curta do mesmo arquivo). As respostas possíveis são as mesmas nas duas trilhas.
 
 O resumo inclui as **premissas** assumidas, para o tutor conferir: as **a confirmar** em destaque, com a alternativa descartada, e as **toleráveis** em lista curta. Nenhuma bloqueia, mas o tutor pode contestá-las. Recomende ao tutor corrigir a redação na spec depois, sem urgência.
 

@@ -1,6 +1,7 @@
 # Loop: <branch>
 - status: em andamento | aguardando aprovação | bloqueado | concluído
 - plano aprovado: <data, quando aprovado>
+- trilha: curta | normal — <motivo>
 - etapa atual: <n>
 - base: <ref usada no preflight>
 - fingerprint: <fingerprint do preflight>
