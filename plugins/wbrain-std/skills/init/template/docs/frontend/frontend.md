@@ -20,6 +20,7 @@ React 19 + TypeScript + Vite, em monorepo com o design system `@design-system/ui
 |---|---|
 | [structure.md](structure.md) | Monorepo, `@design-system/ui`, pastas de `apps/web/src` |
 | [styling.md](styling.md) | Tailwind v4 + Shadcn/UI, organização de componentes |
+| [design-system.md](design-system.md) | Direção visual, páginas do showcase e catálogo de componentes |
 | [api-client.md](api-client.md) | snake_case, instância Axios, tipos `Paginated`/`PageMeta`, services por domínio |
 | [shared-utilities.md](shared-utilities.md) | `useListData`, `useAsyncOptions`, paginação, Zod comum, rótulos |
 | [data-list.md](data-list.md) | Listagens: larguras, truncamento, ordenação, mobile |

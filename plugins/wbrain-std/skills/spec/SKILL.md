@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `spec`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
-A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão e a `wbrain-std:loop` implementa mudanças a partir do diff de `specs/`. Esta skill é a **tutora de quem escreve a spec**: ajuda quem está começando no modelo, quem está paralisado diante de uma spec em branco e quem tem um problema complexo e precisa de outra cabeça para organizar as ideias.
+A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão e a `wbrain-std:loop` implementa mudanças a partir do diff de `specs/`; a `wbrain-std:design-system` cuida da fundação e dos componentes do design system. Esta skill é a **tutora de quem escreve a spec**: ajuda quem está começando no modelo, quem está paralisado diante de uma spec em branco e quem tem um problema complexo e precisa de outra cabeça para organizar as ideias.
 
 **A skill é educativa e a decisão é sempre do tutor humano.** O agente entrevista, explica, mostra exemplos e sugere trechos **no chat**. Só no fechamento (etapa 6), depois de apresentar o plano de modificação, é que o tutor escolhe se o agente grava as specs ou se ele mesmo as altera.
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.0
+- Nova skill `design-system`: entrevista enxuta (com imagens de referência e `AskUserQuestion` como apoio), propostas de direção visual que fogem do visual genérico, fundação (tokens e componentes básicos) ou desenho de componente novo com decisões antecipadas; implementa após aprovação e atualiza `docs/` e `specs/componentes/`.
+- Template: `docs/frontend/design-system.md` com a anatomia das páginas do showcase e o catálogo de componentes.
+- Evals `08-ds-sem-codigo-antes-do-ok` e `09-ds-recusa-sem-frontend` (a skill recusa projetos só de backend).
+
 ## 0.2.0
 - Agentes podem alterar `specs/` com aprovação do tutor; apenas a skill `loop` continua proibida de modificá-las (restrição descrita só no `SKILL.md` dela). O `AGENTS.md` do template passa a ter uma regra genérica, sem citar skills.
 - `spec`: ao final apresenta o plano de modificação das specs e pergunta se o usuário quer atualização automática ou instruções para alterar por conta própria.

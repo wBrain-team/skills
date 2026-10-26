@@ -1,0 +1,1 @@
+/wbrain-std:design-system Quero começar o design system do app: é um painel interno de logística, usado o dia todo por operadores. Gosto de visual sóbrio e compacto. Proponha direções.

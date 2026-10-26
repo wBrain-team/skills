@@ -38,7 +38,7 @@ Ou use `/plugin`, abra a aba **Discover** e escolha `wbrain-std`. Depois da inst
 
 ### 4. Conferir
 
-Digite `/wbrain-std:` e as quatro skills devem aparecer na lista.
+Digite `/wbrain-std:` e as cinco skills devem aparecer na lista.
 
 ### Atualizar e remover
 
@@ -57,6 +57,7 @@ Todas são de invocação manual (`disable-model-invocation`), no formato `/wbra
 | `spec` | Escrita de specs |
 | `loop` | Loop de implementação guiado por spec |
 | `onboard` | Onboarding/migração de projetos existentes |
+| `design-system` | Fundação do design system e desenho de componentes novos |
 
 As skills dependem umas das outras (caminhos relativos), por isso são distribuídas juntas em um único plugin.
 
@@ -66,7 +67,7 @@ As skills dependem umas das outras (caminhos relativos), por isso são distribu�
 .claude-plugin/marketplace.json     # catálogo
 plugins/wbrain-std/
 ├── .claude-plugin/plugin.json
-└── skills/{init,spec,loop,onboard}/
+└── skills/{init,spec,loop,onboard,design-system,shared}/
 ```
 
 ## Contribuindo
