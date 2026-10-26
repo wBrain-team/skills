@@ -20,12 +20,14 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/design-sy
 - `novo-componente.md`: roteiro para pensar um componente novo e levantar decisões antecipadas.
 - `anatomia-pagina.md`: o contrato de cada página do showcase.
 - `../shared/subagentes.md`, `../shared/snapshot-lint.md`, `../shared/rastreabilidade.md`: regras comuns do kit.
+- `../shared/tdd-e-cobertura.md`: TDD estrito e cobertura, com `docs/` como lei (etapas 4 e 5).
+- `../shared/ambiente-docker.md`: verificação e montagem do ambiente Docker (guarda 4), e padrão de `node_modules` em volume.
 - `../snapshot/guia-de-escrita.md`: como escrever os snapshots de componente.
 
 ## Regras transversais (valem em todas as etapas)
 
 ### Código só depois do consentimento
-- Até a etapa 4, **nada é gravado** no projeto. Propostas de tokens, API e layout aparecem **no chat**.
+- Até a etapa 4, **nada é gravado** no projeto. Propostas de tokens, API e layout aparecem **no chat**. Única exceção: o ambiente Docker, se o usuário aprovar montá-lo (guarda 4).
 - A implementação só começa quando o usuário aprovar a proposta da etapa 3. Branch só com o ok do usuário (etapa 0); não faça commit nem push.
 - Decisões que só o usuário pode tomar (marca, público, prioridades) voltam como pergunta. Não as invente; proponha opções.
 
@@ -37,7 +39,7 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/design-sy
 - **Seja propositivo:** não se limite ao que foi pedido. Aponte problemas de usabilidade e acessibilidade, sugira melhorias e, ao propor visual, ofereça **pelo menos uma alternativa fora do óbvio** (ver `direcao-visual.md`). O padrão às vezes basta; diga quando for o caso, mas mostre o outro caminho. Nenhuma estética é proibida, inclusive a "cara de IA", se o tutor a escolher. O que se evita é o padrão no piloto automático e o descuido com detalhes: alinhamento, espaçamento, raios e consistência entre componentes.
 
 ### Padrões do projeto
-Siga `docs/frontend/styling.md`, `structure.md`, `design-system.md` (se existir) e `docs/guidelines/accessibility.md`: Shadcn como base modificável, Tailwind v4, tokens OKLCH em `globals.css`, ícones Remix Icon, textos via `t()`, exports em `packages/ui/src/index.ts`. Use subagentes conforme `../shared/subagentes.md`.
+**Como desenvolver** (TDD, testes, cobertura) é a lei de `docs/`: siga `../shared/tdd-e-cobertura.md` com rigor, sem afrouxar o que `docs/guidelines/tdd.md` e `docs/testing/` exigem. Siga também `docs/frontend/styling.md`, `structure.md`, `design-system.md` (se existir) e `docs/guidelines/accessibility.md`: Shadcn como base modificável, Tailwind v4, tokens OKLCH em `globals.css`, ícones Remix Icon, textos via `t()`, exports em `packages/ui/src/index.ts`. Use subagentes conforme `../shared/subagentes.md`.
 
 ## 0. Guardas (orientam, não bloqueiam)
 
@@ -46,6 +48,7 @@ Rode `git branch --show-current` e `git status --short`.
 1. **Pasta vazia ou projeto fora do padrão** (sem `AGENTS.md`/`docs/`): sugira `wbrain-std:init` (projeto novo) ou `wbrain-std:onboard` (existente) e encerre se o usuário concordar.
 2. **Projeto sem frontend** (sem `src-frontend/` nem `docs/frontend/`, ou `docs/` declara que o projeto é só backend, como um microsserviço ou uma API): **recuse e encerre**. Explique que a skill existe para o design system de uma interface e que o projeto não tem uma. Não siga com a entrevista, nem para "só definir a direção visual". Se o projeto passar a ter frontend, ele deve ser adicionado primeiro (e documentado em `docs/frontend/`); depois a skill pode ser invocada de novo.
 3. **Branch `main`/`master` ou HEAD destacado:** nada é produzido nela. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (ex.: `feat/design-system-base`) e **crie a branch só com o ok** do usuário. Sem ok, a conversa segue (até a etapa 4 nada é gravado); a branch volta a ser pedida antes da implementação.
+4. **Ambiente Docker:** siga `../shared/ambiente-docker.md` (verificação, proposta de montagem e `node_modules` em volume) para o frontend: `frontend`, `nginx`, `Makefile` e o showcase acessível. Ambiente completo → siga. Ausente ou incompleto → proponha montá-lo **antes de qualquer código do design system**; ele só é criado com o ok do usuário e fora da `main` (guarda 3). Sem ok, a entrevista e a proposta seguem, mas a implementação (etapa 4) só começa com o ambiente de pé.
 
 ## 1. Diagnóstico
 
@@ -87,12 +90,13 @@ Pergunte com `AskUserQuestion`: **implementar agora**, **ajustar a proposta** (v
 
 Só com a aprovação da etapa 3 e fora da `main`: se ainda estiver nela, peça a branch de novo (etapa 0); sem ela, entregue a proposta como resumo e encerre.
 
-1. **Tokens:** em `packages/ui/src/styles/globals.css` (`@theme inline` + `:root`/`.dark`); fontes conforme o padrão do projeto. Nada de valor hardcoded nos componentes.
-2. **Componentes:** parta do Shadcn (`make shadcn component=<nome>`) quando houver equivalente, ajuste imports para relativos e customize. Peças compostas vão em `components/common/`. Registre cada export em `packages/ui/src/index.ts`.
-3. **Showcase:** uma página por componente (e uma por fundamento: cores, tipografia, espaçamento) em `apps/design-system/`, seguindo `anatomia-pagina.md`, com entrada na navegação.
-4. **Testes:** testes de componente (Vitest + RTL, ver `docs/testing/frontend.md`) para comportamento e acessibilidade: estados, interação por teclado, `aria-*`, disabled. Escreva o teste antes do comportamento. Os marcadores `// snapshot:` entram na etapa 5, quando o snapshot existir.
+0. **Ambiente:** confirme que o ambiente Docker está de pé (guarda 4). Toda instalação, `make shadcn`, lint, build e teste roda pelo container; nada de `npm` no host.
+1. **Regras de teste:** leia `docs/guidelines/tdd.md` e `docs/testing/` (de `frontend.md` em especial) e anote o comando de teste pontual, o de cobertura e os mínimos (`../shared/tdd-e-cobertura.md`, seção 1).
+2. **Tokens:** em `packages/ui/src/styles/globals.css` (`@theme inline` + `:root`/`.dark`); fontes conforme o padrão do projeto. Nada de valor hardcoded nos componentes. Confira o contraste dos pares texto/fundo.
+3. **Componentes, um por vez, em TDD** (`../shared/tdd-e-cobertura.md`, seção 2): (a) **teste primeiro** (Vitest + RTL, `docs/testing/frontend.md`): estados, interação por teclado, `aria-*`, disabled, variantes; (b) rode e **confirme o vermelho**; (c) só então gere (`make shadcn component=<nome>`, quando houver equivalente) e implemente: imports relativos, customização, exports em `packages/ui/src/index.ts`; peças compostas em `components/common/`; (d) verde; (e) refactor. Nunca crie o arquivo do componente antes do arquivo de teste.
+4. **Showcase:** uma página por componente (e uma por fundamento) em `apps/design-system/`, seguindo `anatomia-pagina.md`, com entrada na navegação. Também em TDD: teste de renderização da página antes dela.
 5. **Revisão de detalhe:** passe cada página e componente pela lista "Detalhes que evidenciam descuido" de `direcao-visual.md` e compare com os vizinhos (padding, raio, alturas, foco, cores de texto). Corrija antes de seguir.
-6. **Validação:** rode lint, build e testes do frontend pelos comandos do `AGENTS.md`/`Makefile`. Se possível, abra o showcase e confira claro/escuro e largura de celular.
+6. **Validação:** rode lint, build e a suíte do frontend pelos comandos do `AGENTS.md`/`Makefile`, e depois a **cobertura** (`../shared/tdd-e-cobertura.md`, seção 3). Abaixo do mínimo dos `docs/` → escreva os testes que faltam. Se os `docs/` não definem comando ou mínimo para o frontend, reporte o medido e proponha o texto para `docs/testing/`. Se possível, abra o showcase e confira claro/escuro e largura de celular.
 
 Mudança grande (fundação inteira): divida em blocos (tokens → formulário → feedback → overlays), mostre o resultado de cada bloco e siga.
 
@@ -107,12 +111,13 @@ Depois do código validado:
 
 ## 6. Fechamento
 
-1. Resuma o que foi criado (tokens, componentes, páginas, docs, snapshots) e o que ficou em aberto.
+1. Resuma o que foi criado (tokens, componentes, páginas, docs, snapshots) e o que ficou em aberto. Inclua a **evidência de TDD** (vermelho confirmado por componente) e os **números de cobertura** contra o mínimo (`../shared/tdd-e-cobertura.md`, seção 4).
 2. Liste as melhorias sugeridas e não adotadas, para o usuário considerar depois.
 3. Sugira a mensagem de commit e lembre que mudanças futuras de comportamento desses componentes seguem o fluxo `wbrain-std:snapshot` → `wbrain-std:tuning` (ou esta skill, para componentes novos).
 
 ## Limites
 
 - Não grave nada antes da aprovação da etapa 3. Branch só com o ok do usuário; não faça commit nem push.
-- Atue só no frontend (`packages/ui`, `apps/design-system`, uso pontual nos apps quando combinado), em `docs/frontend/` e em `snapshots/componentes/` + link em `snapshots/snapshots.md`. Não altere backend nem snapshots de domínio.
+- Atue só no frontend (`packages/ui`, `apps/design-system`, uso pontual nos apps quando combinado), em `docs/frontend/` e em `snapshots/componentes/` + link em `snapshots/snapshots.md`. Não altere backend nem snapshots de domínio. A exceção é o ambiente Docker (compose, Dockerfiles, Makefile, nginx, `.env.example`, `.gitignore`), só no escopo de `../shared/ambiente-docker.md` e com o ok do usuário; não toque em `deploy/`.
 - Não troque a stack (Shadcn, Tailwind, Remix Icon) sem o usuário pedir.
+- Nenhum arquivo de implementação (componente ou página) antes do seu teste, nem entrega sem a cobertura conferida.

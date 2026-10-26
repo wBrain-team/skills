@@ -7,7 +7,7 @@
       "name": "wbrain-std",
       "source": "./plugins/wbrain-std",
       "description": "Skills da wbrain para a técnica Source-of-Truth-Driven (STD): init, snapshot, loop, tuning, onboard e design-system.",
-      "version": "0.7.0"
+      "version": "0.8.0"
     }
   ]
 }

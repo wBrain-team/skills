@@ -135,6 +135,7 @@ O fluxo STD exige que tudo rode em containers (desenvolvimento e testes). Esta e
 - **Não roda em Docker** → preencha `templates/docker-migration.md` em `docs/stack/docker-migration.md`: serviços, dependências externas e como cada uma será tratada (container, emulador, mock ou pendência do tutor), passos em ordem e quem executa cada um.
   - **Viável para o agente** (dependências visíveis e reproduzíveis em container, ou mockáveis): com aprovação, execute a migração. Se há testes, eles devem passar no Docker antes de dar a etapa como concluída. Compare com o resultado fora do Docker quando possível.
   - **Não viável** (dependências opacas, credenciais ou ambientes que o agente não acessa, complexidade alta): o plano fica documentado e os itens viram **pendências do tutor** no relatório. Execute só a parte que não depende delas.
+- Se há frontend com `node_modules`, ele vai em volumes Docker (raiz e um por workspace), seguindo `../shared/ambiente-docker.md` (seção 3) e `docs/stack/infrastructure.md`.
 - Atualize `docs/stack/infrastructure.md` e `docs/stack/makefile.md` com o que ficou valendo.
 
 ## 7. Deploy

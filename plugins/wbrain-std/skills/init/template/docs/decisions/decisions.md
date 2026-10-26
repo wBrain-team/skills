@@ -13,6 +13,7 @@ antigo como `Substituído por ADR-NNNN` — não reescreva o histórico.
 | [0003](0003-mandatory-repository.md) | Camada repository obrigatória; commit fora dela | Aceito |
 | [0004](0004-refresh-token-rotation.md) | Refresh token persistido e rotacionado | Aceito |
 | [0005](0005-test-rollback-isolation.md) | Isolamento de testes por rollback com savepoint | Aceito |
+| [0006](0006-node-modules-in-volumes.md) | `node_modules` em volumes Docker (raiz e por workspace) | Aceito |
 
 ## Modelo
 

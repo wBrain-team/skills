@@ -1,5 +1,6 @@
 memory
 __pycache__
+node_modules/
 workspace
 .claude-config/*
 !.claude-config/settings.json

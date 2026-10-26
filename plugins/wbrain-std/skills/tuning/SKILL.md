@@ -62,6 +62,8 @@ Para os bloqueantes, **não** use `AskUserQuestion` e **não** aceite decisões 
 - `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/snapshot-coverage.sh [snapshot...]`: relaciona snapshots aos testes pelo marcador `snapshot:` (etapas 7 e 10). Convenção em `../shared/rastreabilidade.md`.
 
 - `../shared/snapshot-lint.md`: regras de escrita dos snapshots, usadas no lint da etapa 2.
+- `../shared/tdd-e-cobertura.md`: TDD estrito e cobertura, com `docs/` como lei (etapas 7, 9 e 11).
+- `../shared/ambiente-docker.md`: verificação e montagem do ambiente Docker (etapas 3 e 5), e padrão de `node_modules` em volume.
 - `review.md`: guia do subagente revisor (etapa 10).
 - `templates/state.md` e `../shared/templates/plan-summary.md`: modelos do arquivo de estado e do resumo de aprovação do plano.
 - `preflight.sh --base <ref>`: compara contra outra base (ex.: commit de conclusão da tuning anterior); a saída inclui `fingerprint` e o caminho do arquivo de `state`.
@@ -77,6 +79,7 @@ Use o modelo em `templates/state.md`. Preencha os campos de status conforme o mo
 - Mantenha-o enxuto: resumos e caminhos, nunca código ou saídas longas.
 
 ### Testes
+- Siga `../shared/tdd-e-cobertura.md`: teste primeiro, **vermelho confirmado** antes de implementar e cobertura conferida no fim; `docs/` prevalece sobre qualquer afrouxamento.
 - Escreva e rode os testes **seguindo as guidelines**: `docs/guidelines/tdd.md`, `docs/testing/` (a partir de `testing.md`) e `docs/guidelines/agent-behavior.md`. Isso inclui rodar via Docker, nunca instalar dependências na máquina local e seguir os padrões de fixtures/factories e de isolamento do banco.
 - **Durante a implementação**, rode só testes **pontuais, restritos e enxutos**: um arquivo ou um teste específico, com os comandos de `docs/stack/makefile.md` e `docs/testing/`.
 - **Nunca** rode a suíte completa antes da etapa 9, para não gastar CPU e memória à toa.
@@ -149,7 +152,7 @@ Pelo diff, escolha **só as camadas afetadas** e dispare **um subagente `Explore
 - **banco**: models, migrations, seed;
 - **frontend**: páginas, componentes, estado, cliente de API;
 - **jobs/integrações**: workers e serviços externos;
-- **infra/config**: Docker, variáveis de ambiente, Makefile.
+- **infra/config**: Docker, variáveis de ambiente, Makefile. **Sempre** inclua a verificação do ambiente Docker de `../shared/ambiente-docker.md` (seção 1), limitada ao que o diff toca.
 
 Se a mudança for pequena e de uma camada só, dispare um único subagente. Teto de ~4.
 
@@ -183,6 +186,7 @@ Dispare um subagente `Plan` com o resumo do diff e os retornos das etapas 3 e 4.
 - garantir testes **úteis e valiosos**, centrados nas **regras de negócio**, para que implementações futuras não causem regressão;
 - em remoções, prever a retirada do código **e dos testes** obsoletos;
 - incluir a atualização de `docs/` (o que criar, atualizar ou remover);
+- se a verificação da etapa 3 achou o ambiente Docker ausente ou incompleto, ter como **tarefa 1** montá-lo (`../shared/ambiente-docker.md`, seção 2), antes de qualquer teste; o ok do plano na etapa 6 cobre essa tarefa;
 - dividir o trabalho em tarefas pequenas, marcando quais são **paralelizáveis** (arquivos disjuntos) e quais são **sequenciais**;
 - indicar, por tarefa, o **comando de teste pontual** que valida o progresso;
 - terminar com a seção **"Dúvidas/ambiguidades"**, separando **bloqueantes** de **premissas** (toleráveis, com a leitura adotada). Se houver bloqueantes → **guarda de ambiguidade**. As premissas seguem para a etapa 6.
@@ -228,7 +232,7 @@ Ao longo da implementação (ao fim de cada tarefa ou grupo de tarefas), revise 
 
 ## 9. Validação final
 
-Só agora, com tudo implementado, rode a **suíte completa** uma única vez (`make test`, mais os testes de frontend se existirem) e o lint (`make lint`).
+Só agora, com tudo implementado, rode a **suíte completa** uma única vez (`make test`, mais os testes de frontend se existirem) e o lint (`make lint`). Depois rode a **cobertura** definida em `docs/` (`make test-coverage` e o equivalente do frontend, se existir) e compare com os mínimos (`../shared/tdd-e-cobertura.md`, seção 3); abaixo do mínimo → escreva os testes que faltam (conta nas 5 rodadas).
 - Se algo falhar → corrija usando testes pontuais e rode a suíte completa de novo só no fim. Respeite o limite de 5 rodadas.
 
 ## 10. Revisão independente (subagente revisor)
@@ -245,4 +249,4 @@ Dispare um subagente `general-purpose` **somente leitura** (instrua-o a não edi
 - Siga `docs/guidelines/git.md` (Conventional Commits: `<tipo>(escopo): descrição curta`). Faça commits granulares, um por tarefa coerente.
 - Nunca use `--no-verify` e não faça push sem pedido.
 - Ao terminar, atualize o arquivo de estado: `status: concluído` e `commit de conclusão: <hash do HEAD>`.
-- Relatório final curto: o que mudou (por camada), testes criados/alterados e resultado da suíte, docs atualizados, commits feitos e **premissas assumidas** (com a sugestão de ajuste no snapshot para o tutor).
+- Relatório final curto: o que mudou (por camada), testes criados/alterados e resultado da suíte, **evidência de TDD (vermelho confirmado) e números de cobertura** contra o mínimo (`../shared/tdd-e-cobertura.md`, seção 4), docs atualizados, commits feitos e **premissas assumidas** (com a sugestão de ajuste no snapshot para o tutor).

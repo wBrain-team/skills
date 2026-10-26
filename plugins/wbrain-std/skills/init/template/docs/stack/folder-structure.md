@@ -20,7 +20,7 @@ Todo diretório com código-fonte de um serviço usa o prefixo `src-` (ex.: `src
 │   ├── alembic/           # Migrações
 │   ├── Dockerfile
 │   └── requirements.txt
-├── src-frontend/          # Monorepo npm workspaces — ver docs/frontend/
+├── src-frontend/          # Monorepo npm workspaces — ver docs/frontend/ (node_modules em volumes Docker)
 ├── nginx/nginx.conf       # Proxy reverso: :8084 app, :8085 design system
 ├── docker-compose.yml     # backend, frontend, nginx, cron, db, db-test
 ├── docker-compose.override.yml    # config local (gitignored)

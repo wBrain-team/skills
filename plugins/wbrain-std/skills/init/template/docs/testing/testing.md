@@ -52,6 +52,6 @@ src-frontend/apps/web/src/tests/   # Vitest + React Testing Library
 
 ## Cobertura mínima esperada
 
-- Services (backend): **90%+** — confira com `make test-coverage`.
+- Services (backend): **80%+ de linhas e de branches** — confira com `make test-coverage`; o comando falha abaixo disso (ver [Testes unitários](backend-unit.md#cobertura)).
 - Routers/endpoints (backend): todos os status codes documentados cobertos.
-- Componentes críticos (frontend): fluxos principais cobertos (formulários, autenticação, listagens).
+- Frontend (`packages/ui` e `apps/*`): **80%+ de linhas e de branches** — confira com `make test-coverage-front`; o comando falha abaixo disso. Além do número, os fluxos principais (formulários, autenticação, listagens) precisam estar cobertos por testes de comportamento.

@@ -6,12 +6,13 @@ Guia do subagente revisor do `wbrain-std:tuning`. Você revisa um trabalho que *
 
 ## Entradas
 - A base da tuning: rode `git diff <base> -- snapshots/` para ver o que o snapshot pede, e `git diff <base> -- . ':!snapshots'` para ver o que foi feito.
-- O resumo da modificação e o plano (do arquivo de estado).
+- O resumo da modificação e o plano (do arquivo de estado), e a evidência de TDD e cobertura que o principal registrou.
 - Ao ler um snapshot, carregue também o pai dele (`Extends:`). Se um snapshot alterado for pai de outros, verifique também os filhos: a mudança no pai vale para eles.
 
 ## O que verificar
 1. **Cobertura do snapshot.** Cada regra nova ou alterada no diff do snapshot está implementada **e** tem teste. Regras removidas tiveram o código e os testes correspondentes removidos. Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/snapshot-coverage.sh <snapshots do diff>`: snapshot novo ou alterado sem nenhum teste marcado é **bloqueante** `cobertura`; marcador apontando para snapshot inexistente é **sugestão** `testes` (ou bloqueante, se o snapshot foi removido neste diff e o teste continua lá). Convenção em `${CLAUDE_PLUGIN_ROOT}/skills/shared/rastreabilidade.md`.
 2. **Qualidade dos testes.** Os testes verificam a regra de negócio pelo comportamento observável, não detalhes de implementação. Não são tautológicos (testes que passariam sem a implementação), cobrem casos de borda, erro e permissão descritos no snapshot, e seguem `docs/testing/`.
+2b. **TDD e cobertura.** O relatório traz vermelho confirmado por unidade e a cobertura medida contra os mínimos de `docs/`. Sem evidência, ou com cobertura abaixo do mínimo sem justificativa, é **bloqueante**. Código novo sem arquivo de teste correspondente também. Referência: `../shared/tdd-e-cobertura.md`.
 3. **Fidelidade ao escopo.** Nada foi implementado além do que o snapshot pede. Nenhum comportamento existente foi alterado sem respaldo do snapshot.
 4. **Aderência aos docs.** O código segue as guidelines e os padrões de `docs/` (camadas, contrato de API, exceções, migrations, segurança).
 5. **Docs atualizados.** `docs/` reflete a mudança, sem trechos que descrevem comportamento que não existe mais.

@@ -14,6 +14,9 @@ Plano para o projeto rodar em containers (desenvolvimento, testes e, se aplicáv
 |---|---|---|---|---|
 | <app> | <imagem> | <função> | <comando> | <volume ou "—"> |
 
+## Frontend: `node_modules` em volumes
+<se há frontend: um volume na raiz do projeto JS e um por workspace, instalação (`npm ci`) só no container via `make install`, conforme `docs/stack/infrastructure.md`. Se não há, "—".>
+
 ## Dependências externas
 
 | Dependência | Uso | Tratamento | Quem resolve |

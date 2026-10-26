@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.0
+- Nova regra compartilhada `shared/ambiente-docker.md`: antes de gravar código, `design-system`, `tuning` e `loop` verificam o ambiente Docker de desenvolvimento (compose, Dockerfiles, Makefile, healthchecks). Se estiver ausente ou incompleto, propõem montá-lo (na `design-system`, guarda 4 da etapa 0, com o ok do usuário; na `tuning` e na `loop`, como tarefa 1 do plano). A `init` continua criando só documentação.
+- `node_modules` do frontend passa a viver em volumes Docker, um na raiz e um por workspace, com instalação só no container (`make install`). Template: ADR-0006, seção em `docs/stack/infrastructure.md`, `makefile.md`, `folder-structure.md` e `node_modules/` no `.gitignore`. `onboard` ganha a seção no `docker-migration.md`.
+- `design-system` pode alterar o ambiente Docker, só no escopo da regra compartilhada e sem tocar em `deploy/`.
+- Nova regra compartilhada `shared/tdd-e-cobertura.md`: `docs/` é a lei de como desenvolver. TDD estrito (teste primeiro, vermelho confirmado antes de implementar), cobertura conferida contra os mínimos de `docs/` ao finalizar, e evidência de ambos no relatório. `design-system` (etapa 4 reordenada: teste antes de componente e de página do showcase), `tuning` e `loop` passam a rodar a cobertura; o revisor da `tuning` trata a falta de evidência como bloqueante.
+- Template: cobertura mínima do frontend de **80% (linhas e branches)** em `packages/ui` e `apps/*`, com `make test-coverage-front`, limite no `vitest.config.ts` (`testing/frontend.md`) e regra em `tdd.md`, `testing.md` e `docs.md`. O mínimo dos services do backend baixa de 90% para **80%**, igualando o frontend, e passa a medir também branches (`pytest-cov` com `branch = true` e `fail_under = 80` em `app/services`, ver `testing/backend-unit.md`). Projetos existentes precisam adicionar o alvo e o limite do Vitest, e ajustar a meta do backend nos seus `docs/`.
+- Projetos existentes com frontend em Docker: mover `node_modules` para volumes (ver ADR-0006).
+
 ## 0.7.0
 - STD passa a significar **Source-of-Truth-Driven** (antes Spec-Test-Driven).
 - O artefato "spec" passa a se chamar **snapshot**, para não confundir com o uso de "spec" no mercado (documento de mudança). A pasta `specs/` vira `snapshots/` (e `specs/specs.md` vira `snapshots/snapshots.md`), a skill `spec` vira `snapshot`, `spec-lint.md` vira `snapshot-lint.md`, `spec-coverage.sh` vira `snapshot-coverage.sh` e o marcador de teste `# spec:` vira `# snapshot:`.

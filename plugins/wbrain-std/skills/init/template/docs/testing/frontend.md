@@ -38,6 +38,27 @@ describe("LoginForm", () => {
 });
 ```
 
+## Cobertura
+
+Mínimo de **80% de linhas e de branches** em `packages/ui` e em cada app (`apps/*`), medido com `make test-coverage-front` (`vitest run --coverage`). O limite fica no `vitest.config.ts` de cada pacote, então o comando falha abaixo dele:
+
+```typescript
+// vitest.config.ts (em cada pacote)
+test: {
+  coverage: {
+    provider: "v8",
+    include: ["src/**/*.{ts,tsx}"],
+    exclude: ["src/**/*.test.{ts,tsx}", "src/tests/**", "src/main.tsx", "src/**/*.d.ts"],
+    reporter: ["text", "html"],
+    thresholds: { lines: 80, branches: 80 },
+  },
+}
+```
+
+- Workspace novo herda a mesma configuração e o mesmo limite.
+- Suba o número com testes de comportamento (estados, teclado, `aria-*`, erros), não com testes sem asserção.
+- Exclusão de arquivo da medição exige justificativa no próprio `vitest.config.ts` (comentário).
+
 ---
 
 **Veja também:** [DataList](../frontend/data-list.md) · [Formulários](../frontend/forms.md)

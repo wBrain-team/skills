@@ -6,7 +6,7 @@
 - Python 3.12+, FastAPI, Pydantic v2
 - SQLAlchemy 2.x (async) + PostgreSQL 17 + Alembic
 - Auth sem senha: OTP por e-mail (Resend/SendGrid) + JWT (python-jose) — ver [Autenticação](../auth/auth.md)
-- Testes: Pytest + pytest-asyncio + httpx + factory-boy
+- Testes: Pytest + pytest-asyncio + pytest-cov + httpx + factory-boy
 - Lint/format: Ruff; tipagem: mypy
 
 ## Frontend

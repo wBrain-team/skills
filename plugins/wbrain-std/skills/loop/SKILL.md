@@ -20,6 +20,8 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/loop/`):
 - `../snapshot/guia-de-escrita.md`: como escrever snapshots.
 - `../design-system/novo-componente.md`: roteiro para pensar um componente novo.
 - `../tuning/review.md`: guia do subagente revisor (etapa 8).
+- `../shared/tdd-e-cobertura.md`: TDD estrito e cobertura, com `docs/` como lei (etapas 6, 8 e 9).
+- `../shared/ambiente-docker.md`: verificação e montagem do ambiente Docker (etapa 5), e padrão de `node_modules` em volume.
 - `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh [caminho...]`: links internos quebrados em `docs/` e `snapshots/`.
 - `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/snapshot-coverage.sh [snapshot...]`: relação snapshot → testes pelo marcador `snapshot:`.
 
@@ -50,6 +52,7 @@ Pedido grande é a principal causa de entrega errada e de contexto inchado. Pref
 Use o modelo em `templates/state.md`. A pasta `.std/` fica fora do git. Atualize o arquivo **ao fim de cada etapa e de cada tarefa**: ele é a memória da loop, o contexto da conversa não é. Mantenha-o enxuto: resumos e caminhos, nunca código.
 
 ### Testes
+- Siga `../shared/tdd-e-cobertura.md`: teste primeiro, **vermelho confirmado** antes de implementar e cobertura conferida no fim; `docs/` prevalece sobre qualquer afrouxamento.
 - Siga `docs/guidelines/tdd.md`, `docs/testing/` (a partir de `testing.md`) e `docs/guidelines/agent-behavior.md` (Docker, sem instalar dependências na máquina local, fixtures/factories, isolamento do banco).
 - Na implementação, rode só testes **pontuais** (um arquivo ou um teste). A **suíte completa** roda só na etapa 8.
 - **Testes sempre em série:** só o principal, ou um único subagente por vez, roda testes.
@@ -98,6 +101,7 @@ Dispare um subagente `Plan` com o resumo da etapa 2, a fatia escolhida e os reto
 - seguir `docs/`, em especial **TDD**: teste antes da implementação em cada tarefa, com testes úteis centrados em regra de negócio e o marcador `snapshot:` (`../shared/rastreabilidade.md`);
 - dividir em tarefas pequenas, marcando **paralelizáveis** (arquivos disjuntos) e **sequenciais**, com o **comando de teste pontual** de cada uma;
 - em remoções, prever a retirada do código e dos testes obsoletos;
+- incluir a verificação do ambiente Docker de `../shared/ambiente-docker.md` (seção 1) e, se ele estiver ausente ou incompleto, ter como **tarefa 1** montá-lo (seção 2), antes de qualquer teste; o aceite do plano cobre essa tarefa;
 - trazer o **mapa de documentação**: arquivos de `snapshots/` (documentação humana, comportamento) e de `docs/` (técnica) a criar, editar ou remover, incluindo os que podem ficar **desatualizados** pela mudança (drift);
 - terminar com dúvidas e premissas.
 
@@ -124,14 +128,14 @@ Ao fim de cada tarefa ou grupo, aplique o mapa de documentação do plano:
 
 ## 8. Validação e revisão
 
-1. Rode a **suíte completa** e o lint uma única vez (`make test`, testes de frontend se existirem, `make lint`). Falhas → corrija com testes pontuais e rode a suíte de novo no fim (limite de 5 rodadas).
+1. Rode a **suíte completa** e o lint uma única vez (`make test`, testes de frontend se existirem, `make lint`). Falhas → corrija com testes pontuais e rode a suíte de novo no fim (limite de 5 rodadas). Em seguida rode a **cobertura** definida em `docs/` (`make test-coverage` e o equivalente do frontend, se existir) e compare com os mínimos (`../shared/tdd-e-cobertura.md`, seção 3); abaixo do mínimo → escreva os testes que faltam (conta nas 5 rodadas).
 2. Dispare um subagente `general-purpose` **somente leitura** (sem editar nem commitar) com o resumo da etapa 2, o plano e a instrução de seguir `../tuning/review.md`, comparando o pedido aprovado com o diff de código, testes, `snapshots/` e `docs/`. Bloqueantes → corrija, rode a suíte e faça **uma** nova revisão. Sugestões baratas e no escopo → aplique; as demais vão para o relatório.
 
 ## 9. Commits e relatório
 
 - Commite só na branch atual, seguindo `docs/guidelines/git.md` (Conventional Commits), em commits granulares. Nunca use `--no-verify` nem faça push sem pedido.
 - Atualize o estado: `status: concluído` e `commit de conclusão: <hash>`.
-- Relatório curto: o que mudou por camada, testes e resultado da suíte, `snapshots/` e `docs/` atualizados, commits, premissas e **próximas fatias** sugeridas. Peça ao tutor que avalie a entrega.
+- Relatório curto: o que mudou por camada, testes e resultado da suíte, **evidência de TDD e números de cobertura** (`../shared/tdd-e-cobertura.md`, seção 4), `snapshots/` e `docs/` atualizados, commits, premissas e **próximas fatias** sugeridas. Peça ao tutor que avalie a entrega.
 
 ## 10. Ajustes pós-entrega
 

@@ -22,7 +22,7 @@ alteram com aprovação do tutor). Como rodar o projeto: [README.md](../README.m
 ## Essencial
 
 - Siga o [comportamento do agente](guidelines/agent-behavior.md): leia antes de editar e peça confirmação antes de ações destrutivas ou que afetem produção.
-- Desenvolva em [TDD](guidelines/tdd.md) estrito; ao finalizar uma feature, `make test-coverage` com services em 90%+.
+- Desenvolva em [TDD](guidelines/tdd.md) estrito; ao finalizar uma feature, `make test-coverage` com services em 80%+ e, se tocou o frontend, `make test-coverage-front` com 80%+.
 - Tudo roda em containers, acessado via Nginx na porta 8084 (ver [Infraestrutura](stack/infrastructure.md)).
 - Código (identificadores, tabelas, colunas, rotas) sempre em inglês; o idioma do conteúdo é livre — ver [Clean Code](guidelines/clean-code.md#idioma).
 - Commits em [Conventional Commits](guidelines/git.md).
