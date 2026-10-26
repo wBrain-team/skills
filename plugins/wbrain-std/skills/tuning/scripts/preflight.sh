@@ -2,8 +2,9 @@
 # Etapas 0 e 1 da wbrain-std:tuning: guarda de branch + diff de specs/.
 # Uso: preflight.sh [--full] [--base REF]
 #   --full      inclui o diff completo de specs/
-#   --base REF  compara contra REF (ex.: commit de conclusão do última tuning) em vez da main
-# Saída: 0 = há modificação | 1 = branch main/erro | 3 = nada a implementar
+#   --base REF  compara contra REF (ex.: commit de conclusão da última tuning) em vez da main/master
+# Saída: 0 = há modificação | 1 = branch main/master ou erro | 3 = nada a implementar
+#         4 = alterações fora de specs/ (sem tuning em andamento)
 set -uo pipefail
 
 SPECS="specs"
@@ -23,21 +24,19 @@ if [ -z "$branch" ]; then
   echo "RECUSADO: HEAD destacado (sem branch). Faça checkout de uma branch que não seja main." >&2
   exit 1
 fi
-if [ "$branch" = "main" ]; then
-  echo "RECUSADO: branch atual é 'main'. A tuning não roda na main." >&2
-  echo "Crie uma branch (ex.: feat/<descrição>) ou peça explicitamente ao agente para criar uma branch com nome definido." >&2
+if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+  echo "RECUSADO: branch atual é '$branch'. A tuning não roda na branch principal." >&2
+  echo "Proponha uma branch (ex.: feat/<descrição>) e crie-a com o ok do tutor." >&2
   exit 1
 fi
 
 if [ -n "$base" ]; then
   git rev-parse --verify -q "$base^{commit}" >/dev/null || { echo "ERRO: base '$base' não encontrada." >&2; exit 1; }
-elif git rev-parse --verify -q main >/dev/null; then
-  base=main
-elif git rev-parse --verify -q origin/main >/dev/null; then
-  base=origin/main
 else
-  echo "ERRO: branch 'main' não encontrada (nem local nem origin/main)." >&2
-  exit 1
+  for ref in main master origin/main origin/master; do
+    git rev-parse --verify -q "$ref" >/dev/null && { base=$ref; break; }
+  done
+  [ -n "$base" ] || { echo "ERRO: branch principal não encontrada (main, master, origin/main ou origin/master)." >&2; exit 1; }
 fi
 
 committed=$(git diff --name-status "$base"...HEAD -- "$SPECS")
@@ -60,6 +59,22 @@ echo "${local_changes:-(nada)}"
 echo
 echo "## Não rastreados"
 echo "${untracked:-(nada)}"
+
+# A tuning só roda numa branch cujo diff contra a base é apenas de specs/.
+# Com estado existente, o que está fora de specs/ é da própria tuning em andamento.
+others=$(
+  { git diff --name-only "$base"...HEAD -- . ":!$SPECS" ":!.std"
+    git diff --name-only HEAD -- . ":!$SPECS" ":!.std"
+    git ls-files --others --exclude-standard -- . ":!$SPECS" ":!.std"; } | sort -u
+)
+if [ -n "$others" ] && [ ! -f "$state" ]; then
+  echo
+  echo "## Fora de $SPECS/ (vs $base)"
+  echo "$others"
+  echo
+  echo "RECUSADO: a branch tem alterações fora de $SPECS/. A tuning só roda quando o diff contra $base é apenas de $SPECS/." >&2
+  exit 4
+fi
 
 if [ -z "$committed$local_changes$untracked" ]; then
   echo

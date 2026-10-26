@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+- `tuning` só roda numa branch cujo diff contra a `main` é apenas de `specs/`. Com alterações de outra natureza (código, docs, trabalho de uma `loop`), o `preflight.sh` sai com código `4` e a skill orienta o tutor: integrar o trabalho à `main` primeiro, levar as specs para uma branch nova ou usar a `loop`. Uma tuning já em andamento na branch (estado existente) não é recusada.
+- Regra "tuning ou loop": na `tuning` a spec é a entrada; na `loop`, a saída. A `loop` recomenda a `tuning` quando a branch só tem alterações em `specs/`; a `tuning` sugere a `loop` quando não há mudança de spec. `spec`, `onboard` e README apontam o critério.
+- Branch `main`/`master` tratada igual em todas as skills, no padrão da `loop`: nada é produzido nela; a skill propõe uma branch com `AskUserQuestion` e só a cria com o ok do tutor.
+- `loop`: a guarda de branch é a primeira ação, e o arquivo de estado só é criado com a branch definida (evita estado com nome errado). Garante `.std/` no `.gitignore`.
+- `preflight.sh` recusa `master` e aceita `master`/`origin/master` como base.
+- Scripts chamados sempre por `bash ${CLAUDE_PLUGIN_ROOT}/skills/...`. `loop` e `tuning` passam a conferir links também em `specs/`.
+- Eval `12-tuning-recusa-branch-com-codigo`.
+
 ## 0.5.0
 - Nova skill `loop` (desenvolvimento padrão): entrevista o tutor sobre Contexto, Problema e Pedido (com `AskUserQuestion` como apoio), investiga o projeto com subagentes, fatia o trabalho, propõe plano e, com o aceite, implementa em TDD atualizando `docs/` e `specs/`. Na `main`, propõe uma branch e só a cria com o ok. Ajustes fora do escopo levam à recomendação de nova conversa. Estado em `.std/loop/<branch>.md`.
 - Referências antigas ao fluxo guiado pelo diff de `specs/` nas skills `spec`, `onboard` e `design-system` passam a apontar para a `tuning`.

@@ -38,7 +38,7 @@ Ou use `/plugin`, abra a aba **Discover** e escolha `wbrain-std`. Depois da inst
 
 ### 4. Conferir
 
-Digite `/wbrain-std:` e as cinco skills devem aparecer na lista.
+Digite `/wbrain-std:` e as seis skills devem aparecer na lista.
 
 ### Atualizar e remover
 
@@ -59,6 +59,8 @@ Todas são de invocação manual (`disable-model-invocation`), no formato `/wbra
 | `tuning` | Ajuste fino da aplicação guiado pelo diff de spec |
 | `onboard` | Onboarding/migração de projetos existentes |
 | `design-system` | Fundação do design system e desenho de componentes novos |
+
+**Tuning ou loop?** Use a `tuning` quando a mudança já está escrita em `specs/`: a spec é a entrada, e ela só roda numa branch cujo diff contra a `main` é apenas de `specs/`. Use a `loop` para pedidos em linguagem natural: a spec é a saída, escrita junto com o código.
 
 As skills dependem umas das outras (caminhos relativos), por isso são distribuídas juntas em um único plugin.
 

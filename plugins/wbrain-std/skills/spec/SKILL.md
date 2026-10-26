@@ -19,14 +19,14 @@ Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` ante
 Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/spec/`):
 - `guia-de-escrita.md`: exemplos certo/errado e esqueleto sugerido de spec, para consultar e citar.
 - `../shared/spec-lint.md`: as regras que a tuning aplica ao diff de `specs/`. É o que direciona o conteúdo das specs.
-- `bash ../shared/scripts/check-doc-links.sh`: verificação de links internos (opcional, na revisão de um rascunho).
+- `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh`: verificação de links internos (opcional, na revisão de um rascunho).
 - `../init/SKILL.md` e `../onboard/SKILL.md`: referência da condução de entrevista.
 
 ## Regras transversais (valem em todas as etapas)
 
 ### Escrita só ao final e com consentimento
 - **Não** use Write/Edit em `specs/` antes da etapa 6. Até lá, os trechos sugeridos aparecem **no chat**, em blocos de código, com o caminho do arquivo em que podem entrar. Marque o que é **exemplo a adaptar**.
-- Só grave em `specs/` depois de apresentar o plano de modificação e o usuário escolher a atualização automática (etapa 6). Nunca grave em outro arquivo do projeto. Não crie branch, commit nem push.
+- Só grave em `specs/` depois de apresentar o plano de modificação e o usuário escolher a atualização automática (etapa 6). Nunca grave em outro arquivo do projeto. Branch só com o ok do usuário (etapa 0); não faça commit nem push.
 - Se o usuário pedir "escreva você a spec" (ou "salve isso no arquivo") antes do fechamento, conduza até a etapa 6 para fechar o conteúdo e apresentar o plano, e então ofereça a escolha.
 - A spec precisa refletir a vontade do tutor: não invente regras. Decisões que só ele pode tomar voltam como pergunta.
 
@@ -42,7 +42,7 @@ Rode `git branch --show-current`, `git status --short` e `ls -A specs 2>/dev/nul
 
 1. **Projeto sem nenhum conteúdo** (pasta vazia, sem `specs/`, sem código): sugira usar a skill `wbrain-std:init` para criar o projeto a partir do boilerplate e encerre.
 2. **Projeto com conteúdo ainda não normalizado para o padrão de spec** (existe código ou docs, mas `specs/` está ausente ou vazio, ou as specs existentes não seguem o padrão: sem `Extends:` onde há herança, textos no passado ou no futuro, `TODO`/`TBD`, arquivos que misturam assuntos): sugira a skill `wbrain-std:onboard` e explique que ela deixa o projeto pronto para o fluxo. Se o usuário preferir seguir mesmo assim, siga.
-3. **Branch `main` (ou `master`) ou HEAD destacado:** lembre o usuário de abrir uma nova branch antes de editar as specs, porque o `wbrain-std:tuning` **se recusa a atuar na `main`**. Sugira um nome no padrão de `docs/guidelines/git.md` (`feat/`, `fix/`, `chore/` + descrição). **Não crie a branch**: o usuário cria. Siga com a conversa normalmente.
+3. **Branch `main` (ou `master`) ou HEAD destacado:** nada é produzido nela. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/`, `fix/`, `chore/` + descrição) e **crie a branch só com o ok** do usuário. Sem ok, a conversa segue normalmente (até a etapa 6 nada é gravado); no fechamento, a atualização automática só é oferecida fora da `main`.
 
 ## 1. Entender o projeto e o ponto em que ele está
 
@@ -92,7 +92,7 @@ Se o usuário quiser escrever por conta própria, convide-o a voltar com o rascu
 
 ## 5. Revisão assistida (quando o usuário voltar com o rascunho)
 
-- Leia o que ele escreveu. Se for útil, rode `bash ../shared/scripts/check-doc-links.sh` para achar links quebrados.
+- Leia o que ele escreveu. Se for útil, rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh specs` para achar links quebrados.
 - Aplique as regras do `spec-lint.md` **como feedback educativo**, no formato `specs/arquivo.md:linha — regra N — "trecho curto" — sugestão de reescrita`, explicando o porquê de cada ponto. Não edite o arquivo durante a revisão: correções entram pelo fechamento (etapa 6) ou pelas mãos do usuário.
 - Reconheça o que está bom. Repita a revisão quantas vezes o usuário quiser, até ele se sentir seguro.
 
@@ -103,11 +103,11 @@ Se o usuário quiser escrever por conta própria, convide-o a voltar com o rascu
 3. **Pergunte** com `AskUserQuestion` como o usuário prefere seguir:
    - **Atualizar automaticamente:** o agente aplica o plano em `specs/`. Antes de gravar, confira o conteúdo contra `../shared/spec-lint.md`; depois de gravar, mostre o que foi alterado e os achados do lint, se houver.
    - **Instruções para eu mesmo alterar:** o agente entrega, no chat, os trechos e o passo a passo por arquivo (caminho, o que colocar, onde), e se oferece para revisar o resultado (etapa 5).
-4. Lembre o caminho seguinte: conferir que está numa branch que **não** é a `main`, commitar as specs e acionar a `wbrain-std:tuning`.
+4. Lembre o caminho seguinte: conferir que está numa branch que **não** é a `main` e cujo diff contra a `main` é **só de `specs/`** (a tuning recusa branch com código ou outros arquivos alterados), commitar as specs e acionar a `wbrain-std:tuning`.
 5. Reforce que a tuning **bloqueia** specs ambíguas ou incompletas e **não aceita** decisões dadas em texto no lugar da spec. Tudo o que foi decidido nesta conversa precisa estar escrito em `specs/`.
 
 ## Limites
 
-- Só grave em `specs/`, e só depois de o usuário escolher a atualização automática. Não escreva em outros arquivos nem crie branch, commit ou push.
+- Só grave em `specs/`, e só depois de o usuário escolher a atualização automática. Não escreva em outros arquivos nem faça commit ou push. Branch só com o ok do usuário.
 - Não implemente código e não altere `docs/`.
 - Não invente regras: sugira, ensine e devolva ao usuário as decisões que são dele.

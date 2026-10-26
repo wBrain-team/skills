@@ -20,8 +20,8 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/loop/`):
 - `../spec/guia-de-escrita.md`: como escrever specs.
 - `../design-system/novo-componente.md`: roteiro para pensar um componente novo.
 - `../tuning/review.md`: guia do subagente revisor (etapa 8).
-- `bash ../shared/scripts/check-doc-links.sh [caminho...]`: links internos quebrados em `docs/` e `specs/`.
-- `bash ../shared/scripts/spec-coverage.sh [spec...]`: relação spec → testes pelo marcador `spec:`.
+- `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh [caminho...]`: links internos quebrados em `docs/` e `specs/`.
+- `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/spec-coverage.sh [spec...]`: relação spec → testes pelo marcador `spec:`.
 
 ## Regras transversais (valem em todas as etapas)
 
@@ -57,16 +57,18 @@ Use o modelo em `templates/state.md`. A pasta `.std/` fica fora do git. Atualize
 
 ## 0. Guarda de branch
 
-Rode `git branch --show-current` e `git status --short`.
+É a **primeira ação** da skill, antes de qualquer leitura de estado ou pergunta sobre o pedido: o nome da branch define o arquivo de estado. Rode `git branch --show-current` e `git status --short`.
 
-- Branch `main`, `master` ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/<descrição>`, `fix/<descrição>`, `chore/<descrição>`), com base no pedido, e **crie a branch só com o ok** do tutor. Sem ok, a entrevista pode seguir, mas nada é implementado.
+- Branch `main`, `master` ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/<descrição>`, `fix/<descrição>`, `chore/<descrição>`), com base no que o tutor já disse do pedido, e **crie a branch só com o ok** do tutor. Sem ok, a entrevista pode seguir, mas nada é gravado, nem o arquivo de estado; a branch volta a ser pedida antes do plano (etapa 5).
 - Alterações locais não commitadas → avise e pergunte se fazem parte do pedido antes de seguir.
 
 ## 1. Retomada
 
-Se `.std/loop/<branch>.md` existe, leia e retome da etapa registrada, sem refazer entrevista ou plano já aprovados. Se `status: concluído`, trate a conversa como etapa 10 (ajustes) ou, se o pedido for outro, como uma loop nova (mova o resumo anterior para **Histórico**).
+Só com a branch definida (etapa 0). Se `.std/loop/<branch>.md` existe, leia e retome da etapa registrada, sem refazer entrevista ou plano já aprovados. Se `status: concluído`, trate a conversa como etapa 10 (ajustes) ou, se o pedido for outro, como uma loop nova (mova o resumo anterior para **Histórico**).
 
-Sem arquivo → crie-o com `status: entrevista`.
+Sem arquivo → antes de criá-lo, confira o diff da branch contra a `main` (`git diff --name-only main...HEAD`, `git status --short`). Se ele tiver **só** alterações em `specs/`, o tutor provavelmente já escreveu a mudança na spec: recomende a `wbrain-std:tuning`, que implementa exatamente esse diff, e explique em uma frase (na tuning a spec é a entrada; na loop, a saída). Só siga com a loop se o tutor preferir; nesse caso, as mudanças de spec entram como contexto da entrevista.
+
+Então crie o arquivo com `status: entrevista` e garanta `.std/` no `.gitignore`.
 
 ## 2. Entrevista: Contexto, Problema e Pedido
 
@@ -99,6 +101,8 @@ Dispare um subagente `Plan` com o resumo da etapa 2, a fatia escolhida e os reto
 - trazer o **mapa de documentação**: arquivos de `specs/` (documentação humana, comportamento) e de `docs/` (técnica) a criar, editar ou remover, incluindo os que podem ficar **desatualizados** pela mudança (drift);
 - terminar com dúvidas e premissas.
 
+Ainda na `main` (o tutor recusou a branch na etapa 0)? Peça a branch de novo antes de apresentar o plano; sem ela, entregue o resumo do entendimento e encerre.
+
 Apresente o resumo com `templates/plan-summary.md`, registre `status: aguardando aprovação` e **pare**. Ajustes pedidos pelo tutor voltam para o plano; só siga com um "seguir" claro. Registre `plano aprovado: <data>`.
 
 ## 6. Implementação
@@ -116,7 +120,7 @@ Ao fim de cada tarefa ou grupo, aplique o mapa de documentação do plano:
 - **`specs/`**: descreva o comportamento entregue, seguindo `../shared/spec-lint.md` e `../spec/guia-de-escrita.md` (presente, testável, um assunto por arquivo, alcançável a partir de `specs/specs.md`).
 - **`docs/`**: registre o que é técnico; decisões relevantes viram ADR em `docs/decisions/`, registrado em `decisions.md`. Mantenha índices e links **Veja também**.
 - **Anti-drift:** peça a um subagente `Explore` que procure em `specs/` e `docs/` trechos que a mudança tornou falsos (comportamento, nomes, rotas, valores) e corrija-os.
-- Rode `bash ../shared/scripts/check-doc-links.sh` e corrija links quebrados.
+- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh docs specs` e corrija links quebrados.
 
 ## 8. Validação e revisão
 
@@ -138,5 +142,5 @@ O tutor pode pedir correções e ajustes. Antes de agir, compare o pedido com o 
 ## Limites
 
 - Nunca produza na `main`. Crie branch só com o ok do tutor.
-- Nada gravado no projeto antes do aceite do plano, exceto `.std/loop/`.
+- Nada gravado no projeto antes do aceite do plano, exceto `.std/loop/` (e só com a branch definida).
 - Uma fatia por conversa.

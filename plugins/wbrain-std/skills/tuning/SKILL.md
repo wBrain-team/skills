@@ -10,6 +10,8 @@ Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbr
 
 Esta skill faz o **ajuste fino** da aplicação: o tutor descreve em `specs/` o ajuste que deseja (comportamento, regra de negócio, correção, refactor técnico ou remoção) e o agente implementa a partir do diff. O escopo é **exatamente** o que houver de novo em `specs/`.
 
+**Tuning ou loop:** a tuning parte de uma spec já escrita (a spec é a **entrada**) e só roda numa branch cujo diff contra a `main` é apenas de `specs/`. Pedido em linguagem natural, ou branch que já tem outro trabalho, é caso da `wbrain-std:loop` (a spec é a **saída**).
+
 Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` antes de começar.
 
 ## Regras transversais (valem em todas as etapas)
@@ -55,9 +57,9 @@ Para os bloqueantes, **não** use `AskUserQuestion` e **não** aceite decisões 
 - Manter `docs/` atualizado é responsabilidade do agente (etapa 8).
 
 ### Ferramentas da skill (`scripts/` e `../shared/`)
-- `scripts/preflight.sh [--full]`: guarda de branch + diff de `specs/` (etapas 0 e 1). Códigos de saída: `0` há modificação, `1` recusado/erro, `3` nada a implementar.
-- `../shared/scripts/check-doc-links.sh [caminho...]`: lista links internos quebrados em `docs/` e `specs/` (etapas 2 e 8).
-- `../shared/scripts/spec-coverage.sh [spec...]`: relaciona specs aos testes pelo marcador `spec:` (etapas 7 e 10). Convenção em `../shared/rastreabilidade.md`.
+- `bash ${CLAUDE_PLUGIN_ROOT}/skills/tuning/scripts/preflight.sh [--full]`: guarda de branch + diff de `specs/` (etapas 0 e 1). Códigos de saída: `0` há modificação, `1` recusado/erro, `3` nada a implementar, `4` alterações fora de `specs/`.
+- `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh [caminho...]`: lista links internos quebrados em `docs/` e `specs/` (etapas 2 e 8).
+- `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/spec-coverage.sh [spec...]`: relaciona specs aos testes pelo marcador `spec:` (etapas 7 e 10). Convenção em `../shared/rastreabilidade.md`.
 
 - `../shared/spec-lint.md`: regras de escrita das specs, usadas no lint da etapa 2.
 - `review.md`: guia do subagente revisor (etapa 10).
@@ -94,8 +96,15 @@ bash ${CLAUDE_PLUGIN_ROOT}/skills/tuning/scripts/preflight.sh
 
 O script cobre esta etapa e a próxima.
 
-- Se ele sair com código `1` (branch `main`, HEAD destacado ou `main` inexistente) → **recuse e encerre**. Explique que rodar a tuning na `main` é arriscado demais e oriente o usuário a criar uma branch, sugerindo um nome no padrão de `docs/guidelines/git.md` (`feat/<descrição>`, `fix/<descrição>`, `chore/<descrição>`). Outra opção é o usuário pedir **explicitamente** que o agente crie uma branch com nome definido. Depois disso, ele invoca a skill de novo.
-- **Nunca** crie uma branch por conta própria e não prossiga na `main`, mesmo que o usuário insista sem indicar a branch.
+- Se ele sair com código `1` por branch `main`/`master` ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/<descrição>`, `fix/<descrição>`, `chore/<descrição>`), com base nas specs alteradas, e **crie a branch só com o ok** do tutor; depois rode o preflight de novo. Sem ok, encerre: a tuning não tem o que fazer sem produzir.
+  - As alterações locais em `specs/` acompanham a branch nova. Se as mudanças de spec já foram **commitadas na `main`**, a branch nova não as enxerga no diff: explique e oriente o tutor a movê-las para a branch (ou a indicar a base com `--base`).
+- Código `1` por outro motivo (não é repositório git, `main`/`master` inexistente, base inválida) → reporte o erro e encerre.
+- Código `4` → **recuse e encerre**. A tuning só roda numa branch cujo diff contra a `main` é **apenas de `specs/`**: assim, tudo o que ela implementa vem da spec, e trabalho de outra origem (código manual, uma `wbrain-std:loop`, a `wbrain-std:design-system`) não se mistura ao escopo. O preflight lista os arquivos fora de `specs/`. Oriente o tutor conforme o caso, sem mover nem desfazer nada por conta própria:
+  - **o trabalho fora de `specs/` está pronto** → integrá-lo à `main` primeiro e então rodar a tuning numa branch nova, a partir da `main` atualizada, só com as mudanças de spec;
+  - **as mudanças de spec são independentes desse trabalho** → levá-las para uma branch nova a partir da `main` (ex.: `git switch -c feat/<descrição> main` e trazer só `specs/`) e rodar a tuning lá;
+  - **o pedido é continuar o trabalho desta branch** → usar a `wbrain-std:loop`, que conduz pedidos em linguagem natural e mantém `specs/` coerente com o código.
+
+  A exceção é uma tuning já em andamento na branch (arquivo de estado existe): o código fora de `specs/` é dela, e o preflight não recusa.
 
 ## 1. Estado e diff da spec
 
@@ -108,7 +117,7 @@ Sem arquivo de estado → crie-o com `status: em andamento`, a base e o fingerpr
 
 **Diff.** A saída do `preflight.sh` lista os arquivos alterados em `specs/` (commitados na branch contra a `main`, alterações locais e não rastreados), com status e estatística. Para ler o conteúdo das mudanças, rode `preflight.sh --full` (ou `git diff <base> -- <arquivo>` para um arquivo só).
 
-- Código `3` (sem nenhuma alteração) → informe que não há modificação a implementar e **encerre**.
+- Código `3` (sem nenhuma alteração) → informe que não há modificação a implementar e **encerre**. Se o tutor tem um pedido em linguagem natural, sem spec escrita, sugira a `wbrain-std:loop`; se quer escrever a spec antes, a `wbrain-std:spec`.
 - Com alterações → resuma a modificação para uso interno: o que é **novo**, o que foi **alterado** e o que foi **removido**, e quais camadas parecem afetadas. Aplique a guarda de ambiguidade já aqui, se for o caso.
 
 **Trilha.** Classifique a modificação e registre `trilha: curta|normal — <motivo>` no arquivo de estado. É **curta** só se **todos** os critérios valem:
@@ -215,7 +224,7 @@ Ao longo da implementação (ao fim de cada tarefa ou grupo de tarefas), revise 
 - mantenha os índices (`docs/docs.md` e o índice de cada pasta) e os links **Veja também** coerentes;
 - para decisões técnicas relevantes, crie um ADR em `docs/decisions/` no formato e na numeração dos existentes e registre-o em `docs/decisions/decisions.md`;
 - não deixe docs descrevendo comportamento que não existe mais;
-- ao terminar, rode `../shared/scripts/check-doc-links.sh` e corrija os links quebrados.
+- ao terminar, rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh docs specs` e corrija os links quebrados.
 
 ## 9. Validação final
 
@@ -232,7 +241,7 @@ Dispare um subagente `general-purpose` **somente leitura** (instrua-o a não edi
 
 ## 11. Commits e relatório
 
-- Commite apenas na branch atual (nunca na `main`, salvo ordem explícita do tutor humano).
+- Commite apenas na branch atual (nunca na `main`).
 - Siga `docs/guidelines/git.md` (Conventional Commits: `<tipo>(escopo): descrição curta`). Faça commits granulares, um por tarefa coerente.
 - Nunca use `--no-verify` e não faça push sem pedido.
 - Ao terminar, atualize o arquivo de estado: `status: concluído` e `commit de conclusão: <hash do HEAD>`.

@@ -26,7 +26,7 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/design-sy
 
 ### Código só depois do consentimento
 - Até a etapa 4, **nada é gravado** no projeto. Propostas de tokens, API e layout aparecem **no chat**.
-- A implementação só começa quando o usuário aprovar a proposta da etapa 3. Não crie branch, commit nem push.
+- A implementação só começa quando o usuário aprovar a proposta da etapa 3. Branch só com o ok do usuário (etapa 0); não faça commit nem push.
 - Decisões que só o usuário pode tomar (marca, público, prioridades) voltam como pergunta. Não as invente; proponha opções.
 
 ### Condução da conversa
@@ -45,7 +45,7 @@ Rode `git branch --show-current` e `git status --short`.
 
 1. **Pasta vazia ou projeto fora do padrão** (sem `AGENTS.md`/`docs/`): sugira `wbrain-std:init` (projeto novo) ou `wbrain-std:onboard` (existente) e encerre se o usuário concordar.
 2. **Projeto sem frontend** (sem `src-frontend/` nem `docs/frontend/`, ou `docs/` declara que o projeto é só backend, como um microsserviço ou uma API): **recuse e encerre**. Explique que a skill existe para o design system de uma interface e que o projeto não tem uma. Não siga com a entrevista, nem para "só definir a direção visual". Se o projeto passar a ter frontend, ele deve ser adicionado primeiro (e documentado em `docs/frontend/`); depois a skill pode ser invocada de novo.
-3. **Branch `main`/`master` ou HEAD destacado:** lembre de abrir uma branch antes da implementação, no padrão de `docs/guidelines/git.md` (ex.: `feat/design-system-base`). **Não crie a branch.** Siga com a conversa.
+3. **Branch `main`/`master` ou HEAD destacado:** nada é produzido nela. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (ex.: `feat/design-system-base`) e **crie a branch só com o ok** do usuário. Sem ok, a conversa segue (até a etapa 4 nada é gravado); a branch volta a ser pedida antes da implementação.
 
 ## 1. Diagnóstico
 
@@ -85,7 +85,7 @@ Pergunte com `AskUserQuestion`: **implementar agora**, **ajustar a proposta** (v
 
 ## 4. Implementação
 
-Só com a aprovação da etapa 3. Lembre da branch se ainda estiver na `main`.
+Só com a aprovação da etapa 3 e fora da `main`: se ainda estiver nela, peça a branch de novo (etapa 0); sem ela, entregue a proposta como resumo e encerre.
 
 1. **Tokens:** em `packages/ui/src/styles/globals.css` (`@theme inline` + `:root`/`.dark`); fontes conforme o padrão do projeto. Nada de valor hardcoded nos componentes.
 2. **Componentes:** parta do Shadcn (`make shadcn component=<nome>`) quando houver equivalente, ajuste imports para relativos e customize. Peças compostas vão em `components/common/`. Registre cada export em `packages/ui/src/index.ts`.
@@ -113,6 +113,6 @@ Depois do código validado:
 
 ## Limites
 
-- Não grave nada antes da aprovação da etapa 3. Não crie branch, commit nem push.
+- Não grave nada antes da aprovação da etapa 3. Branch só com o ok do usuário; não faça commit nem push.
 - Atue só no frontend (`packages/ui`, `apps/design-system`, uso pontual nos apps quando combinado), em `docs/frontend/` e em `specs/componentes/` + link em `specs/specs.md`. Não altere backend nem specs de domínio.
 - Não troque a stack (Shadcn, Tailwind, Remix Icon) sem o usuário pedir.

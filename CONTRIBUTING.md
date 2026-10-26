@@ -1,7 +1,7 @@
 # Contribuindo
 
 1. Adicione ou edite skills em `plugins/wbrain-std/skills/<nome>/SKILL.md` (frontmatter com `name` igual ao diretório e `description`).
-2. Mantenha referências entre skills por caminho relativo (`../outra-skill/...`).
+2. Mantenha referências entre skills por caminho relativo (`../outra-skill/...`). Scripts executados pelo agente usam o caminho absoluto `bash ${CLAUDE_PLUGIN_ROOT}/skills/...`, porque o Bash roda a partir da pasta do projeto.
 3. **Sempre** aumente `version` em `plugins/<plugin>/.claude-plugin/plugin.json` (e em `marketplace.json`); sem isso os usuários não recebem a atualização.
 4. Registre a mudança em `CHANGELOG.md`.
 5. Valide com `claude plugin validate .` e teste localmente: `/plugin marketplace add .`

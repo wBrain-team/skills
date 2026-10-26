@@ -25,7 +25,7 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/onboard/`
 - `../init/template/`: **o padrão STD** (AGENTS.md, CLAUDE.md, `docs/`, `specs/specs.md`, `deploy/`, `gitignore`). É o modelo para o qual o projeto deve convergir.
 - `../shared/spec-lint.md`: regras de escrita das specs.
 - `../shared/templates/plan-summary.md`: formato enxuto de apresentação de plano.
-- `bash ../shared/scripts/check-doc-links.sh`: verificação de links internos.
+- `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh`: verificação de links internos.
 
 ## Regras transversais (valem em todas as etapas)
 
@@ -65,9 +65,9 @@ ls -A1 | grep -vxE '\.git|\.claude|\.claude-config|\.DS_Store|Thumbs\.db|desktop
 
 - Não é repositório git, ou não há commits → **recuse e encerre**: o onboarding precisa de histórico para que nada se perca. Oriente o tutor a versionar o projeto primeiro.
 - Listagem vazia (pasta limpa) → **recuse e encerre** e indique a `wbrain-std:init`.
-- Branch `main` (ou `master`) ou HEAD destacado → **recuse e encerre**. Sugira criar uma branch como `chore/std-onboard`. Só crie a branch se o tutor pedir **explicitamente**, com o nome definido.
+- Branch `main` (ou `master`) ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (ex.: `chore/std-onboard`) e **crie a branch só com o ok** do tutor. Sem ok, a descoberta, o diagnóstico e a entrevista (etapas 1 a 3) podem seguir, mas nada é gravado, nem o arquivo de estado; a branch volta a ser pedida antes da decisão de rota (etapa 4) e, sem ela, entregue o resumo no chat e encerre.
 - Alterações locais não commitadas → avise e peça que o tutor commite ou guarde antes de seguir.
-- `.std/onboard/state.md` existe → leia e **retome** da etapa registrada, sem refazer o que já foi decidido. Se `status: concluído`, informe que o onboarding já foi feito e que o próximo passo é a `wbrain-std:tuning`.
+- `.std/onboard/state.md` existe → leia e **retome** da etapa registrada, sem refazer o que já foi decidido. Se `status: concluído`, informe que o onboarding já foi feito e que o próximo passo é a `wbrain-std:tuning` (mudança já escrita em `specs/`) ou a `wbrain-std:loop` (pedido em linguagem natural).
 
 ## 1. Descoberta (subagentes Explore, em paralelo)
 
@@ -169,7 +169,7 @@ A tuning depende de TDD: precisa de um jeito confiável de escrever e rodar test
   - banco de teste isolado, se houver banco (ver `template/docs/testing/test-database.md`);
   - pastas e convenções de fixtures e factories;
   - **um teste de fumaça** que só prova que a infraestrutura de testes funciona.
-- Documente em `docs/testing/testing.md` a convenção de rastreabilidade de `../shared/rastreabilidade.md` (marcador `spec:` nos testes de regra de negócio). Testes existentes **não** são marcados em massa; depois da etapa 9, rode `bash ../shared/scripts/spec-coverage.sh` e registre no relatório a cobertura inicial como linha de base.
+- Documente em `docs/testing/testing.md` a convenção de rastreabilidade de `../shared/rastreabilidade.md` (marcador `spec:` nos testes de regra de negócio). Testes existentes **não** são marcados em massa; depois da etapa 9, rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/spec-coverage.sh` e registre no relatório a cobertura inicial como linha de base.
 - Registre em `docs/testing/` e `docs/stack/makefile.md`.
 
 ## 9. Specs
@@ -193,10 +193,10 @@ Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), p
 
 ## 10. Verificação e relatório
 
-- Rode `bash ../shared/scripts/check-doc-links.sh docs specs` (caminho relativo a esta skill) e corrija os links quebrados.
+- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh docs specs` e corrija os links quebrados.
 - Dispare um subagente `Explore` para um lint final de **todas** as specs criadas, com `../shared/spec-lint.md`, no formato de retorno do guia. Achados → corrija com o tutor (cada correção aprovada por ele).
 - Se há Docker, rode a suíte via Docker uma vez (`make test` ou equivalente) e registre o resultado. Se `deploy/` foi copiado, rode `bash deploy/tests/config-test.sh` (só valida a configuração; não faz deploy).
 - Atualize `docs/std-onboarding.md` (modelo `templates/report.md`) com: veredito por dimensão antes e depois, o que foi feito, ADRs criados, **pendências do tutor**, **Gaps** e áreas sem spec.
 - Registre `status: concluído` no estado (ou `bloqueado`, se sobraram pendências que impedem a tuning).
 - Se a política combinada prevê commit no fim, faça-o agora; caso contrário, confira que o que foi commitado bate com a política.
-- Relatório final ao tutor, curto: o que mudou por área, pendências dele e o próximo passo — revisar (e commitar, se ainda não estiver commitada) a base (harness, docs, specs) e integrá-la à `main`, para que a `wbrain-std:tuning` passe a trabalhar a partir do diff de `specs/`.
+- Relatório final ao tutor, curto: o que mudou por área, pendências dele e o próximo passo — revisar (e commitar, se ainda não estiver commitada) a base (harness, docs, specs) e integrá-la à `main`. Depois disso, o desenvolvimento segue por duas portas: a `wbrain-std:tuning`, quando o tutor já escreveu a mudança em `specs/` (numa branch só com alterações de spec), e a `wbrain-std:loop`, para pedidos em linguagem natural.
