@@ -1,26 +1,26 @@
 #!/usr/bin/env bash
 # Funções comuns aos casos de eval.
 
-# Cria em $1 um mini projeto STD na main, com specs por domínio, código e teste.
+# Cria em $1 um mini projeto STD na main, com snapshots por domínio, código e teste.
 base_repo() {
   local d=$1
   mkdir -p "$d" && cd "$d" || return 1
   git init -q -b main
   git config user.email eval@wbrain.local
   git config user.name eval
-  mkdir -p specs/base specs/pedidos docs app tests
+  mkdir -p snapshots/base snapshots/pedidos docs app tests
   printf '.std/\n' > .gitignore
   cat > AGENTS.md <<'EOF'
 # AGENTS.md
-Projeto de exemplo do fluxo wbrain-std. `specs/` é a fonte da verdade; `docs/` guarda as guidelines.
+Projeto de exemplo do fluxo wbrain-std. `snapshots/` é a fonte da verdade; `docs/` guarda as guidelines.
 Testes: `python -m pytest tests/<arquivo>` (pontual) e `python -m pytest` (suíte).
 EOF
   cat > docs/docs.md <<'EOF'
 # Docs
-Projeto pequeno em Python, sem banco. Camada única: `app/`. Testes em `tests/`, com marcador `# spec:`.
+Projeto pequeno em Python, sem banco. Camada única: `app/`. Testes em `tests/`, com marcador `# snapshot:`.
 EOF
-  cat > specs/specs.md <<'EOF'
-# Specs
+  cat > snapshots/snapshots.md <<'EOF'
+# Snapshots
 
 Organização: por domínio de negócio; dentro de cada domínio, por telas.
 
@@ -35,21 +35,21 @@ Organização: por domínio de negócio; dentro de cada domínio, por telas.
 ## Glossário
 - **Cliente**: quem faz pedidos.
 EOF
-  cat > specs/base/data-list.md <<'EOF'
+  cat > snapshots/base/data-list.md <<'EOF'
 # Lista base
 
 ## Comportamento
 - A lista mostra 20 itens por página, do mais recente ao mais antigo.
 - Sem itens: mostra "Nada por aqui".
 EOF
-  cat > specs/pedidos/regras.md <<'EOF'
+  cat > snapshots/pedidos/regras.md <<'EOF'
 # Regras de pedidos
 
 ## Comportamento
 - O frete custa R$ 15,00.
 - Só o administrador cancela pedidos.
 EOF
-  cat > specs/pedidos/lista.md <<'EOF'
+  cat > snapshots/pedidos/lista.md <<'EOF'
 Extends: [Lista base](../base/data-list.md)
 
 # Lista de pedidos
@@ -57,7 +57,7 @@ Extends: [Lista base](../base/data-list.md)
 ## Comportamento
 - O cliente vê só os próprios pedidos.
 EOF
-  cat > specs/pedidos/historico.md <<'EOF'
+  cat > snapshots/pedidos/historico.md <<'EOF'
 Extends: [Lista base](../base/data-list.md)
 
 # Histórico de pedidos
@@ -74,7 +74,7 @@ def pode_cancelar(papel):
     return papel == "admin"
 EOF
   cat > tests/test_pedidos.py <<'EOF'
-# spec: specs/pedidos/regras.md
+# snapshot: snapshots/pedidos/regras.md
 from app.pedidos import FRETE, pode_cancelar
 
 
@@ -100,9 +100,9 @@ assert_state() {  # assert_state <regex>
   grep -qiE "$1" "$f" || fail "estado não casa /$1/"
 }
 assert_no_state() { [ -z "$(state_file)" ] || fail "arquivo de estado criado"; }
-assert_specs_untouched() {
-  git diff --quiet HEAD -- specs/ && [ -z "$(git ls-files --others --exclude-standard specs/)" ] \
-    || fail "specs/ foi alterado"
+assert_snapshots_untouched() {
+  git diff --quiet HEAD -- snapshots/ && [ -z "$(git ls-files --others --exclude-standard snapshots/)" ] \
+    || fail "snapshots/ foi alterado"
 }
 assert_code_untouched() {
   git diff --quiet HEAD -- app tests || fail "código alterado antes da aprovação"

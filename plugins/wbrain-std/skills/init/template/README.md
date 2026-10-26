@@ -34,7 +34,7 @@ Lista completa em [docs/stack/makefile.md](docs/stack/makefile.md).
 
 ## Onde está cada coisa
 
-- [specs/specs.md](specs/specs.md) — **fonte da verdade** do produto: o que o sistema faz,
+- [snapshots/snapshots.md](snapshots/snapshots.md) — **fonte da verdade** do produto: o que o sistema faz,
   requisitos, modelo de dados e endpoints. Alterações aprovadas pelo tutor.
 - [docs/docs.md](docs/docs.md) — como o sistema é implementado: arquitetura, padrões,
   testes e convenções.

@@ -26,9 +26,9 @@ O desenvolvimento segue TDD estrito (ver [TDD](../guidelines/tdd.md)).
 
 Nunca implemente um endpoint ou service sem cobertura de testes.
 
-## Rastreabilidade spec → teste
+## Rastreabilidade snapshot → teste
 
-Todo teste de regra de negócio traz um comentário com o caminho da spec que ele garante: `# spec: specs/pedidos/regras.md` (Python) ou `// spec: specs/pedidos/lista.md` (TS). No topo do arquivo, vale para todos os testes dele; um teste pode ter mais de um marcador. Testes técnicos (infraestrutura, fumaça) ficam sem marcador. Spec removida leva junto os testes marcados com ela.
+Todo teste de regra de negócio traz um comentário com o caminho do snapshot que ele garante: `# snapshot: snapshots/pedidos/regras.md` (Python) ou `// snapshot: snapshots/pedidos/lista.md` (TS). No topo do arquivo, vale para todos os testes dele; um teste pode ter mais de um marcador. Testes técnicos (infraestrutura, fumaça) ficam sem marcador. Snapshot removida leva junto os testes marcados com ela.
 
 ## Estrutura de pastas
 

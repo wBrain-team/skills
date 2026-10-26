@@ -1,16 +1,16 @@
 ## Plano — <branch>
 
-Entendimento da spec
-- specs/<arquivo>.md: <regra, em uma linha>
+Entendimento do snapshot
+- snapshots/<arquivo>.md: <regra, em uma linha>
 
-Mudança na spec → como será garantida
-- "<trecho da spec>" → teste: <cenário(s)>
+Mudança no snapshot → como será garantida
+- "<trecho do snapshot>" → teste: <cenário(s)>
 
 A confirmar (leitura adotada com alternativa de comportamento diferente; "nenhuma" se não houver)
-- specs/<arquivo>.md:<linha> — "<trecho>" → li como: <leitura adotada> (<evidência>); alternativa descartada: <...>
+- snapshots/<arquivo>.md:<linha> — "<trecho>" → li como: <leitura adotada> (<evidência>); alternativa descartada: <...>
 
 Premissas toleráveis (imprecisões deduzidas do contexto; "nenhuma" se não houver)
-- specs/<arquivo>.md:<linha> — "<trecho>" → <leitura adotada>
+- snapshots/<arquivo>.md:<linha> — "<trecho>" → <leitura adotada>
 
 Tarefas (<n>): <x> paralelas, <y> sequenciais
 Camadas: <camadas>
@@ -24,7 +24,7 @@ Seguir com a implementação?
 ## Variante curta (trilha curta)
 
 ## Plano (trilha curta) — <branch>
-- Muda: specs/<arquivo>.md — <regra, em uma linha>
+- Muda: snapshots/<arquivo>.md — <regra, em uma linha>
 - Garantia: teste <cenário> (`<comando pontual>`)
 - Tarefas: <1 a 3, em uma linha cada>
 - Premissas: <a confirmar em destaque, toleráveis em uma linha, ou "nenhuma">

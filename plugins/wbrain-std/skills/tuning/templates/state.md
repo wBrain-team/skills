@@ -16,8 +16,8 @@
 - [ ] 2. <tarefa> — teste: `<comando pontual>`
 
 ## Premissas
-<imprecisões toleráveis da spec, deduzidas do contexto; uma por linha>
-- [tolerável|a confirmar] specs/<arquivo>.md:<linha> — "<trecho>" — leitura adotada: <...> — evidência: <...> — alternativa descartada: <só a confirmar>
+<imprecisões toleráveis do snapshot, deduzidas do contexto; uma por linha>
+- [tolerável|a confirmar] snapshots/<arquivo>.md:<linha> — "<trecho>" — leitura adotada: <...> — evidência: <...> — alternativa descartada: <só a confirmar>
 
 ## Registro
 - <data> etapa <n>: <resultado em uma linha>

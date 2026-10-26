@@ -4,7 +4,7 @@ Ponto de partida da documentação de implementação e boas práticas. Cada pas
 índice com o mesmo nome (ex.: `backend/backend.md`) que lista seus arquivos.
 
 O que o produto faz — requisitos, modelo de dados e endpoints — está em
-[specs/specs.md](../specs/specs.md), a fonte da verdade, mantida pelas pessoas (agentes só a
+[snapshots/snapshots.md](../snapshots/snapshots.md), a fonte da verdade, mantida pelas pessoas (agentes só a
 alteram com aprovação do tutor). Como rodar o projeto: [README.md](../README.md).
 
 ## Áreas
@@ -33,4 +33,4 @@ alteram com aprovação do tutor). Como rodar o projeto: [README.md](../README.m
 - Prefira arquivos curtos e focados num assunto: ao criar um, registre-o no índice da pasta e ligue-o aos assuntos relacionados em **Veja também**.
 - Toda decisão técnica relevante (escolha de padrão, biblioteca ou trade-off) ganha um [ADR](decisions/decisions.md).
 - Mudanças no passo a passo de setup atualizam o [README.md](../README.md).
-- Divergência entre a implementação e o [specs](../specs/specs.md) não se resolve por conta própria: sinalize às pessoas responsáveis e só altere o specs com aprovação do tutor.
+- Divergência entre a implementação e o [snapshots](../snapshots/snapshots.md) não se resolve por conta própria: sinalize às pessoas responsáveis e só altere o snapshots com aprovação do tutor.

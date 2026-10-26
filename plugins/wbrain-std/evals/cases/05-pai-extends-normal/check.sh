@@ -1,2 +1,2 @@
 assert_state "trilha: *normal"
-assert_specs_untouched
+assert_snapshots_untouched

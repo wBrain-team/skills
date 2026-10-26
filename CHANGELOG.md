@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.7.0
+- STD passa a significar **Source-of-Truth-Driven** (antes Spec-Test-Driven).
+- O artefato "spec" passa a se chamar **snapshot**, para não confundir com o uso de "spec" no mercado (documento de mudança). A pasta `specs/` vira `snapshots/` (e `specs/specs.md` vira `snapshots/snapshots.md`), a skill `spec` vira `snapshot`, `spec-lint.md` vira `snapshot-lint.md`, `spec-coverage.sh` vira `snapshot-coverage.sh` e o marcador de teste `# spec:` vira `# snapshot:`.
+- `AGENTS.md` do template explicita a divisão: `snapshots/` diz o que a aplicação faz (negócio); `docs/` diz como ela é construída (técnica).
+- Projetos existentes precisam renomear `specs/` para `snapshots/` e os marcadores `spec:` dos testes para `snapshot:`.
+
 ## 0.6.0
 - `tuning` só roda numa branch cujo diff contra a `main` é apenas de `specs/`. Com alterações de outra natureza (código, docs, trabalho de uma `loop`), o `preflight.sh` sai com código `4` e a skill orienta o tutor: integrar o trabalho à `main` primeiro, levar as specs para uma branch nova ou usar a `loop`. Uma tuning já em andamento na branch (estado existente) não é recusada.
 - Regra "tuning ou loop": na `tuning` a spec é a entrada; na `loop`, a saída. A `loop` recomenda a `tuning` quando a branch só tem alterações em `specs/`; a `tuning` sugere a `loop` quando não há mudança de spec. `spec`, `onboard` e README apontam o critério.

@@ -1,14 +1,14 @@
 ---
 name: init
-description: Inicializa um novo projeto a partir do boilerplate wbrain-std numa pasta vazia — entrevista o usuário sobre o projeto, copia a base (README, AGENTS, docs, specs) e a adapta às respostas. Use apenas quando o usuário pedir explicitamente para iniciar/criar um projeto com o boilerplate wbrain.
+description: Inicializa um novo projeto a partir do boilerplate wbrain-std numa pasta vazia — entrevista o usuário sobre o projeto, copia a base (README, AGENTS, docs, snapshots) e a adapta às respostas. Use apenas quando o usuário pedir explicitamente para iniciar/criar um projeto com o boilerplate wbrain.
 disable-model-invocation: true
 ---
 
 # wbrain-std:init
 
-Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `spec`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele. Esta skill prepara o terreno para esse fluxo.
+Skill da série **wbrain-std** — STD = **Source-of-Truth-Driven**, a técnica da wbrain para desenvolvimento com IA: o `snapshots/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `snapshot`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele. Esta skill prepara o terreno para esse fluxo.
 
-Gera a base inicial de um projeto a partir do snapshot em `template/` (nesta pasta da skill) e adapta o conteúdo ao projeto do usuário.
+Gera a base inicial de um projeto a partir da base em `template/` (nesta pasta da skill) e adapta o conteúdo ao projeto do usuário.
 
 Siga as etapas **na ordem**. Fale com o usuário em pt-BR.
 
@@ -75,7 +75,7 @@ Edite os arquivos copiados conforme a entrevista:
 - **ADRs** — para cada mudança relevante de stack em relação ao padrão, crie um ADR em `docs/decisions/` seguindo o formato e a numeração dos existentes, e registre-o em `docs/decisions/decisions.md`.
 - **Deploy** — adapte `deploy/config/config.yaml.example` (nunca crie `deploy/config/config.yaml`, que guarda dados do ambiente e não é versionado) com as respostas da camada 8: `name` (só minúsculas, dígitos e hífen), `environment`, `state` (bucket/key/region; a `key` segue `<name>/<environment>/terraform.tfstate`), `deploy.repo`/`deploy.branch` e o bloco `https` (com `enabled: true` só se houver domínios). Região diferente de `sa-east-1` → ajuste também `aws_region` em `deploy/config/terraform.tfvars.example`. Itens sem resposta ficam com os placeholders. Se o projeto não usará esse deploy, trate como área descartada: remova `deploy/`, `docs/stack/deploy.md` e as referências (`docs/stack/stack.md`, `infrastructure.md`, `folder-structure.md`, `docs/docs.md`, `README.md`). Não altere os scripts nem o Terraform de `deploy/`.
 - **Idioma** — se o conteúdo do produto não for pt-BR, ajuste o locale padrão citado em `docs/frontend/i18n.md`.
-- **`specs/specs.md`** — é a fonte da verdade e esta skill só gera o boilerplate: **não** escreva requisitos nele. Deixe-o vazio; o preenchimento é feito depois com `wbrain-std:spec` (projeto novo) ou `wbrain-std:onboard` (projeto existente).
+- **`snapshots/snapshots.md`** — é a fonte da verdade e esta skill só gera o boilerplate: **não** escreva requisitos nele. Deixe-o vazio; o preenchimento é feito depois com `wbrain-std:snapshot` (projeto novo) ou `wbrain-std:onboard` (projeto existente).
 - **`CLAUDE.md` e `AGENTS.md`** — mantenha inalterados.
 
 ## 5. Verificação e relatório
@@ -86,5 +86,5 @@ Edite os arquivos copiados conforme a entrevista:
   ```
   e verifique cada destino (relativo ao arquivo de origem). Corrija os quebrados.
 - Se `deploy/` foi mantido, confira que o exemplo adaptado ainda é válido: `bash deploy/tests/config-test.sh`.
-- Reporte ao usuário: o que foi copiado, o que foi adaptado (por arquivo), o que foi removido, ADRs criados e sugestões de próximos passos (ex.: preencher `specs/specs.md` com `wbrain-std:spec`). Se `deploy/` foi mantido, inclua os passos do primeiro deploy (seção "Primeiro deploy" de `docs/stack/deploy.md`), lembrando que o projeto ainda precisa criar o `docker-compose.prod.yml` e o `.env.example` exigidos por `deploy/CONTRACT.md`.
+- Reporte ao usuário: o que foi copiado, o que foi adaptado (por arquivo), o que foi removido, ADRs criados e sugestões de próximos passos (ex.: preencher `snapshots/snapshots.md` com `wbrain-std:snapshot`). Se `deploy/` foi mantido, inclua os passos do primeiro deploy (seção "Primeiro deploy" de `docs/stack/deploy.md`), lembrando que o projeto ainda precisa criar o `docker-compose.prod.yml` e o `.env.example` exigidos por `deploy/CONTRACT.md`.
 - Não faça commit, a menos que o usuário peça.
