@@ -1,4 +1,4 @@
-# Loop: <branch>
+# Tuning: <branch>
 - status: em andamento | aguardando aprovação | bloqueado | concluído
 - plano aprovado: <data, quando aprovado>
 - trilha: curta | normal — <motivo>
@@ -23,4 +23,4 @@
 - <data> etapa <n>: <resultado em uma linha>
 
 ## Histórico
-<resumo de loops anteriores concluídos nesta branch>
+<resumo de tunings anteriores concluídas nesta branch>

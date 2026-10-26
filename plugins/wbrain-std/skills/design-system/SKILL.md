@@ -103,7 +103,7 @@ Depois do código validado:
 - **`docs/frontend/styling.md`:** ajuste se houver regra nova de estilo (fontes, uso de sombra, densidade).
 - **`specs/componentes/<componente>.md`:** um arquivo por componente, com o comportamento observável (variantes, estados, teclado, mensagens, limites), no padrão de `../spec/guia-de-escrita.md` e conferido contra `../shared/spec-lint.md`. Link a partir de `specs/specs.md` em **Transversais**.
 - **Rastreabilidade:** adicione `// spec: specs/componentes/<componente>.md` nos testes (ver `../shared/rastreabilidade.md`).
-- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/check-doc-links.sh` e `bash ${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/spec-coverage.sh specs/componentes/*.md` e corrija o que apontarem.
+- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh` e `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/spec-coverage.sh specs/componentes/*.md` e corrija o que apontarem.
 
 ## 6. Fechamento
 

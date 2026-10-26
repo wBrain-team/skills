@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Etapas 0 e 1 do wbrain-std:loop: guarda de branch + diff de specs/.
+# Etapas 0 e 1 da wbrain-std:tuning: guarda de branch + diff de specs/.
 # Uso: preflight.sh [--full] [--base REF]
 #   --full      inclui o diff completo de specs/
-#   --base REF  compara contra REF (ex.: commit de conclusão do último loop) em vez da main
+#   --base REF  compara contra REF (ex.: commit de conclusão do última tuning) em vez da main
 # Saída: 0 = há modificação | 1 = branch main/erro | 3 = nada a implementar
 set -uo pipefail
 
@@ -24,7 +24,7 @@ if [ -z "$branch" ]; then
   exit 1
 fi
 if [ "$branch" = "main" ]; then
-  echo "RECUSADO: branch atual é 'main'. O loop não roda na main." >&2
+  echo "RECUSADO: branch atual é 'main'. A tuning não roda na main." >&2
   echo "Crie uma branch (ex.: feat/<descrição>) ou peça explicitamente ao agente para criar uma branch com nome definido." >&2
   exit 1
 fi
@@ -44,7 +44,7 @@ committed=$(git diff --name-status "$base"...HEAD -- "$SPECS")
 local_changes=$(git diff --name-status HEAD -- "$SPECS")
 untracked=$(git ls-files --others --exclude-standard -- "$SPECS" | sed 's/^/??\t/')
 
-state=".std/loop/${branch//\//__}.md"
+state=".std/tuning/${branch//\//__}.md"
 fingerprint=$( { git diff "$base" -- "$SPECS"; git ls-files --others --exclude-standard -z -- "$SPECS" | xargs -0 -r cat; } | git hash-object --stdin)
 
 echo "branch: $branch"

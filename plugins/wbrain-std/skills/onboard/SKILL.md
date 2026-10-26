@@ -24,8 +24,8 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/onboard/`
 - `templates/deploy-migration.md`: modelo do plano de migração de deploy.
 - `../init/template/`: **o padrão STD** (AGENTS.md, CLAUDE.md, `docs/`, `specs/specs.md`, `deploy/`, `gitignore`). É o modelo para o qual o projeto deve convergir.
 - `../shared/spec-lint.md`: regras de escrita das specs.
-- `../loop/templates/plan-summary.md`: formato enxuto de apresentação de plano.
-- `bash ../loop/scripts/check-doc-links.sh`: verificação de links internos.
+- `../shared/templates/plan-summary.md`: formato enxuto de apresentação de plano.
+- `bash ../shared/scripts/check-doc-links.sh`: verificação de links internos.
 
 ## Regras transversais (valem em todas as etapas)
 
@@ -109,7 +109,7 @@ Ao final, apresente um **resumo** (visão, funcionalidades existentes, decisões
 - Faça só os ajustes seguros, se o tutor aprovar: `.std/` no `.gitignore` e um `AGENTS.md` mínimo apontando para o relatório.
 - Registre `status: bloqueado (aguardando tutor)` e encerre explicando que, resolvidos os bloqueios, a skill pode ser invocada de novo e retoma pelo estado.
 
-**Próximo ou intermediário** → monte o **plano de adequação**: tarefas pequenas por área (harness, docs, Docker, testes, specs), cada uma com o que muda, o motivo e quem faz. Apresente no formato enxuto de `../loop/templates/plan-summary.md` (adaptado: sem a relação spec → teste), grave as tarefas como checkboxes no estado, registre `status: aguardando aprovação` e **pare**.
+**Próximo ou intermediário** → monte o **plano de adequação**: tarefas pequenas por área (harness, docs, Docker, testes, specs), cada uma com o que muda, o motivo e quem faz. Apresente no formato enxuto de `../shared/templates/plan-summary.md` (adaptado: sem a relação spec → teste), grave as tarefas como checkboxes no estado, registre `status: aguardando aprovação` e **pare**.
 - **Seguir** → `status: em andamento`, vá para a etapa 5.
 - **Ajuste** → aplique **Propor, explicar, respeitar a decisão**, refaça o plano e apresente de novo.
 
@@ -169,7 +169,7 @@ O loop depende de TDD: precisa de um jeito confiável de escrever e rodar testes
   - banco de teste isolado, se houver banco (ver `template/docs/testing/test-database.md`);
   - pastas e convenções de fixtures e factories;
   - **um teste de fumaça** que só prova que a infraestrutura de testes funciona.
-- Documente em `docs/testing/testing.md` a convenção de rastreabilidade de `../shared/rastreabilidade.md` (marcador `spec:` nos testes de regra de negócio). Testes existentes **não** são marcados em massa; depois da etapa 9, rode `bash ../loop/scripts/spec-coverage.sh` e registre no relatório a cobertura inicial como linha de base.
+- Documente em `docs/testing/testing.md` a convenção de rastreabilidade de `../shared/rastreabilidade.md` (marcador `spec:` nos testes de regra de negócio). Testes existentes **não** são marcados em massa; depois da etapa 9, rode `bash ../shared/scripts/spec-coverage.sh` e registre no relatório a cobertura inicial como linha de base.
 - Registre em `docs/testing/` e `docs/stack/makefile.md`.
 
 ## 9. Specs
@@ -193,7 +193,7 @@ Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), p
 
 ## 10. Verificação e relatório
 
-- Rode `bash ../loop/scripts/check-doc-links.sh docs specs` (caminho relativo a esta skill) e corrija os links quebrados.
+- Rode `bash ../shared/scripts/check-doc-links.sh docs specs` (caminho relativo a esta skill) e corrija os links quebrados.
 - Dispare um subagente `Explore` para um lint final de **todas** as specs criadas, com `../shared/spec-lint.md`, no formato de retorno do guia. Achados → corrija com o tutor (cada correção aprovada por ele).
 - Se há Docker, rode a suíte via Docker uma vez (`make test` ou equivalente) e registre o resultado. Se `deploy/` foi copiado, rode `bash deploy/tests/config-test.sh` (só valida a configuração; não faz deploy).
 - Atualize `docs/std-onboarding.md` (modelo `templates/report.md`) com: veredito por dimensão antes e depois, o que foi feito, ADRs criados, **pendências do tutor**, **Gaps** e áreas sem spec.

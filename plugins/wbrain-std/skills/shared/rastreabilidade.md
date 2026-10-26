@@ -17,4 +17,4 @@ it("mostra 20 pedidos por página", () => { ... });
 - Testes técnicos (infraestrutura, fumaça) ficam sem marcador.
 - Spec removida ou renomeada → os marcadores acompanham: testes da regra removida saem, os da renomeada são atualizados.
 
-Verificação: `bash ${CLAUDE_PLUGIN_ROOT}/skills/loop/scripts/spec-coverage.sh [specs...]` lista, por spec, os arquivos de teste que a referenciam, as specs sem teste e os marcadores que apontam para spec inexistente.
+Verificação: `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/spec-coverage.sh [specs...]` lista, por spec, os arquivos de teste que a referenciam, as specs sem teste e os marcadores que apontam para spec inexistente.

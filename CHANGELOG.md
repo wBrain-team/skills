@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+- Skill `loop` renomeada para `tuning`: o fluxo guiado pelo diff de `specs/` passa a ser posicionado como ajuste fino da aplicação. O estado fica em `.std/tuning/<branch>.md`. O nome `loop` fica reservado para uma futura skill de desenvolvimento padrão.
+- `check-doc-links.sh` e `spec-coverage.sh` movidos para `skills/shared/scripts/`, e `plan-summary.md` para `skills/shared/templates/` (usados por várias skills).
+- Evals passam a invocar `/wbrain-std:tuning`.
+
 ## 0.3.0
 - Nova skill `design-system`: entrevista enxuta (com imagens de referência e `AskUserQuestion` como apoio), propostas de direção visual que fogem do visual genérico, fundação (tokens e componentes básicos) ou desenho de componente novo com decisões antecipadas; implementa após aprovação e atualiza `docs/` e `specs/componentes/`.
 - Template: `docs/frontend/design-system.md` com a anatomia das páginas do showcase e o catálogo de componentes.

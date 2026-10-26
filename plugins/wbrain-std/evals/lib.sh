@@ -94,7 +94,7 @@ work_branch() { git checkout -qb "feat/${1:-eval}"; }
 
 # --- asserções (rodam dentro do repo do caso) ---
 fail() { echo "FALHOU: $*"; exit 1; }
-state_file() { ls .std/loop/*.md 2>/dev/null | head -1; }
+state_file() { ls .std/tuning/*.md 2>/dev/null | head -1; }
 assert_state() {  # assert_state <regex>
   local f; f=$(state_file); [ -n "$f" ] || fail "sem arquivo de estado"
   grep -qiE "$1" "$f" || fail "estado não casa /$1/"
