@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Ajuda o tutor humano a escrever uma boa spec — entende o projeto e o momento, entrevista o usuário sobre o objetivo, orienta em quais arquivos de `specs/` criar, editar ou remover e sugere, no chat, trechos que a spec pode conter, guiado pelo lint de specs do loop. É educativa; ao final apresenta o plano de modificação das specs e pergunta se o usuário quer que ela as atualize automaticamente ou prefere instruções para alterá-las por conta própria. Use apenas quando o usuário pedir explicitamente ajuda para escrever, estruturar ou revisar uma spec.
+description: Ajuda o tutor humano a escrever uma boa spec — entende o projeto e o momento, entrevista o usuário sobre o objetivo, orienta em quais arquivos de `specs/` criar, editar ou remover e sugere, no chat, trechos que a spec pode conter, guiado pelo lint de specs da tuning. É educativa; ao final apresenta o plano de modificação das specs e pergunta se o usuário quer que ela as atualize automaticamente ou prefere instruções para alterá-las por conta própria. Use apenas quando o usuário pedir explicitamente ajuda para escrever, estruturar ou revisar uma spec.
 disable-model-invocation: true
 ---
 
@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `spec`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
-A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão e a `wbrain-std:loop` implementa mudanças a partir do diff de `specs/`; a `wbrain-std:design-system` cuida da fundação e dos componentes do design system. Esta skill é a **tutora de quem escreve a spec**: ajuda quem está começando no modelo, quem está paralisado diante de uma spec em branco e quem tem um problema complexo e precisa de outra cabeça para organizar as ideias.
+A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão e a `wbrain-std:tuning` implementa mudanças a partir do diff de `specs/`; a `wbrain-std:design-system` cuida da fundação e dos componentes do design system. Esta skill é a **tutora de quem escreve a spec**: ajuda quem está começando no modelo, quem está paralisado diante de uma spec em branco e quem tem um problema complexo e precisa de outra cabeça para organizar as ideias.
 
 **A skill é educativa e a decisão é sempre do tutor humano.** O agente entrevista, explica, mostra exemplos e sugere trechos **no chat**. Só no fechamento (etapa 6), depois de apresentar o plano de modificação, é que o tutor escolhe se o agente grava as specs ou se ele mesmo as altera.
 
@@ -18,7 +18,7 @@ Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` ante
 
 Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/spec/`):
 - `guia-de-escrita.md`: exemplos certo/errado e esqueleto sugerido de spec, para consultar e citar.
-- `../shared/spec-lint.md`: as regras que o loop aplica ao diff de `specs/`. É o que direciona o conteúdo das specs.
+- `../shared/spec-lint.md`: as regras que a tuning aplica ao diff de `specs/`. É o que direciona o conteúdo das specs.
 - `bash ../shared/scripts/check-doc-links.sh`: verificação de links internos (opcional, na revisão de um rascunho).
 - `../init/SKILL.md` e `../onboard/SKILL.md`: referência da condução de entrevista.
 
@@ -42,7 +42,7 @@ Rode `git branch --show-current`, `git status --short` e `ls -A specs 2>/dev/nul
 
 1. **Projeto sem nenhum conteúdo** (pasta vazia, sem `specs/`, sem código): sugira usar a skill `wbrain-std:init` para criar o projeto a partir do boilerplate e encerre.
 2. **Projeto com conteúdo ainda não normalizado para o padrão de spec** (existe código ou docs, mas `specs/` está ausente ou vazio, ou as specs existentes não seguem o padrão: sem `Extends:` onde há herança, textos no passado ou no futuro, `TODO`/`TBD`, arquivos que misturam assuntos): sugira a skill `wbrain-std:onboard` e explique que ela deixa o projeto pronto para o fluxo. Se o usuário preferir seguir mesmo assim, siga.
-3. **Branch `main` (ou `master`) ou HEAD destacado:** lembre o usuário de abrir uma nova branch antes de editar as specs, porque o `wbrain-std:loop` **se recusa a atuar na `main`**. Sugira um nome no padrão de `docs/guidelines/git.md` (`feat/`, `fix/`, `chore/` + descrição). **Não crie a branch**: o usuário cria. Siga com a conversa normalmente.
+3. **Branch `main` (ou `master`) ou HEAD destacado:** lembre o usuário de abrir uma nova branch antes de editar as specs, porque o `wbrain-std:tuning` **se recusa a atuar na `main`**. Sugira um nome no padrão de `docs/guidelines/git.md` (`feat/`, `fix/`, `chore/` + descrição). **Não crie a branch**: o usuário cria. Siga com a conversa normalmente.
 
 ## 1. Entender o projeto e o ponto em que ele está
 
@@ -103,8 +103,8 @@ Se o usuário quiser escrever por conta própria, convide-o a voltar com o rascu
 3. **Pergunte** com `AskUserQuestion` como o usuário prefere seguir:
    - **Atualizar automaticamente:** o agente aplica o plano em `specs/`. Antes de gravar, confira o conteúdo contra `../shared/spec-lint.md`; depois de gravar, mostre o que foi alterado e os achados do lint, se houver.
    - **Instruções para eu mesmo alterar:** o agente entrega, no chat, os trechos e o passo a passo por arquivo (caminho, o que colocar, onde), e se oferece para revisar o resultado (etapa 5).
-4. Lembre o caminho seguinte: conferir que está numa branch que **não** é a `main`, commitar as specs e acionar a `wbrain-std:loop`.
-5. Reforce que o loop **bloqueia** specs ambíguas ou incompletas e **não aceita** decisões dadas em texto no lugar da spec. Tudo o que foi decidido nesta conversa precisa estar escrito em `specs/`.
+4. Lembre o caminho seguinte: conferir que está numa branch que **não** é a `main`, commitar as specs e acionar a `wbrain-std:tuning`.
+5. Reforce que a tuning **bloqueia** specs ambíguas ou incompletas e **não aceita** decisões dadas em texto no lugar da spec. Tudo o que foi decidido nesta conversa precisa estar escrito em `specs/`.
 
 ## Limites
 

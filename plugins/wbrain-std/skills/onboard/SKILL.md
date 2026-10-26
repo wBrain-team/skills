@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `spec`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
-A `wbrain-std:init` cria projetos novos e a `wbrain-std:loop` implementa mudanças a partir do diff de `specs/`. Esta skill fica entre as duas: pega um projeto **que já existe** e o deixa pronto para o loop. Ela mede a distância até o padrão STD e decide a rota:
+A `wbrain-std:init` cria projetos novos e a `wbrain-std:tuning` implementa mudanças a partir do diff de `specs/`. Esta skill fica entre as duas: pega um projeto **que já existe** e o deixa pronto para a tuning e a loop. Ela mede a distância até o padrão STD e decide a rota:
 - **distante**: documenta os principais problemas e o que precisa ser feito, e devolve o trabalho ao tutor;
 - **próximo ou intermediário**: planeja e executa os ajustes, com aprovação do tutor.
 
@@ -67,7 +67,7 @@ ls -A1 | grep -vxE '\.git|\.claude|\.claude-config|\.DS_Store|Thumbs\.db|desktop
 - Listagem vazia (pasta limpa) → **recuse e encerre** e indique a `wbrain-std:init`.
 - Branch `main` (ou `master`) ou HEAD destacado → **recuse e encerre**. Sugira criar uma branch como `chore/std-onboard`. Só crie a branch se o tutor pedir **explicitamente**, com o nome definido.
 - Alterações locais não commitadas → avise e peça que o tutor commite ou guarde antes de seguir.
-- `.std/onboard/state.md` existe → leia e **retome** da etapa registrada, sem refazer o que já foi decidido. Se `status: concluído`, informe que o onboarding já foi feito e que o próximo passo é a `wbrain-std:loop`.
+- `.std/onboard/state.md` existe → leia e **retome** da etapa registrada, sem refazer o que já foi decidido. Se `status: concluído`, informe que o onboarding já foi feito e que o próximo passo é a `wbrain-std:tuning`.
 
 ## 1. Descoberta (subagentes Explore, em paralelo)
 
@@ -139,7 +139,7 @@ O fluxo STD exige que tudo rode em containers (desenvolvimento e testes). Esta e
 
 ## 7. Deploy
 
-O deploy é uma trilha **separada e opcional**: o loop depende de specs, testes e Docker, não do deploy. Trocar o deploy de um projeto em produção é a mudança mais arriscada do onboarding (dados, DNS, secrets, indisponibilidade), por isso ela nunca é executada aqui.
+O deploy é uma trilha **separada e opcional**: a tuning depende de specs, testes e Docker, não do deploy. Trocar o deploy de um projeto em produção é a mudança mais arriscada do onboarding (dados, DNS, secrets, indisponibilidade), por isso ela nunca é executada aqui.
 
 **Checklist de compatibilidade com o deploy da init** (`../init/template/deploy/CONTRACT.md` e `../init/template/docs/stack/deploy.md`):
 - roda via compose (hoje ou após a etapa 6), com healthchecks;
@@ -159,7 +159,7 @@ Em qualquer rota, o relatório lista o que o tutor precisa fazer.
 
 ## 8. Estrutura de testes
 
-O loop depende de TDD: precisa de um jeito confiável de escrever e rodar testes pontuais e a suíte completa.
+A tuning depende de TDD: precisa de um jeito confiável de escrever e rodar testes pontuais e a suíte completa.
 
 - **Projeto com testes** → documente como rodá-los (via Docker) em `docs/testing/`, no modelo de `template/docs/testing/`, e ajuste os comandos do Makefile (`make test` e teste pontual). Se há testes quebrados, registre no relatório; não os corrija nem apague sem aprovação.
 - **Projeto sem testes automáticos** → **não invente testes** para o código existente. Proponha ações ao tutor (ex.: testes de caracterização das regras mais críticas, por prioridade) e registre como sugestão no relatório; o tutor decide se e quando.
@@ -174,7 +174,7 @@ O loop depende de TDD: precisa de um jeito confiável de escrever e rodar testes
 
 ## 9. Specs
 
-Gerar as specs a partir do que o projeto já tem é parte do trabalho desta skill: o projeto ainda não tem fonte da verdade e precisa de uma base mínima para o tutor seguir pelo loop. O agente redige, mas **só grava um arquivo depois que o tutor aprova o conteúdo dele**.
+Gerar as specs a partir do que o projeto já tem é parte do trabalho desta skill: o projeto ainda não tem fonte da verdade e precisa de uma base mínima para o tutor seguir pela tuning. O agente redige, mas **só grava um arquivo depois que o tutor aprova o conteúdo dele**.
 
 Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), parta dela: reorganize e complete em vez de reescrever, com a mesma regra de aprovação.
 
@@ -186,9 +186,9 @@ Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), p
    - apresente ao tutor e pergunte o que for preciso, **sem deixar ambiguidade**: regras que o código não deixa claras, comportamentos que parecem bug, termos com mais de um sentido;
    - grave o arquivo só após a aprovação e marque-o no estado.
 3. **Realidade, não intenção.** A spec descreve **o que a aplicação faz hoje**.
-   - Se o tutor disser que algo "deveria ser diferente" ou "vai mudar", isso **não** entra na spec: registre na seção **Gaps** do relatório, como futura mudança de spec a ser feita pelo tutor e implementada pelo loop.
+   - Se o tutor disser que algo "deveria ser diferente" ou "vai mudar", isso **não** entra na spec: registre na seção **Gaps** do relatório, como futura mudança de spec a ser feita pelo tutor e implementada pela tuning.
    - Se o código parecer ter um bug, pergunte. Se o tutor confirmar que é bug, a spec descreve o comportamento correto e o bug vai para **Gaps**. Caso contrário, a spec descreve o comportamento atual.
-4. **Escopo mínimo.** Especifique o necessário para o tutor continuar pelo loop: as funcionalidades em produção e as áreas que ele pretende mexer primeiro. Áreas não especificadas ficam listadas no relatório.
+4. **Escopo mínimo.** Especifique o necessário para o tutor continuar pela tuning: as funcionalidades em produção e as áreas que ele pretende mexer primeiro. Áreas não especificadas ficam listadas no relatório.
 5. Garanta que toda spec é alcançável a partir de `specs/specs.md`.
 
 ## 10. Verificação e relatório
@@ -197,6 +197,6 @@ Se já existir `specs/` (ou documentação equivalente encontrada na etapa 1), p
 - Dispare um subagente `Explore` para um lint final de **todas** as specs criadas, com `../shared/spec-lint.md`, no formato de retorno do guia. Achados → corrija com o tutor (cada correção aprovada por ele).
 - Se há Docker, rode a suíte via Docker uma vez (`make test` ou equivalente) e registre o resultado. Se `deploy/` foi copiado, rode `bash deploy/tests/config-test.sh` (só valida a configuração; não faz deploy).
 - Atualize `docs/std-onboarding.md` (modelo `templates/report.md`) com: veredito por dimensão antes e depois, o que foi feito, ADRs criados, **pendências do tutor**, **Gaps** e áreas sem spec.
-- Registre `status: concluído` no estado (ou `bloqueado`, se sobraram pendências que impedem o loop).
+- Registre `status: concluído` no estado (ou `bloqueado`, se sobraram pendências que impedem a tuning).
 - Se a política combinada prevê commit no fim, faça-o agora; caso contrário, confira que o que foi commitado bate com a política.
-- Relatório final ao tutor, curto: o que mudou por área, pendências dele e o próximo passo — revisar (e commitar, se ainda não estiver commitada) a base (harness, docs, specs) e integrá-la à `main`, para que a `wbrain-std:loop` passe a trabalhar a partir do diff de `specs/`.
+- Relatório final ao tutor, curto: o que mudou por área, pendências dele e o próximo passo — revisar (e commitar, se ainda não estiver commitada) a base (harness, docs, specs) e integrá-la à `main`, para que a `wbrain-std:tuning` passe a trabalhar a partir do diff de `specs/`.

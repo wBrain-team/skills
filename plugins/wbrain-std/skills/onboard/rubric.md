@@ -24,7 +24,7 @@ Usada no diagnóstico (etapa 2) para medir a distância entre o projeto e o padr
 
 - **Próximo**: nenhum `bloqueio` e no máximo 3 `ajuste`.
 - **Intermediário**: nenhum `bloqueio` em Docker, Testes ou Specs, e os demais bloqueios têm caminho claro.
-- **Distante**: qualquer `bloqueio` em Docker, Testes ou Specs, ou bloqueios sem caminho claro. Sem essas três dimensões o loop não funciona.
+- **Distante**: qualquer `bloqueio` em Docker, Testes ou Specs, ou bloqueios sem caminho claro. Sem essas três dimensões a tuning não funciona.
 
 A dimensão **Deploy** é só informativa: aparece no diagnóstico e no relatório, mas não conta para o veredito (ver etapa 7 do `SKILL.md`).
 

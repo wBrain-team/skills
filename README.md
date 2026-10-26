@@ -55,6 +55,7 @@ Todas são de invocação manual (`disable-model-invocation`), no formato `/wbra
 |---|---|
 | `init` | Inicializa um projeto a partir do template padrão |
 | `spec` | Escrita de specs |
+| `loop` | Desenvolvimento padrão: entrevista, fatiamento, plano e implementação em TDD |
 | `tuning` | Ajuste fino da aplicação guiado pelo diff de spec |
 | `onboard` | Onboarding/migração de projetos existentes |
 | `design-system` | Fundação do design system e desenho de componentes novos |
@@ -67,7 +68,7 @@ As skills dependem umas das outras (caminhos relativos), por isso são distribu�
 .claude-plugin/marketplace.json     # catálogo
 plugins/wbrain-std/
 ├── .claude-plugin/plugin.json
-└── skills/{init,spec,tuning,onboard,design-system,shared}/
+└── skills/{init,spec,loop,tuning,onboard,design-system,shared}/
 ```
 
 ## Contribuindo

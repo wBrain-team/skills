@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0
+- Nova skill `loop` (desenvolvimento padrão): entrevista o tutor sobre Contexto, Problema e Pedido (com `AskUserQuestion` como apoio), investiga o projeto com subagentes, fatia o trabalho, propõe plano e, com o aceite, implementa em TDD atualizando `docs/` e `specs/`. Na `main`, propõe uma branch e só a cria com o ok. Ajustes fora do escopo levam à recomendação de nova conversa. Estado em `.std/loop/<branch>.md`.
+- Referências antigas ao fluxo guiado pelo diff de `specs/` nas skills `spec`, `onboard` e `design-system` passam a apontar para a `tuning`.
+- Evals `10-loop-sem-codigo-antes-do-aceite` e `11-loop-main-nao-produz`.
+
 ## 0.4.0
 - Skill `loop` renomeada para `tuning`: o fluxo guiado pelo diff de `specs/` passa a ser posicionado como ajuste fino da aplicação. O estado fica em `.std/tuning/<branch>.md`. O nome `loop` fica reservado para uma futura skill de desenvolvimento padrão.
 - `check-doc-links.sh` e `spec-coverage.sh` movidos para `skills/shared/scripts/`, e `plan-summary.md` para `skills/shared/templates/` (usados por várias skills).

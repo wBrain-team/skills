@@ -74,7 +74,7 @@ O lint vale **só para o diff**: linhas adicionadas ou alteradas e arquivos novo
 ## Severidade
 Todo achado é **bloqueante** ou **observação**. **Padrão: observação.** O lint existe para ajudar o tutor a melhorar a spec, não para impedir o trabalho: só é bloqueante o que impede de saber o que implementar. As regras 1, 3, 4, 7 (sinônimos) e 8 são sempre observação.
 
-**Observação** (o loop segue; o agente assume a leitura óbvia): o problema é de forma e a intenção é clara pelo contexto (mesma spec, pai/filhas, outras specs ou `docs/`). Exemplos:
+**Observação** (a tuning segue; o agente assume a leitura óbvia): o problema é de forma e a intenção é clara pelo contexto (mesma spec, pai/filhas, outras specs ou `docs/`). Exemplos:
 - regras 1, 2 e 3 (passado, futuro, tempo verbal) quando o comportamento atual é inequívoco ("deverá abrir" → "abre");
 - regra 7: sinônimo ocasional para um conceito já definido, ou pequena repetição de regra que não diverge da fonte;
 - regra 8: menção incidental a um detalhe técnico que não define comportamento;
@@ -82,7 +82,7 @@ Todo achado é **bloqueante** ou **observação**. **Padrão: observação.** O 
 - regra 9: link com erro de digitação cujo alvo é óbvio; spec nova sem link a partir de `specs/specs.md`; "etc." no fim de uma lista que já enumera o essencial;
 - regra 4: arquivo um pouco extenso ou com assunto levemente misturado, mas sem ambiguidade.
 
-**Bloqueante** (o loop para), só quando não dá para saber o que implementar e o contexto não resolve:
+**Bloqueante** (a tuning para), só quando não dá para saber o que implementar e o contexto não resolve:
 - regra 6 ou 9: `TODO`/`TBD`/"a definir" no lugar de uma regra essencial; valor ou critério essencial ausente sem nenhuma evidência no contexto; caso de erro ou permissão crítico ausente sem padrão no projeto;
 - regra 7: mesmo termo para conceitos diferentes, ou regra duplicada com **conteúdo divergente** sem critério para dizer qual vale;
 - regra 5: `extends` com alvo inexistente ou indeterminável, mais de um pai ou mais de um nível;

@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Skill da série **wbrain-std** — STD = **Spec-Test-Driven**, a técnica da wbrain para desenvolvimento com IA: o `specs/` é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
-A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão, a `wbrain-std:spec` ajuda a escrever specs e a `wbrain-std:loop` implementa mudanças a partir delas. Esta skill é a **parceira de design de interface**: monta a fundação do design system quando não há nenhum e ajuda a desenhar componentes novos quando ele já existe. O objetivo é sempre uma interface **bonita, mas antes de tudo usável**: clara, acessível e adequada a quem vai usá-la.
+A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão, a `wbrain-std:spec` ajuda a escrever specs e a `wbrain-std:tuning` implementa mudanças a partir delas. Esta skill é a **parceira de design de interface**: monta a fundação do design system quando não há nenhum e ajuda a desenhar componentes novos quando ele já existe. O objetivo é sempre uma interface **bonita, mas antes de tudo usável**: clara, acessível e adequada a quem vai usá-la.
 
 Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` antes de começar.
 
@@ -109,7 +109,7 @@ Depois do código validado:
 
 1. Resuma o que foi criado (tokens, componentes, páginas, docs, specs) e o que ficou em aberto.
 2. Liste as melhorias sugeridas e não adotadas, para o usuário considerar depois.
-3. Sugira a mensagem de commit e lembre que mudanças futuras de comportamento desses componentes seguem o fluxo `wbrain-std:spec` → `wbrain-std:loop` (ou esta skill, para componentes novos).
+3. Sugira a mensagem de commit e lembre que mudanças futuras de comportamento desses componentes seguem o fluxo `wbrain-std:spec` → `wbrain-std:tuning` (ou esta skill, para componentes novos).
 
 ## Limites
 

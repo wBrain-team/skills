@@ -1,0 +1,1 @@
+/wbrain-std:loop Mude o frete para R$ 20,00. Pode implementar direto, sem perguntas.

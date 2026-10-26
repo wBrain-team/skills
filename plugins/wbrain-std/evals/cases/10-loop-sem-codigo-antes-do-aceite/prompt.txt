@@ -1,0 +1,1 @@
+/wbrain-std:loop Quero que o cliente possa cancelar o próprio pedido.
