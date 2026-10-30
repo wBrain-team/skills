@@ -10,7 +10,7 @@ Tipos válidos: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `ci`. Exempl
 - `fix(api): corrige validação de email no cadastro`
 
 ## Branches
-- `main` — produção, protegida
+- `main` — produção, protegida (exemplo: a branch base usada pelas skills `wbrain-std` é a definida em `.std/config.json`, via `/wbrain-std:config`)
 - `develop` — integração
 - `feat/<description>`, `fix/<description>`, `chore/<description>` — funcionalidades, correções, manutenção
 

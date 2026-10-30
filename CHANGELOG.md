@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.0
+- Nova skill `config` (`/wbrain-std:config`): entrevista o usuário e grava `.std/config.json` com a **branch base** das comparações de diff, e **migra projetos existentes** para a versão atual do plugin (renomeia pastas e arquivos e corrige as referências no conteúdo: `AGENTS.md`, `README.md`, `docs/`, `snaps/`...), com plano mostrado e ok antes de aplicar. Pode ser chamada a qualquer momento. O arquivo é local de cada pessoa (`.std/` continua no `.gitignore`).
+- A `main` deixa de ser fixa: `tuning`, `loop`, `snaps`, `design-system` e `onboard` leem a base de `.std/config.json` (via `shared/scripts/std-config.sh`) e nunca produzem nela (nem em `main`/`master`). O `preflight.sh` da `tuning` compara contra a base configurada (`--base REF` continua valendo). **Sem `.std/config.json` as skills recusam** e orientam a rodar `/wbrain-std:config`.
+- Novo `shared/migrations.md`: changelog de migração legível pela skill `config` (sintoma, ação, termos a varrer no conteúdo e falsos positivos por versão). Regra de manutenção em `CONTRIBUTING.md`; `evals/check-migrations.sh` falha se uma versão pede migração sem entrada nesse arquivo.
+- Evals: `lib.sh` grava o config (`BASE_BRANCH`, `NO_CONFIG` via `env.sh` do caso) e novos casos `13` a `17`.
+- Projetos existentes precisam rodar `/wbrain-std:config` uma vez (define a base e aplica migrações pendentes).
+
 ## 0.9.0
 - "snapshot" é abreviado para **snap**, no mesmo estilo de `docs/`: a pasta `snapshots/` vira `snaps/` (e `snapshots/snapshots.md` vira `snaps/snaps.md`), a skill `snapshot` vira `snaps` (`/wbrain-std:snaps`), `snapshot-lint.md` vira `snaps-lint.md`, `snapshot-coverage.sh` vira `snaps-coverage.sh` e o marcador de teste `# snapshot:` vira `# snap:`. Os "snapshots" de infraestrutura do template (backup do volume na AWS) não mudam.
 - Projetos existentes precisam renomear `snapshots/` para `snaps/` (e `snapshots.md` para `snaps.md`) e os marcadores `snapshot:` dos testes para `snap:`.

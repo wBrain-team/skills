@@ -10,12 +10,14 @@ tmp=${EVAL_TMP:-$(mktemp -d)}
 model_args=(); [ -n "${EVAL_MODEL:-}" ] && model_args=(--model "$EVAL_MODEL")
 pass=0; failed=()
 
+bash "$here/check-migrations.sh" || exit 1
+
 for case_dir in "$here"/cases/*/; do
   name=$(basename "$case_dir")
   [[ "$name" == *"${1:-}"* ]] || continue
   repo="$tmp/$name"; out="$tmp/$name.out"
   rm -rf "$repo"
-  ( source "$here/lib.sh"; base_repo "$repo" && source "$case_dir/setup.sh" ) >/dev/null \
+  ( [ -f "$case_dir/env.sh" ] && source "$case_dir/env.sh"; source "$here/lib.sh"; base_repo "$repo" && source "$case_dir/setup.sh" ) >/dev/null \
     || { failed+=("$name (setup)"); continue; }
 
   echo "▶ $name"

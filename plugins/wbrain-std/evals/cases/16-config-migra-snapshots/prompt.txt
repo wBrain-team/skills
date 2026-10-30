@@ -1,0 +1,1 @@
+/wbrain-std:config A branch base é main. Aplique todas as migrações pendentes; tem o meu ok, sem perguntar mais nada.

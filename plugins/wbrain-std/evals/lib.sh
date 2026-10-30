@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Funções comuns aos casos de eval.
 
-# Cria em $1 um mini projeto STD na main, com snaps por domínio, código e teste.
+# Cria em $1 um mini projeto STD na branch base ($BASE_BRANCH, padrão main), com snaps por domínio,
+# código e teste, e grava .std/config.json (exceto com NO_CONFIG=1). Um caso pode definir
+# BASE_BRANCH/NO_CONFIG num env.sh na sua pasta (lido pelo run.sh antes do base_repo).
 base_repo() {
   local d=$1
   mkdir -p "$d" && cd "$d" || return 1
-  git init -q -b main
+  git init -q -b "${BASE_BRANCH:-main}"
   git config user.email eval@wbrain.local
   git config user.name eval
   mkdir -p snaps/base snaps/pedidos docs app tests
@@ -86,8 +88,17 @@ def test_so_admin_cancela():
     assert pode_cancelar("admin") and not pode_cancelar("cliente")
 EOF
   touch app/__init__.py
+  [ "${NO_CONFIG:-0}" = 1 ] || write_config "${BASE_BRANCH:-main}"
   git add -A && git commit -qm "base"
 }
+
+# Grava .std/config.json (ignorado pelo git) com a branch base.
+write_config() {
+  mkdir -p .std
+  printf '{ "schema_version": 1, "base_branch": "%s" }\n' "$1" > .std/config.json
+}
+# Branch base configurada do caso.
+base_branch() { sed -n 's/.*"base_branch"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' .std/config.json; }
 
 # Cria a branch de trabalho do caso.
 work_branch() { git checkout -qb "feat/${1:-eval}"; }

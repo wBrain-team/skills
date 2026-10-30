@@ -1,0 +1,1 @@
+/wbrain-std:config A branch base é develop. Já confirmei, pode gravar sem perguntar mais nada.

@@ -10,7 +10,7 @@ Skill da série **wbrain-std** — STD = **Source-of-Truth-Driven**, a técnica 
 
 Esta skill faz o **ajuste fino** da aplicação: o tutor descreve em `snaps/` o ajuste que deseja (comportamento, regra de negócio, correção, refactor técnico ou remoção) e o agente implementa a partir do diff. O escopo é **exatamente** o que houver de novo em `snaps/`.
 
-**Tuning ou loop:** a tuning parte de um snap já escrito (o snap é a **entrada**) e só roda numa branch cujo diff contra a `main` é apenas de `snaps/`. Pedido em linguagem natural, ou branch que já tem outro trabalho, é caso da `wbrain-std:loop` (o snap é a **saída**).
+**Tuning ou loop:** a tuning parte de um snap já escrito (o snap é a **entrada**) e só roda numa branch cujo diff contra a branch base (`.std/config.json`) é apenas de `snaps/`. Pedido em linguagem natural, ou branch que já tem outro trabalho, é caso da `wbrain-std:loop` (o snap é a **saída**).
 
 Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` antes de começar.
 
@@ -99,12 +99,12 @@ bash ${CLAUDE_PLUGIN_ROOT}/skills/tuning/scripts/preflight.sh
 
 O script cobre esta etapa e a próxima.
 
-- Se ele sair com código `1` por branch `main`/`master` ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/<descrição>`, `fix/<descrição>`, `chore/<descrição>`), com base nos snaps alterados, e **crie a branch só com o ok** do tutor; depois rode o preflight de novo. Sem ok, encerre: a tuning não tem o que fazer sem produzir.
-  - As alterações locais em `snaps/` acompanham a branch nova. Se as mudanças de snap já foram **commitadas na `main`**, a branch nova não as enxerga no diff: explique e oriente o tutor a movê-las para a branch (ou a indicar a base com `--base`).
-- Código `1` por outro motivo (não é repositório git, `main`/`master` inexistente, base inválida) → reporte o erro e encerre.
-- Código `4` → **recuse e encerre**. A tuning só roda numa branch cujo diff contra a `main` é **apenas de `snaps/`**: assim, tudo o que ela implementa vem do snap, e trabalho de outra origem (código manual, uma `wbrain-std:loop`, a `wbrain-std:design-system`) não se mistura ao escopo. O preflight lista os arquivos fora de `snaps/`. Oriente o tutor conforme o caso, sem mover nem desfazer nada por conta própria:
-  - **o trabalho fora de `snaps/` está pronto** → integrá-lo à `main` primeiro e então rodar a tuning numa branch nova, a partir da `main` atualizada, só com as mudanças de snap;
-  - **as mudanças de snap são independentes desse trabalho** → levá-las para uma branch nova a partir da `main` (ex.: `git switch -c feat/<descrição> main` e trazer só `snaps/`) e rodar a tuning lá;
+- Se ele sair com código `1` por branch base/`main`/`master` ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/<descrição>`, `fix/<descrição>`, `chore/<descrição>`), com base nos snaps alterados, e **crie a branch só com o ok** do tutor; depois rode o preflight de novo. Sem ok, encerre: a tuning não tem o que fazer sem produzir.
+  - As alterações locais em `snaps/` acompanham a branch nova. Se as mudanças de snap já foram **commitadas na branch base**, a branch nova não as enxerga no diff: explique e oriente o tutor a movê-las para a branch (ou a indicar a base com `--base`).
+- Código `1` por outro motivo (não é repositório git, base configurada inexistente, base inválida) → reporte o erro e encerre. Se a mensagem for `CONFIG AUSENTE` (sem `.std/config.json`), oriente o tutor a rodar `/wbrain-std:config`.
+- Código `4` → **recuse e encerre**. A tuning só roda numa branch cujo diff contra a branch base é **apenas de `snaps/`**: assim, tudo o que ela implementa vem do snap, e trabalho de outra origem (código manual, uma `wbrain-std:loop`, a `wbrain-std:design-system`) não se mistura ao escopo. O preflight lista os arquivos fora de `snaps/`. Oriente o tutor conforme o caso, sem mover nem desfazer nada por conta própria:
+  - **o trabalho fora de `snaps/` está pronto** → integrá-lo à branch base primeiro e então rodar a tuning numa branch nova, a partir da base atualizada, só com as mudanças de snap;
+  - **as mudanças de snap são independentes desse trabalho** → levá-las para uma branch nova a partir da base (ex.: `git switch -c feat/<descrição> <base>` e trazer só `snaps/`) e rodar a tuning lá;
   - **o pedido é continuar o trabalho desta branch** → usar a `wbrain-std:loop`, que conduz pedidos em linguagem natural e mantém `snaps/` coerente com o código.
 
   A exceção é uma tuning já em andamento na branch (arquivo de estado existe): o código fora de `snaps/` é dela, e o preflight não recusa.
@@ -118,7 +118,7 @@ O script cobre esta etapa e a próxima.
 
 Sem arquivo de estado → crie-o com `status: em andamento`, a base e o fingerprint.
 
-**Diff.** A saída do `preflight.sh` lista os arquivos alterados em `snaps/` (commitados na branch contra a `main`, alterações locais e não rastreados), com status e estatística. Para ler o conteúdo das mudanças, rode `preflight.sh --full` (ou `git diff <base> -- <arquivo>` para um arquivo só).
+**Diff.** A saída do `preflight.sh` lista os arquivos alterados em `snaps/` (commitados na branch contra a base, alterações locais e não rastreados), com status e estatística. Para ler o conteúdo das mudanças, rode `preflight.sh --full` (ou `git diff <base> -- <arquivo>` para um arquivo só).
 
 - Código `3` (sem nenhuma alteração) → informe que não há modificação a implementar e **encerre**. Se o tutor tem um pedido em linguagem natural, sem snap escrito, sugira a `wbrain-std:loop`; se quer escrever o snap antes, a `wbrain-std:snaps`.
 - Com alterações → resuma a modificação para uso interno: o que é **novo**, o que foi **alterado** e o que foi **removido**, e quais camadas parecem afetadas. Aplique a guarda de ambiguidade já aqui, se for o caso.
@@ -245,7 +245,7 @@ Dispare um subagente `general-purpose` **somente leitura** (instrua-o a não edi
 
 ## 11. Commits e relatório
 
-- Commite apenas na branch atual (nunca na `main`).
+- Commite apenas na branch atual (nunca na branch base).
 - Siga `docs/guidelines/git.md` (Conventional Commits: `<tipo>(escopo): descrição curta`). Faça commits granulares, um por tarefa coerente.
 - Nunca use `--no-verify` e não faça push sem pedido.
 - Ao terminar, atualize o arquivo de estado: `status: concluído` e `commit de conclusão: <hash do HEAD>`.

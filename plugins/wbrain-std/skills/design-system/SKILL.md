@@ -47,8 +47,8 @@ Rode `git branch --show-current` e `git status --short`.
 
 1. **Pasta vazia ou projeto fora do padrão** (sem `AGENTS.md`/`docs/`): sugira `wbrain-std:init` (projeto novo) ou `wbrain-std:onboard` (existente) e encerre se o usuário concordar.
 2. **Projeto sem frontend** (sem `src-frontend/` nem `docs/frontend/`, ou `docs/` declara que o projeto é só backend, como um microsserviço ou uma API): **recuse e encerre**. Explique que a skill existe para o design system de uma interface e que o projeto não tem uma. Não siga com a entrevista, nem para "só definir a direção visual". Se o projeto passar a ter frontend, ele deve ser adicionado primeiro (e documentado em `docs/frontend/`); depois a skill pode ser invocada de novo.
-3. **Branch `main`/`master` ou HEAD destacado:** nada é produzido nela. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (ex.: `feat/design-system-base`) e **crie a branch só com o ok** do usuário. Sem ok, a conversa segue (até a etapa 4 nada é gravado); a branch volta a ser pedida antes da implementação.
-4. **Ambiente Docker:** siga `../shared/ambiente-docker.md` (verificação, proposta de montagem e `node_modules` em volume) para o frontend: `frontend`, `nginx`, `Makefile` e o showcase acessível. Ambiente completo → siga. Ausente ou incompleto → proponha montá-lo **antes de qualquer código do design system**; ele só é criado com o ok do usuário e fora da `main` (guarda 3). Sem ok, a entrevista e a proposta seguem, mas a implementação (etapa 4) só começa com o ambiente de pé.
+3. **Branch base ou HEAD destacado:** rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/std-config.sh get base_branch` (código `2`, sem `.std/config.json` → **recuse e encerre**, orientando `/wbrain-std:config`). Se a branch atual for a base configurada, `main`, `master` ou HEAD destacado, nada é produzido nela. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (ex.: `feat/design-system-base`) e **crie a branch só com o ok** do usuário. Sem ok, a conversa segue (até a etapa 4 nada é gravado); a branch volta a ser pedida antes da implementação.
+4. **Ambiente Docker:** siga `../shared/ambiente-docker.md` (verificação, proposta de montagem e `node_modules` em volume) para o frontend: `frontend`, `nginx`, `Makefile` e o showcase acessível. Ambiente completo → siga. Ausente ou incompleto → proponha montá-lo **antes de qualquer código do design system**; ele só é criado com o ok do usuário e fora da branch base (guarda 3). Sem ok, a entrevista e a proposta seguem, mas a implementação (etapa 4) só começa com o ambiente de pé.
 
 ## 1. Diagnóstico
 
@@ -88,7 +88,7 @@ Pergunte com `AskUserQuestion`: **implementar agora**, **ajustar a proposta** (v
 
 ## 4. Implementação
 
-Só com a aprovação da etapa 3 e fora da `main`: se ainda estiver nela, peça a branch de novo (etapa 0); sem ela, entregue a proposta como resumo e encerre.
+Só com a aprovação da etapa 3 e fora da branch base: se ainda estiver nela, peça a branch de novo (etapa 0); sem ela, entregue a proposta como resumo e encerre.
 
 0. **Ambiente:** confirme que o ambiente Docker está de pé (guarda 4). Toda instalação, `make shadcn`, lint, build e teste roda pelo container; nada de `npm` no host.
 1. **Regras de teste:** leia `docs/guidelines/tdd.md` e `docs/testing/` (de `frontend.md` em especial) e anote o comando de teste pontual, o de cobertura e os mínimos (`../shared/tdd-e-cobertura.md`, seção 1).

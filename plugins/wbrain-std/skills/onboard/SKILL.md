@@ -47,7 +47,7 @@ O objetivo é aproximar o projeto do modelo do init (estrutura de `docs/`, guide
 - Mexe só em harness (`AGENTS.md`, `CLAUDE.md`, `.claude/`), `docs/`, `snaps/`, infraestrutura (Docker, compose, Makefile, `.env.example`, `.gitignore`) e estrutura de testes. **Não altera código de negócio.** Se Docker ou testes exigirem ajuste no código (ex.: ler config de variável de ambiente), proponha e só faça com aprovação explícita.
 - **Nunca toque em produção**: nada de deploy, alteração de CI/CD de deploy, DNS, secrets reais ou recursos de nuvem. O máximo é deixar arquivos e planos prontos; a execução é do tutor.
 - Nada destrutivo (apagar, sobrescrever, mover) sem confirmação. Antes de sobrescrever, leia o alvo.
-- Commits seguem a **política de commits** combinada na entrevista (camada 4) e registrada no estado. Sem política definida, não commite. Nunca faça push sem pedido nem commite na `main`.
+- Commits seguem a **política de commits** combinada na entrevista (camada 4) e registrada no estado. Sem política definida, não commite. Nunca faça push sem pedido nem commite na branch base.
 
 ### Estado (`.std/onboard/state.md`)
 - Use o modelo em `templates/state.md`. Atualize ao fim de cada etapa e a cada decisão do tutor. Ele é a memória do onboarding; o contexto da conversa não é.
@@ -65,7 +65,8 @@ ls -A1 | grep -vxE '\.git|\.claude|\.claude-config|\.DS_Store|Thumbs\.db|desktop
 
 - Não é repositório git, ou não há commits → **recuse e encerre**: o onboarding precisa de histórico para que nada se perca. Oriente o tutor a versionar o projeto primeiro.
 - Listagem vazia (pasta limpa) → **recuse e encerre** e indique a `wbrain-std:init`.
-- Branch `main` (ou `master`) ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (ex.: `chore/std-onboard`) e **crie a branch só com o ok** do tutor. Sem ok, a descoberta, o diagnóstico e a entrevista (etapas 1 a 3) podem seguir, mas nada é gravado, nem o arquivo de estado; a branch volta a ser pedida antes da decisão de rota (etapa 4) e, sem ela, entregue o resumo no chat e encerre.
+- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/std-config.sh get base_branch`. Código `2` (sem `.std/config.json`) → **recuse e encerre**, orientando `/wbrain-std:config` (a skill `config` também migra projetos antigos).
+- Branch atual igual à base, `main`, `master` ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (ex.: `chore/std-onboard`) e **crie a branch só com o ok** do tutor. Sem ok, a descoberta, o diagnóstico e a entrevista (etapas 1 a 3) podem seguir, mas nada é gravado, nem o arquivo de estado; a branch volta a ser pedida antes da decisão de rota (etapa 4) e, sem ela, entregue o resumo no chat e encerre.
 - Alterações locais não commitadas → avise e peça que o tutor commite ou guarde antes de seguir.
 - `.std/onboard/state.md` existe → leia e **retome** da etapa registrada, sem refazer o que já foi decidido. Se `status: concluído`, informe que o onboarding já foi feito e que o próximo passo é a `wbrain-std:tuning` (mudança já escrita em `snaps/`) ou a `wbrain-std:loop` (pedido em linguagem natural).
 
@@ -200,4 +201,4 @@ Se já existir `snaps/` (ou documentação equivalente encontrada na etapa 1), p
 - Atualize `docs/std-onboarding.md` (modelo `templates/report.md`) com: veredito por dimensão antes e depois, o que foi feito, ADRs criados, **pendências do tutor**, **Gaps** e áreas sem snap.
 - Registre `status: concluído` no estado (ou `bloqueado`, se sobraram pendências que impedem a tuning).
 - Se a política combinada prevê commit no fim, faça-o agora; caso contrário, confira que o que foi commitado bate com a política.
-- Relatório final ao tutor, curto: o que mudou por área, pendências dele e o próximo passo — revisar (e commitar, se ainda não estiver commitada) a base (harness, docs, snaps) e integrá-la à `main`. Depois disso, o desenvolvimento segue por duas portas: a `wbrain-std:tuning`, quando o tutor já escreveu a mudança em `snaps/` (numa branch só com alterações de snap), e a `wbrain-std:loop`, para pedidos em linguagem natural.
+- Relatório final ao tutor, curto: o que mudou por área, pendências dele e o próximo passo — revisar (e commitar, se ainda não estiver commitada) a base (harness, docs, snaps) e integrá-la à branch base. Depois disso, o desenvolvimento segue por duas portas: a `wbrain-std:tuning`, quando o tutor já escreveu a mudança em `snaps/` (numa branch só com alterações de snap), e a `wbrain-std:loop`, para pedidos em linguagem natural.

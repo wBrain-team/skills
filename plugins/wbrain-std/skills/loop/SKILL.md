@@ -37,7 +37,7 @@ Não leia arquivos grandes no principal quando um subagente pode trazer o resumo
 
 ### Nada é produzido antes do aceite
 - Até a aprovação do plano (etapa 5), **nada é gravado** no projeto além do arquivo de estado em `.std/loop/`. Propostas aparecem **no chat**.
-- Nunca produza na `main` (etapa 0).
+- Nunca produza na branch base do `.std/config.json` nem na `main`/`master` (etapa 0).
 
 ### Condução da conversa
 - **Uma pergunta por vez**, em diálogo. Enquanto o usuário colabora, use perguntas **abertas** e aprofunde quando a resposta abrir algo relevante.
@@ -62,14 +62,15 @@ Use o modelo em `templates/state.md`. A pasta `.std/` fica fora do git. Atualize
 
 É a **primeira ação** da skill, antes de qualquer leitura de estado ou pergunta sobre o pedido: o nome da branch define o arquivo de estado. Rode `git branch --show-current` e `git status --short`.
 
-- Branch `main`, `master` ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/<descrição>`, `fix/<descrição>`, `chore/<descrição>`), com base no que o tutor já disse do pedido, e **crie a branch só com o ok** do tutor. Sem ok, a entrevista pode seguir, mas nada é gravado, nem o arquivo de estado; a branch volta a ser pedida antes do plano (etapa 5).
+- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/std-config.sh get base_branch`. Código `2` (sem `.std/config.json`) → **recuse e encerre**, orientando o tutor a rodar `/wbrain-std:config` para definir a branch base. Guarde o valor: ele é a **branch base** nas etapas seguintes.
+- Branch atual igual à base, `main`, `master` ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/<descrição>`, `fix/<descrição>`, `chore/<descrição>`), com base no que o tutor já disse do pedido, e **crie a branch só com o ok** do tutor. Sem ok, a entrevista pode seguir, mas nada é gravado, nem o arquivo de estado; a branch volta a ser pedida antes do plano (etapa 5).
 - Alterações locais não commitadas → avise e pergunte se fazem parte do pedido antes de seguir.
 
 ## 1. Retomada
 
 Só com a branch definida (etapa 0). Se `.std/loop/<branch>.md` existe, leia e retome da etapa registrada, sem refazer entrevista ou plano já aprovados. Se `status: concluído`, trate a conversa como etapa 10 (ajustes) ou, se o pedido for outro, como uma loop nova (mova o resumo anterior para **Histórico**).
 
-Sem arquivo → antes de criá-lo, confira o diff da branch contra a `main` (`git diff --name-only main...HEAD`, `git status --short`). Se ele tiver **só** alterações em `snaps/`, o tutor provavelmente já escreveu a mudança no snap: recomende a `wbrain-std:tuning`, que implementa exatamente esse diff, e explique em uma frase (na tuning o snap é a entrada; na loop, a saída). Só siga com a loop se o tutor preferir; nesse caso, as mudanças de snap entram como contexto da entrevista.
+Sem arquivo → antes de criá-lo, confira o diff da branch contra a base (`git diff --name-only <base>...HEAD`, `git status --short`). Se ele tiver **só** alterações em `snaps/`, o tutor provavelmente já escreveu a mudança no snap: recomende a `wbrain-std:tuning`, que implementa exatamente esse diff, e explique em uma frase (na tuning o snap é a entrada; na loop, a saída). Só siga com a loop se o tutor preferir; nesse caso, as mudanças de snap entram como contexto da entrevista.
 
 Então crie o arquivo com `status: entrevista` e garanta `.std/` no `.gitignore`.
 
@@ -105,7 +106,7 @@ Dispare um subagente `Plan` com o resumo da etapa 2, a fatia escolhida e os reto
 - trazer o **mapa de documentação**: arquivos de `snaps/` (documentação humana, comportamento) e de `docs/` (técnica) a criar, editar ou remover, incluindo os que podem ficar **desatualizados** pela mudança (drift);
 - terminar com dúvidas e premissas.
 
-Ainda na `main` (o tutor recusou a branch na etapa 0)? Peça a branch de novo antes de apresentar o plano; sem ela, entregue o resumo do entendimento e encerre.
+Ainda na branch base (o tutor recusou a branch na etapa 0)? Peça a branch de novo antes de apresentar o plano; sem ela, entregue o resumo do entendimento e encerre.
 
 Apresente o resumo com `templates/plan-summary.md`, registre `status: aguardando aprovação` e **pare**. Ajustes pedidos pelo tutor voltam para o plano; só siga com um "seguir" claro. Registre `plano aprovado: <data>`.
 
@@ -145,6 +146,6 @@ O tutor pode pedir correções e ajustes. Antes de agir, compare o pedido com o 
 
 ## Limites
 
-- Nunca produza na `main`. Crie branch só com o ok do tutor.
+- Nunca produza na branch base nem na `main`/`master`. Crie branch só com o ok do tutor.
 - Nada gravado no projeto antes do aceite do plano, exceto `.std/loop/` (e só com a branch definida).
 - Uma fatia por conversa.

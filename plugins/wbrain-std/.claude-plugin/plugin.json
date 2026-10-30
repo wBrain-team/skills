@@ -1,7 +1,7 @@
 {
   "name": "wbrain-std",
   "description": "Skills da wbrain para a técnica Source-of-Truth-Driven (STD): init, snaps, loop, tuning, onboard e design-system.",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "author": { "name": "wBrain" },
   "homepage": "https://github.com/wBrain-team/skills",
   "repository": "https://github.com/wBrain-team/skills"

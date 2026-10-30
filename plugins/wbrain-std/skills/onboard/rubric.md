@@ -17,7 +17,7 @@ Usada no diagnóstico (etapa 2) para medir a distância entre o projeto e o padr
 | **Testes** | Suíte roda via Docker, com teste pontual | Sem testes ou fora do Docker, mas dá para criar a estrutura mínima | Não há como rodar testes (ex.: só funciona em produção) |
 | **Comandos** (Makefile) | `make` cobre subir, testes, lint | Comandos espalhados ou só documentados | — |
 | **Dependências externas** | Todas visíveis, com sandbox ou mock | Algumas opacas, com caminho claro para o tutor resolver | Opacas, críticas e sem caminho conhecido |
-| **Git** | Branch `main`, histórico, fluxo de branches | Convenções de commit ou branch fora do padrão | — |
+| **Git** | Branch base, histórico, fluxo de branches | Convenções de commit ou branch fora do padrão | — |
 | **Deploy** (informativa) | Deploy documentado: o da init, ou um próprio que o tutor mantém | Deploy não documentado, ou adoção/migração planejada | — |
 
 ## Veredito global

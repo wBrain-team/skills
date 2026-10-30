@@ -50,4 +50,4 @@ Só para projetos sem testes automáticos. O tutor decide se e quando.
 - <regra crítica> — <tipo de teste sugerido>
 
 ## Próximo passo
-<ex.: revisar e commitar a base, integrar à `main` e rodar a `wbrain-std:tuning` na próxima mudança de snap>
+<ex.: revisar e commitar a base, integrar à branch base e rodar a `wbrain-std:tuning` na próxima mudança de snap>

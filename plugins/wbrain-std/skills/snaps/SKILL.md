@@ -42,7 +42,7 @@ Rode `git branch --show-current`, `git status --short` e `ls -O snaps 2>/dev/nul
 
 1. **Projeto sem nenhum conteúdo** (pasta vazia, sem `snaps/`, sem código): sugira usar a skill `wbrain-std:init` para criar o projeto a partir do boilerplate e encerre.
 2. **Projeto com conteúdo ainda não normalizado para o padrão de snap** (existe código ou docs, mas `snaps/` está ausente ou vazio, ou os snaps existentes não seguem o padrão: sem `Extends:` onde há herança, textos no passado ou no futuro, `TODO`/`TBD`, arquivos que misturam assuntos): sugira a skill `wbrain-std:onboard` e explique que ela deixa o projeto pronto para o fluxo. Se o usuário preferir seguir mesmo assim, siga.
-3. **Branch `main` (ou `master`) ou HEAD destacado:** nada é produzido nela. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/`, `fix/`, `chore/` + descrição) e **crie a branch só com o ok** do usuário. Sem ok, a conversa segue normalmente (até a etapa 6 nada é gravado); no fechamento, a atualização automática só é oferecida fora da `main`.
+3. **Branch base ou HEAD destacado:** rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/std-config.sh get base_branch` (código `2`, sem `.std/config.json` → **recuse e encerre**, orientando `/wbrain-std:config`). Se a branch atual for a base configurada, `main`, `master` ou HEAD destacado, nada é produzido nela. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (`feat/`, `fix/`, `chore/` + descrição) e **crie a branch só com o ok** do usuário. Sem ok, a conversa segue normalmente (até a etapa 6 nada é gravado); no fechamento, a atualização automática só é oferecida fora da branch base.
 
 ## 1. Entender o projeto e o ponto em que ele está
 
@@ -103,7 +103,7 @@ Se o usuário quiser escrever por conta própria, convide-o a voltar com o rascu
 3. **Pergunte** com `AskUserQuestion` como o usuário prefere seguir:
    - **Atualizar automaticamente:** o agente aplica o plano em `snaps/`. Antes de gravar, confira o conteúdo contra `../shared/snaps-lint.md`; depois de gravar, mostre o que foi alterado e os achados do lint, se houver.
    - **Instruções para eu mesmo alterar:** o agente entrega, no chat, os trechos e o passo a passo por arquivo (caminho, o que colocar, onde), e se oferece para revisar o resultado (etapa 5).
-4. Lembre o caminho seguinte: conferir que está numa branch que **não** é a `main` e cujo diff contra a `main` é **só de `snaps/`** (a tuning recusa branch com código ou outros arquivos alterados), commitar os snaps e acionar a `wbrain-std:tuning`.
+4. Lembre o caminho seguinte: conferir que está numa branch que **não** é a branch base e cujo diff contra ela é **só de `snaps/`** (a tuning recusa branch com código ou outros arquivos alterados), commitar os snaps e acionar a `wbrain-std:tuning`.
 5. Reforce que a tuning **bloqueia** snaps ambíguos ou incompletos e **não aceita** decisões dadas em texto no lugar do snap. Tudo o que foi decidido nesta conversa precisa estar escrito em `snaps/`.
 
 ## Limites

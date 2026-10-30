@@ -2,12 +2,13 @@
 # Etapas 0 e 1 da wbrain-std:tuning: guarda de branch + diff de snaps/.
 # Uso: preflight.sh [--full] [--base REF]
 #   --full      inclui o diff completo de snaps/
-#   --base REF  compara contra REF (ex.: commit de conclusão da última tuning) em vez da main/master
-# Saída: 0 = há modificação | 1 = branch main/master ou erro | 3 = nada a implementar
-#         4 = alterações fora de snaps/ (sem tuning em andamento)
+#   --base REF  compara contra REF (ex.: commit de conclusão da última tuning) em vez da branch base do .std/config.json
+# Saída: 0 = há modificação | 1 = branch protegida (base/main/master), config ausente ou erro
+#         3 = nada a implementar | 4 = alterações fora de snaps/ (sem tuning em andamento)
 set -uo pipefail
 
 SNAPS="snaps"
+CONFIG="$(cd "$(dirname "$0")" && pwd)/../../shared/scripts/std-config.sh"
 full=0; base=""
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -21,11 +22,12 @@ cd "$(git rev-parse --show-toplevel 2>/dev/null)" || { echo "ERRO: não é um re
 
 branch=$(git branch --show-current)
 if [ -z "$branch" ]; then
-  echo "RECUSADO: HEAD destacado (sem branch). Faça checkout de uma branch que não seja main." >&2
+  echo "RECUSADO: HEAD destacado (sem branch). Faça checkout de uma branch que não seja a base." >&2
   exit 1
 fi
-if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
-  echo "RECUSADO: branch atual é '$branch'. A tuning não roda na branch principal." >&2
+protected=$(bash "$CONFIG" protected) || exit 1
+if printf '%s\n' "$protected" | grep -qxF -- "$branch"; then
+  echo "RECUSADO: branch atual é '$branch' (branch base/principal). A tuning não roda nela." >&2
   echo "Proponha uma branch (ex.: feat/<descrição>) e crie-a com o ok do tutor." >&2
   exit 1
 fi
@@ -33,10 +35,7 @@ fi
 if [ -n "$base" ]; then
   git rev-parse --verify -q "$base^{commit}" >/dev/null || { echo "ERRO: base '$base' não encontrada." >&2; exit 1; }
 else
-  for ref in main master origin/main origin/master; do
-    git rev-parse --verify -q "$ref" >/dev/null && { base=$ref; break; }
-  done
-  [ -n "$base" ] || { echo "ERRO: branch principal não encontrada (main, master, origin/main ou origin/master)." >&2; exit 1; }
+  base=$(bash "$CONFIG" base-ref) || exit 1
 fi
 
 committed=$(git diff --name-status "$base"...HEAD -- "$SNAPS")

@@ -87,4 +87,5 @@ Edite os arquivos copiados conforme a entrevista:
   e verifique cada destino (relativo ao arquivo de origem). Corrija os quebrados.
 - Se `deploy/` foi mantido, confira que o exemplo adaptado ainda é válido: `bash deploy/tests/config-test.sh`.
 - Reporte ao usuário: o que foi copiado, o que foi adaptado (por arquivo), o que foi removido, ADRs criados e sugestões de próximos passos (ex.: preencher `snaps/snaps.md` com `wbrain-std:snaps`). Se `deploy/` foi mantido, inclua os passos do primeiro deploy (seção "Primeiro deploy" de `docs/stack/deploy.md`), lembrando que o projeto ainda precisa criar o `docker-compose.prod.yml` e o `.env.example` exigidos por `deploy/CONTRACT.md`.
+- Oriente a rodar `/wbrain-std:config` para definir a branch base antes de usar as demais skills (sem `.std/config.json` elas recusam).
 - Não faça commit, a menos que o usuário peça.
