@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-# Etapas 0 e 1 da wbrain-std:tuning: guarda de branch + diff de snapshots/.
+# Etapas 0 e 1 da wbrain-std:tuning: guarda de branch + diff de snaps/.
 # Uso: preflight.sh [--full] [--base REF]
-#   --full      inclui o diff completo de snapshots/
+#   --full      inclui o diff completo de snaps/
 #   --base REF  compara contra REF (ex.: commit de conclusão da última tuning) em vez da main/master
 # Saída: 0 = há modificação | 1 = branch main/master ou erro | 3 = nada a implementar
-#         4 = alterações fora de snapshots/ (sem tuning em andamento)
+#         4 = alterações fora de snaps/ (sem tuning em andamento)
 set -uo pipefail
 
-SNAPSHOTS="snapshots"
+SNAPS="snaps"
 full=0; base=""
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -39,12 +39,12 @@ else
   [ -n "$base" ] || { echo "ERRO: branch principal não encontrada (main, master, origin/main ou origin/master)." >&2; exit 1; }
 fi
 
-committed=$(git diff --name-status "$base"...HEAD -- "$SNAPSHOTS")
-local_changes=$(git diff --name-status HEAD -- "$SNAPSHOTS")
-untracked=$(git ls-files --others --exclude-standard -- "$SNAPSHOTS" | sed 's/^/??\t/')
+committed=$(git diff --name-status "$base"...HEAD -- "$SNAPS")
+local_changes=$(git diff --name-status HEAD -- "$SNAPS")
+untracked=$(git ls-files --others --exclude-standard -- "$SNAPS" | sed 's/^/??\t/')
 
 state=".std/tuning/${branch//\//__}.md"
-fingerprint=$( { git diff "$base" -- "$SNAPSHOTS"; git ls-files --others --exclude-standard -z -- "$SNAPSHOTS" | xargs -0 -r cat; } | git hash-object --stdin)
+fingerprint=$( { git diff "$base" -- "$SNAPS"; git ls-files --others --exclude-standard -z -- "$SNAPS" | xargs -0 -r cat; } | git hash-object --stdin)
 
 echo "branch: $branch"
 echo "base: $base"
@@ -60,40 +60,40 @@ echo
 echo "## Não rastreados"
 echo "${untracked:-(nada)}"
 
-# A tuning só roda numa branch cujo diff contra a base é apenas de snapshots/.
-# Com estado existente, o que está fora de snapshots/ é da própria tuning em andamento.
+# A tuning só roda numa branch cujo diff contra a base é apenas de snaps/.
+# Com estado existente, o que está fora de snaps/ é da própria tuning em andamento.
 others=$(
-  { git diff --name-only "$base"...HEAD -- . ":!$SNAPSHOTS" ":!.std"
-    git diff --name-only HEAD -- . ":!$SNAPSHOTS" ":!.std"
-    git ls-files --others --exclude-standard -- . ":!$SNAPSHOTS" ":!.std"; } | sort -u
+  { git diff --name-only "$base"...HEAD -- . ":!$SNAPS" ":!.std"
+    git diff --name-only HEAD -- . ":!$SNAPS" ":!.std"
+    git ls-files --others --exclude-standard -- . ":!$SNAPS" ":!.std"; } | sort -u
 )
 if [ -n "$others" ] && [ ! -f "$state" ]; then
   echo
-  echo "## Fora de $SNAPSHOTS/ (vs $base)"
+  echo "## Fora de $SNAPS/ (vs $base)"
   echo "$others"
   echo
-  echo "RECUSADO: a branch tem alterações fora de $SNAPSHOTS/. A tuning só roda quando o diff contra $base é apenas de $SNAPSHOTS/." >&2
+  echo "RECUSADO: a branch tem alterações fora de $SNAPS/. A tuning só roda quando o diff contra $base é apenas de $SNAPS/." >&2
   exit 4
 fi
 
 if [ -z "$committed$local_changes$untracked" ]; then
   echo
-  echo "SEM MODIFICAÇÃO: nenhuma alteração em $SNAPSHOTS/."
+  echo "SEM MODIFICAÇÃO: nenhuma alteração em $SNAPS/."
   exit 3
 fi
 
 echo
 echo "## Estatística (branch + local)"
-git diff --stat "$base" -- "$SNAPSHOTS" | tail -n 20
+git diff --stat "$base" -- "$SNAPS" | tail -n 20
 
 if [ $full -eq 1 ]; then
   echo
   echo "## Diff completo (branch + local, rastreados)"
-  git diff "$base" -- "$SNAPSHOTS"
+  git diff "$base" -- "$SNAPS"
   if [ -n "$untracked" ]; then
     echo
     echo "## Conteúdo dos não rastreados"
-    git ls-files --others --exclude-standard -- "$SNAPSHOTS" | while read -r f; do
+    git ls-files --others --exclude-standard -- "$SNAPS" | while read -r f; do
       echo "### $f"; cat "$f"; echo
     done
   fi

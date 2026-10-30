@@ -16,7 +16,7 @@ Tarefas (<n>): <x> paralelas, <y> sequenciais
 Camadas: <camadas>
 Design system: <componentes propostos, ou "nada">
 Atenção: <migrations, remoções, contratos de API alterados, ou "nada">
-Snapshots: <arquivos a criar/editar/remover>
+Snaps: <arquivos a criar/editar/remover>
 Docs: <arquivos a criar/editar/remover; ADR novo: sim/não>
 Premissas: <lista curta, ou "nenhuma">
 

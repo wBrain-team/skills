@@ -11,7 +11,7 @@
 ## Diagnóstico
 - harness: <nível> — <uma linha>
 - documentação: <nível> — <uma linha>
-- snapshots: <nível> — <uma linha>
+- snaps: <nível> — <uma linha>
 - docker: <nível> — <uma linha>
 - testes: <nível> — <uma linha>
 - comandos: <nível> — <uma linha>
@@ -28,9 +28,9 @@
 ## Plano
 - [ ] 1. <tarefa> — <área> — <quem faz>
 
-## Snapshots
-- [ ] snapshots/snapshots.md
-- [ ] snapshots/<arquivo>.md — <assunto>
+## Snaps
+- [ ] snaps/snaps.md
+- [ ] snaps/<arquivo>.md — <assunto>
 
 ## Pendências do tutor
 - <item>

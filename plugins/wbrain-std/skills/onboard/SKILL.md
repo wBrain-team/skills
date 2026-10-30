@@ -1,14 +1,14 @@
 ---
 name: onboard
-description: Traz um projeto existente para o fluxo wbrain-std — investiga o repositório com subagentes, entrevista o tutor, mede a distância até o padrão STD e, conforme o caso, entrega um relatório de bloqueios ou executa os ajustes (harness, docs, Docker, estrutura de testes e snapshots iniciais). Use apenas quando o usuário pedir explicitamente para fazer o onboarding wbrain-std de um projeto existente.
+description: Traz um projeto existente para o fluxo wbrain-std — investiga o repositório com subagentes, entrevista o tutor, mede a distância até o padrão STD e, conforme o caso, entrega um relatório de bloqueios ou executa os ajustes (harness, docs, Docker, estrutura de testes e snaps iniciais). Use apenas quando o usuário pedir explicitamente para fazer o onboarding wbrain-std de um projeto existente.
 disable-model-invocation: true
 ---
 
 # wbrain-std:onboard
 
-Skill da série **wbrain-std** — STD = **Source-of-Truth-Driven**, a técnica da wbrain para desenvolvimento com IA: o `snapshots/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `snapshot`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
+Skill da série **wbrain-std** — STD = **Source-of-Truth-Driven**, a técnica da wbrain para desenvolvimento com IA: o `snaps/` (mantido pelo tutor humano, com ajuda das skills `onboard` e `snap`) é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
-A `wbrain-std:init` cria projetos novos e a `wbrain-std:tuning` implementa mudanças a partir do diff de `snapshots/`. Esta skill fica entre as duas: pega um projeto **que já existe** e o deixa pronto para a tuning e a loop. Ela mede a distância até o padrão STD e decide a rota:
+A `wbrain-std:init` cria projetos novos e a `wbrain-std:tuning` implementa mudanças a partir do diff de `snaps/`. Esta skill fica entre as duas: pega um projeto **que já existe** e o deixa pronto para a tuning e a loop. Ela mede a distância até o padrão STD e decide a rota:
 - **distante**: documenta os principais problemas e o que precisa ser feito, e devolve o trabalho ao tutor;
 - **próximo ou intermediário**: planeja e executa os ajustes, com aprovação do tutor.
 
@@ -22,8 +22,8 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/onboard/`
 - `templates/report.md`: modelo do relatório de onboarding.
 - `templates/docker-migration.md`: modelo do plano de migração para Docker.
 - `templates/deploy-migration.md`: modelo do plano de migração de deploy.
-- `../init/template/`: **o padrão STD** (AGENTS.md, CLAUDE.md, `docs/`, `snapshots/snapshots.md`, `deploy/`, `gitignore`). É o modelo para o qual o projeto deve convergir.
-- `../shared/snapshot-lint.md`: regras de escrita dos snapshots.
+- `../init/template/`: **o padrão STD** (AGENTS.md, CLAUDE.md, `docs/`, `snaps/snaps.md`, `deploy/`, `gitignore`). É o modelo para o qual o projeto deve convergir.
+- `../shared/snaps-lint.md`: regras de escrita dos snaps.
 - `../shared/templates/plan-summary.md`: formato enxuto de apresentação de plano.
 - `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh`: verificação de links internos.
 
@@ -44,7 +44,7 @@ O objetivo é aproximar o projeto do modelo do init (estrutura de `docs/`, guide
 - Divergência mantida pelo tutor vira ADR em `docs/decisions/` com as razões dele. Proposta aceita entra no plano.
 
 ### Limites do que a skill altera
-- Mexe só em harness (`AGENTS.md`, `CLAUDE.md`, `.claude/`), `docs/`, `snapshots/`, infraestrutura (Docker, compose, Makefile, `.env.example`, `.gitignore`) e estrutura de testes. **Não altera código de negócio.** Se Docker ou testes exigirem ajuste no código (ex.: ler config de variável de ambiente), proponha e só faça com aprovação explícita.
+- Mexe só em harness (`AGENTS.md`, `CLAUDE.md`, `.claude/`), `docs/`, `snaps/`, infraestrutura (Docker, compose, Makefile, `.env.example`, `.gitignore`) e estrutura de testes. **Não altera código de negócio.** Se Docker ou testes exigirem ajuste no código (ex.: ler config de variável de ambiente), proponha e só faça com aprovação explícita.
 - **Nunca toque em produção**: nada de deploy, alteração de CI/CD de deploy, DNS, secrets reais ou recursos de nuvem. O máximo é deixar arquivos e planos prontos; a execução é do tutor.
 - Nada destrutivo (apagar, sobrescrever, mover) sem confirmação. Antes de sobrescrever, leia o alvo.
 - Commits seguem a **política de commits** combinada na entrevista (camada 4) e registrada no estado. Sem política definida, não commite. Nunca faça push sem pedido nem commite na `main`.
@@ -67,14 +67,14 @@ ls -A1 | grep -vxE '\.git|\.claude|\.claude-config|\.DS_Store|Thumbs\.db|desktop
 - Listagem vazia (pasta limpa) → **recuse e encerre** e indique a `wbrain-std:init`.
 - Branch `main` (ou `master`) ou HEAD destacado → **não produza nada nela**. Proponha com `AskUserQuestion` um nome de branch no padrão de `docs/guidelines/git.md` (ex.: `chore/std-onboard`) e **crie a branch só com o ok** do tutor. Sem ok, a descoberta, o diagnóstico e a entrevista (etapas 1 a 3) podem seguir, mas nada é gravado, nem o arquivo de estado; a branch volta a ser pedida antes da decisão de rota (etapa 4) e, sem ela, entregue o resumo no chat e encerre.
 - Alterações locais não commitadas → avise e peça que o tutor commite ou guarde antes de seguir.
-- `.std/onboard/state.md` existe → leia e **retome** da etapa registrada, sem refazer o que já foi decidido. Se `status: concluído`, informe que o onboarding já foi feito e que o próximo passo é a `wbrain-std:tuning` (mudança já escrita em `snapshots/`) ou a `wbrain-std:loop` (pedido em linguagem natural).
+- `.std/onboard/state.md` existe → leia e **retome** da etapa registrada, sem refazer o que já foi decidido. Se `status: concluído`, informe que o onboarding já foi feito e que o próximo passo é a `wbrain-std:tuning` (mudança já escrita em `snaps/`) ou a `wbrain-std:loop` (pedido em linguagem natural).
 
 ## 1. Descoberta (subagentes Explore, em paralelo)
 
 Dispare até **4** subagentes `Explore`, um por foco:
 
 - **(a) Stack e estrutura**: linguagens, frameworks e versões; monorepo ou não; pastas principais; como o projeto roda hoje (scripts, Makefile, `package.json`, `pyproject.toml` etc.); principais módulos de negócio.
-- **(b) Harness e documentação**: `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.cursor/`, `.cursorrules`, `.github/copilot-instructions.md`, `.windsurfrules`, `docs/`, ADRs, READMEs, wikis no repositório, `snapshots/` ou equivalentes (PRDs, user stories). Para cada um: o que cobre, se está atualizado em relação ao código e se mistura assuntos.
+- **(b) Harness e documentação**: `AGENTS.md`, `CLAUDE.md`, `.claude/`, `.cursor/`, `.cursorrules`, `.github/copilot-instructions.md`, `.windsurfrules`, `docs/`, ADRs, READMEs, wikis no repositório, `snaps/` ou equivalentes (PRDs, user stories). Para cada um: o que cobre, se está atualizado em relação ao código e se mistura assuntos.
 - **(c) Testes e qualidade**: existe suíte? framework, quantidade aproximada, áreas cobertas e descobertas, como rodar, se roda em container; lint, formatter, CI (`.github/workflows`, `.gitlab-ci.yml` etc.).
 - **(d) Infraestrutura e dependências**: Dockerfile e compose (o que sobe e o que fica de fora); variáveis de ambiente e onde são lidas; serviços externos (bancos gerenciados, filas, APIs de terceiros, SaaS, storage, autenticação externa), marcando o que **não** pode ser reproduzido localmente; como é o deploy atual.
 
@@ -92,7 +92,7 @@ Objetivo: entender a visão original do projeto, como ele é desenvolvido e mant
 
 1. **Negócio e visão** — o que é; que problema resolve; para quem; valor principal; a visão original de quem criou.
 2. **Usuários e jornadas** — perfis; fluxos principais; idioma(s) do conteúdo.
-3. **Funcionalidades existentes** — o que está em produção e é usado; o que está incompleto ou experimental; o que é código morto. Confronte com o que a descoberta encontrou. Isso define o escopo dos snapshots (etapa 9).
+3. **Funcionalidades existentes** — o que está em produção e é usado; o que está incompleto ou experimental; o que é código morto. Confronte com o que a descoberta encontrou. Isso define o escopo dos snaps (etapa 9).
 4. **Desenvolvimento e manutenção** — quem mantém; fluxo de git e de revisão; CI; frequência de deploy; se já é desenvolvido com IA e qual harness usa (e o que funciona ou não nele).
    - **Política de commits do onboarding** (pergunta obrigatória): pergunte se o tutor quer que o agente faça commits ao longo das adequações ou como prefere que seja feito (ex.: um commit por tarefa do plano, um commit por área, um único commit no fim, ou nenhum, deixando tudo para ele revisar). Pergunte também sobre convenção de mensagem, se o projeto não usa Conventional Commits. Registre a resposta no estado.
 5. **Stack** — confirme a stack real. Para cada camada (backend e dados, autenticação, frontend, testes), leia o doc correspondente em `../init/template/docs/` e aponte **só** as diferenças que valem a conversa, seguindo **Propor, explicar, respeitar a decisão**. Não proponha reescrever a aplicação: trocar framework ou linguagem fica fora do escopo.
@@ -109,7 +109,7 @@ Ao final, apresente um **resumo** (visão, funcionalidades existentes, decisões
 - Faça só os ajustes seguros, se o tutor aprovar: `.std/` no `.gitignore` e um `AGENTS.md` mínimo apontando para o relatório.
 - Registre `status: bloqueado (aguardando tutor)` e encerre explicando que, resolvidos os bloqueios, a skill pode ser invocada de novo e retoma pelo estado.
 
-**Próximo ou intermediário** → monte o **plano de adequação**: tarefas pequenas por área (harness, docs, Docker, testes, snapshots), cada uma com o que muda, o motivo e quem faz. Apresente no formato enxuto de `../shared/templates/plan-summary.md` (adaptado: sem a relação snapshot → teste), grave as tarefas como checkboxes no estado, registre `status: aguardando aprovação` e **pare**.
+**Próximo ou intermediário** → monte o **plano de adequação**: tarefas pequenas por área (harness, docs, Docker, testes, snaps), cada uma com o que muda, o motivo e quem faz. Apresente no formato enxuto de `../shared/templates/plan-summary.md` (adaptado: sem a relação snap → teste), grave as tarefas como checkboxes no estado, registre `status: aguardando aprovação` e **pare**.
 - **Seguir** → `status: em andamento`, vá para a etapa 5.
 - **Ajuste** → aplique **Propor, explicar, respeitar a decisão**, refaça o plano e apresente de novo.
 
@@ -140,7 +140,7 @@ O fluxo STD exige que tudo rode em containers (desenvolvimento e testes). Esta e
 
 ## 7. Deploy
 
-O deploy é uma trilha **separada e opcional**: a tuning depende de snapshots, testes e Docker, não do deploy. Trocar o deploy de um projeto em produção é a mudança mais arriscada do onboarding (dados, DNS, secrets, indisponibilidade), por isso ela nunca é executada aqui.
+O deploy é uma trilha **separada e opcional**: a tuning depende de snaps, testes e Docker, não do deploy. Trocar o deploy de um projeto em produção é a mudança mais arriscada do onboarding (dados, DNS, secrets, indisponibilidade), por isso ela nunca é executada aqui.
 
 **Checklist de compatibilidade com o deploy da init** (`../init/template/deploy/CONTRACT.md` e `../init/template/docs/stack/deploy.md`):
 - roda via compose (hoje ou após a etapa 6), com healthchecks;
@@ -170,34 +170,34 @@ A tuning depende de TDD: precisa de um jeito confiável de escrever e rodar test
   - banco de teste isolado, se houver banco (ver `template/docs/testing/test-database.md`);
   - pastas e convenções de fixtures e factories;
   - **um teste de fumaça** que só prova que a infraestrutura de testes funciona.
-- Documente em `docs/testing/testing.md` a convenção de rastreabilidade de `../shared/rastreabilidade.md` (marcador `snapshot:` nos testes de regra de negócio). Testes existentes **não** são marcados em massa; depois da etapa 9, rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/snapshot-coverage.sh` e registre no relatório a cobertura inicial como linha de base.
+- Documente em `docs/testing/testing.md` a convenção de rastreabilidade de `../shared/rastreabilidade.md` (marcador `snap:` nos testes de regra de negócio). Testes existentes **não** são marcados em massa; depois da etapa 9, rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/snaps-coverage.sh` e registre no relatório a cobertura inicial como linha de base.
 - Registre em `docs/testing/` e `docs/stack/makefile.md`.
 
-## 9. Snapshots
+## 9. Snaps
 
-Gerar os snapshots a partir do que o projeto já tem é parte do trabalho desta skill: o projeto ainda não tem fonte da verdade e precisa de uma base mínima para o tutor seguir pela tuning. O agente redige, mas **só grava um arquivo depois que o tutor aprova o conteúdo dele**.
+Gerar os snaps a partir do que o projeto já tem é parte do trabalho desta skill: o projeto ainda não tem fonte da verdade e precisa de uma base mínima para o tutor seguir pela tuning. O agente redige, mas **só grava um arquivo depois que o tutor aprova o conteúdo dele**.
 
-Se já existir `snapshots/` (ou documentação equivalente encontrada na etapa 1), parta dela: reorganize e complete em vez de reescrever, com a mesma regra de aprovação.
+Se já existir `snaps/` (ou documentação equivalente encontrada na etapa 1), parta dela: reorganize e complete em vez de reescrever, com a mesma regra de aprovação.
 
-1. **Mapa de snapshots.** Dispare um subagente `Plan` com o resumo da entrevista (funcionalidades existentes, usuários, jornadas) e os retornos da descoberta. Ele identifica os domínios de negócio e propõe, com justificativa, o eixo de organização dentro deles (telas para aplicação com interface, endpoints para microsserviço de API, eventos ou jobs para workers), conforme "Como organizar `snapshots/`" em `../snapshot/guia-de-escrita.md`. Propõe a árvore de arquivos a partir de `snapshots/snapshots.md`, com domínios no primeiro nível e transversais (`base/`, `permissoes/`, `componentes/`) em pastas próprias, seguindo `../shared/snapshot-lint.md`: um assunto por arquivo (cada fluxo de negócio, cada componente relevante), herança `Extends` quando houver base comum, termos do glossário do projeto. Retorno: a árvore com uma linha por arquivo descrevendo o assunto, mais "Dúvidas para o tutor". Apresente o mapa ao tutor, confirme primeiro o eixo de organização e ajuste até aprovar. O eixo escolhido abre o `snapshots/snapshots.md`. Registre no estado.
+1. **Mapa de snaps.** Dispare um subagente `Plan` com o resumo da entrevista (funcionalidades existentes, usuários, jornadas) e os retornos da descoberta. Ele identifica os domínios de negócio e propõe, com justificativa, o eixo de organização dentro deles (telas para aplicação com interface, endpoints para microsserviço de API, eventos ou jobs para workers), conforme "Como organizar `snaps/`" em `../snaps/guia-de-escrita.md`. Propõe a árvore de arquivos a partir de `snaps/snaps.md`, com domínios no primeiro nível e transversais (`base/`, `permissoes/`, `componentes/`) em pastas próprias, seguindo `../shared/snaps-lint.md`: um assunto por arquivo (cada fluxo de negócio, cada componente relevante), herança `Extends` quando houver base comum, termos do glossário do projeto. Retorno: a árvore com uma linha por arquivo descrevendo o assunto, mais "Dúvidas para o tutor". Apresente o mapa ao tutor, confirme primeiro o eixo de organização e ajuste até aprovar. O eixo escolhido abre o `snaps/snaps.md`. Registre no estado.
 2. **Um documento por vez**, na ordem do mapa (raiz e glossário primeiro):
    - dispare um subagente `Explore` para levantar o comportamento **atual** daquele assunto no código e nos testes: regras, validações, casos de borda, erros e permissões, com `caminho:linha`;
-   - redija o snapshot seguindo **todas** as regras de `snapshot-lint.md`: presente, sem passado, sem futuro, comportamento testável com números, o quê e não como, termos consistentes, fonte única com links, casos de borda explícitos, sem `TODO`;
-   - confira o rascunho contra `snapshot-lint.md` antes de mostrar;
+   - redija o snap seguindo **todas** as regras de `snaps-lint.md`: presente, sem passado, sem futuro, comportamento testável com números, o quê e não como, termos consistentes, fonte única com links, casos de borda explícitos, sem `TODO`;
+   - confira o rascunho contra `snaps-lint.md` antes de mostrar;
    - apresente ao tutor e pergunte o que for preciso, **sem deixar ambiguidade**: regras que o código não deixa claras, comportamentos que parecem bug, termos com mais de um sentido;
    - grave o arquivo só após a aprovação e marque-o no estado.
-3. **Realidade, não intenção.** O snapshot descreve **o que a aplicação faz hoje**.
-   - Se o tutor disser que algo "deveria ser diferente" ou "vai mudar", isso **não** entra no snapshot: registre na seção **Gaps** do relatório, como futura mudança de snapshot a ser feita pelo tutor e implementada pela tuning.
-   - Se o código parecer ter um bug, pergunte. Se o tutor confirmar que é bug, o snapshot descreve o comportamento correto e o bug vai para **Gaps**. Caso contrário, o snapshot descreve o comportamento atual.
+3. **Realidade, não intenção.** O snap descreve **o que a aplicação faz hoje**.
+   - Se o tutor disser que algo "deveria ser diferente" ou "vai mudar", isso **não** entra no snap: registre na seção **Gaps** do relatório, como futura mudança de snap a ser feita pelo tutor e implementada pela tuning.
+   - Se o código parecer ter um bug, pergunte. Se o tutor confirmar que é bug, o snap descreve o comportamento correto e o bug vai para **Gaps**. Caso contrário, o snap descreve o comportamento atual.
 4. **Escopo mínimo.** Especifique o necessário para o tutor continuar pela tuning: as funcionalidades em produção e as áreas que ele pretende mexer primeiro. Áreas não especificadas ficam listadas no relatório.
-5. Garanta que todo snapshot é alcançável a partir de `snapshots/snapshots.md`.
+5. Garanta que todo snap é alcançável a partir de `snaps/snaps.md`.
 
 ## 10. Verificação e relatório
 
-- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh docs snapshots` e corrija os links quebrados.
-- Dispare um subagente `Explore` para um lint final de **todas** os snapshots criados, com `../shared/snapshot-lint.md`, no formato de retorno do guia. Achados → corrija com o tutor (cada correção aprovada por ele).
+- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh docs snaps` e corrija os links quebrados.
+- Dispare um subagente `Explore` para um lint final de **todas** os snaps criados, com `../shared/snaps-lint.md`, no formato de retorno do guia. Achados → corrija com o tutor (cada correção aprovada por ele).
 - Se há Docker, rode a suíte via Docker uma vez (`make test` ou equivalente) e registre o resultado. Se `deploy/` foi copiado, rode `bash deploy/tests/config-test.sh` (só valida a configuração; não faz deploy).
-- Atualize `docs/std-onboarding.md` (modelo `templates/report.md`) com: veredito por dimensão antes e depois, o que foi feito, ADRs criados, **pendências do tutor**, **Gaps** e áreas sem snapshot.
+- Atualize `docs/std-onboarding.md` (modelo `templates/report.md`) com: veredito por dimensão antes e depois, o que foi feito, ADRs criados, **pendências do tutor**, **Gaps** e áreas sem snap.
 - Registre `status: concluído` no estado (ou `bloqueado`, se sobraram pendências que impedem a tuning).
 - Se a política combinada prevê commit no fim, faça-o agora; caso contrário, confira que o que foi commitado bate com a política.
-- Relatório final ao tutor, curto: o que mudou por área, pendências dele e o próximo passo — revisar (e commitar, se ainda não estiver commitada) a base (harness, docs, snapshots) e integrá-la à `main`. Depois disso, o desenvolvimento segue por duas portas: a `wbrain-std:tuning`, quando o tutor já escreveu a mudança em `snapshots/` (numa branch só com alterações de snapshot), e a `wbrain-std:loop`, para pedidos em linguagem natural.
+- Relatório final ao tutor, curto: o que mudou por área, pendências dele e o próximo passo — revisar (e commitar, se ainda não estiver commitada) a base (harness, docs, snaps) e integrá-la à `main`. Depois disso, o desenvolvimento segue por duas portas: a `wbrain-std:tuning`, quando o tutor já escreveu a mudança em `snaps/` (numa branch só com alterações de snap), e a `wbrain-std:loop`, para pedidos em linguagem natural.

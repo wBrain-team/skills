@@ -20,7 +20,7 @@
 - [ ] 2. <tarefa> — teste: `<comando pontual>`
 
 ## Documentação
-- snapshots/<arquivo>.md — criar | editar | remover — <o que muda>
+- snaps/<arquivo>.md — criar | editar | remover — <o que muda>
 - docs/<arquivo>.md — criar | editar | remover — <o que muda>
 
 ## Premissas

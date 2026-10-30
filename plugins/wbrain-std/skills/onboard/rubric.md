@@ -12,7 +12,7 @@ Usada no diagnóstico (etapa 2) para medir a distância entre o projeto e o padr
 |---|---|---|---|
 | **Harness** | `AGENTS.md`/`CLAUDE.md` no padrão STD | Sem harness, ou harness de outra ferramenta a migrar | — |
 | **Documentação** (`docs/`) | Estrutura e índices no modelo do template, coerente com o código | Docs espalhados, desatualizados ou inexistentes, mas o código é legível | Código ilegível ou sem ninguém que saiba explicar o projeto |
-| **Snapshots** | `snapshots/` com raiz, um assunto por arquivo, no presente | Sem snapshots, mas o tutor conhece o comportamento e responde à entrevista | Ninguém sabe dizer o que o sistema deve fazer |
+| **Snaps** | `snaps/` com raiz, um assunto por arquivo, no presente | Sem snaps, mas o tutor conhece o comportamento e responde à entrevista | Ninguém sabe dizer o que o sistema deve fazer |
 | **Docker** | Dev e testes rodam via compose | Não roda em Docker, mas as dependências são reproduzíveis ou mockáveis | Depende de serviços, hardware ou ambientes que não podem ser reproduzidos nem mockados |
 | **Testes** | Suíte roda via Docker, com teste pontual | Sem testes ou fora do Docker, mas dá para criar a estrutura mínima | Não há como rodar testes (ex.: só funciona em produção) |
 | **Comandos** (Makefile) | `make` cobre subir, testes, lint | Comandos espalhados ou só documentados | — |
@@ -23,8 +23,8 @@ Usada no diagnóstico (etapa 2) para medir a distância entre o projeto e o padr
 ## Veredito global
 
 - **Próximo**: nenhum `bloqueio` e no máximo 3 `ajuste`.
-- **Intermediário**: nenhum `bloqueio` em Docker, Testes ou Snapshots, e os demais bloqueios têm caminho claro.
-- **Distante**: qualquer `bloqueio` em Docker, Testes ou Snapshots, ou bloqueios sem caminho claro. Sem essas três dimensões a tuning não funciona.
+- **Intermediário**: nenhum `bloqueio` em Docker, Testes ou Snaps, e os demais bloqueios têm caminho claro.
+- **Distante**: qualquer `bloqueio` em Docker, Testes ou Snaps, ou bloqueios sem caminho claro. Sem essas três dimensões a tuning não funciona.
 
 A dimensão **Deploy** é só informativa: aparece no diagnóstico e no relatório, mas não conta para o veredito (ver etapa 7 do `SKILL.md`).
 

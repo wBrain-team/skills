@@ -1,14 +1,14 @@
 ---
 name: design-system
-description: Conduz a criação ou a evolução do design system do projeto (`@design-system/ui` + showcase). Sem design system ativo, entrevista o usuário (aceita imagens de referência), propõe direções visuais com personalidade, fugindo do visual genérico, e monta a fundação (tokens, cores, tipografia e componentes básicos). Com o design system existente, ajuda a pensar um componente novo e antecipa as decisões que ele exige. Apresenta o combinado e, com o consentimento do usuário, implementa o código, uma página de showcase por componente, e depois atualiza `docs/` e `snapshots/`. Use apenas quando o usuário pedir explicitamente ajuda com o design system ou com um componente de interface.
+description: Conduz a criação ou a evolução do design system do projeto (`@design-system/ui` + showcase). Sem design system ativo, entrevista o usuário (aceita imagens de referência), propõe direções visuais com personalidade, fugindo do visual genérico, e monta a fundação (tokens, cores, tipografia e componentes básicos). Com o design system existente, ajuda a pensar um componente novo e antecipa as decisões que ele exige. Apresenta o combinado e, com o consentimento do usuário, implementa o código, uma página de showcase por componente, e depois atualiza `docs/` e `snaps/`. Use apenas quando o usuário pedir explicitamente ajuda com o design system ou com um componente de interface.
 disable-model-invocation: true
 ---
 
 # wbrain-std:design-system
 
-Skill da série **wbrain-std** — STD = **Source-of-Truth-Driven**, a técnica da wbrain para desenvolvimento com IA: o `snapshots/` é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
+Skill da série **wbrain-std** — STD = **Source-of-Truth-Driven**, a técnica da wbrain para desenvolvimento com IA: o `snaps/` é a fonte da verdade, e a implementação avança em TDD estrito a partir dele.
 
-A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão, a `wbrain-std:snapshot` ajuda a escrever snapshots e a `wbrain-std:tuning` implementa mudanças a partir delas. Esta skill é a **parceira de design de interface**: monta a fundação do design system quando não há nenhum e ajuda a desenhar componentes novos quando ele já existe. O objetivo é sempre uma interface **bonita, mas antes de tudo usável**: clara, acessível e adequada a quem vai usá-la.
+A `wbrain-std:init` cria projetos novos, a `wbrain-std:onboard` traz projetos existentes para o padrão, a `wbrain-std:snaps` ajuda a escrever snaps e a `wbrain-std:tuning` implementa mudanças a partir delas. Esta skill é a **parceira de design de interface**: monta a fundação do design system quando não há nenhum e ajuda a desenhar componentes novos quando ele já existe. O objetivo é sempre uma interface **bonita, mas antes de tudo usável**: clara, acessível e adequada a quem vai usá-la.
 
 Siga as etapas **na ordem**. Fale com o usuário em pt-BR. Leia `AGENTS.md` antes de começar.
 
@@ -19,10 +19,10 @@ Caminhos relativos à pasta desta skill (`${CLAUDE_PLUGIN_ROOT}/skills/design-sy
 - `componentes-base.md`: o que compõe a fundação e os estados obrigatórios de cada componente.
 - `novo-componente.md`: roteiro para pensar um componente novo e levantar decisões antecipadas.
 - `anatomia-pagina.md`: o contrato de cada página do showcase.
-- `../shared/subagentes.md`, `../shared/snapshot-lint.md`, `../shared/rastreabilidade.md`: regras comuns do kit.
+- `../shared/subagentes.md`, `../shared/snaps-lint.md`, `../shared/rastreabilidade.md`: regras comuns do kit.
 - `../shared/tdd-e-cobertura.md`: TDD estrito e cobertura, com `docs/` como lei (etapas 4 e 5).
 - `../shared/ambiente-docker.md`: verificação e montagem do ambiente Docker (guarda 4), e padrão de `node_modules` em volume.
-- `../snapshot/guia-de-escrita.md`: como escrever os snapshots de componente.
+- `../snaps/guia-de-escrita.md`: como escrever os snaps de componente.
 
 ## Regras transversais (valem em todas as etapas)
 
@@ -52,7 +52,7 @@ Rode `git branch --show-current` e `git status --short`.
 
 ## 1. Diagnóstico
 
-Com um subagente, levante: `globals.css` (tokens ainda são os padrões do Shadcn?), componentes em `packages/ui/src/components/`, exports de `index.ts`, páginas existentes em `apps/design-system/`, `docs/frontend/design-system.md` e `snapshots/componentes/`.
+Com um subagente, levante: `globals.css` (tokens ainda são os padrões do Shadcn?), componentes em `packages/ui/src/components/`, exports de `index.ts`, páginas existentes em `apps/design-system/`, `docs/frontend/design-system.md` e `snaps/componentes/`.
 
 Classifique o **modo**:
 - **Fundação:** não há showcase com páginas de componentes, ou os tokens são os padrões sem identidade própria.
@@ -100,24 +100,24 @@ Só com a aprovação da etapa 3 e fora da `main`: se ainda estiver nela, peça 
 
 Mudança grande (fundação inteira): divida em blocos (tokens → formulário → feedback → overlays), mostre o resultado de cada bloco e siga.
 
-## 5. Docs e snapshots
+## 5. Docs e snaps
 
 Depois do código validado:
 - **`docs/frontend/design-system.md`:** catálogo atualizado (componente, página do showcase, quando usar) e a direção visual com os tokens principais. Crie a partir de `../init/template/docs/frontend/design-system.md` se não existir, e garanta o link em `docs/frontend/frontend.md`.
 - **`docs/frontend/styling.md`:** ajuste se houver regra nova de estilo (fontes, uso de sombra, densidade).
-- **`snapshots/componentes/<componente>.md`:** um arquivo por componente, com o comportamento observável (variantes, estados, teclado, mensagens, limites), no padrão de `../snapshot/guia-de-escrita.md` e conferido contra `../shared/snapshot-lint.md`. Link a partir de `snapshots/snapshots.md` em **Transversais**.
-- **Rastreabilidade:** adicione `// snapshot: snapshots/componentes/<componente>.md` nos testes (ver `../shared/rastreabilidade.md`).
-- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh` e `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/snapshot-coverage.sh snapshots/componentes/*.md` e corrija o que apontarem.
+- **`snaps/componentes/<componente>.md`:** um arquivo por componente, com o comportamento observável (variantes, estados, teclado, mensagens, limites), no padrão de `../snaps/guia-de-escrita.md` e conferido contra `../shared/snaps-lint.md`. Link a partir de `snaps/snaps.md` em **Transversais**.
+- **Rastreabilidade:** adicione `// snap: snaps/componentes/<componente>.md` nos testes (ver `../shared/rastreabilidade.md`).
+- Rode `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/check-doc-links.sh` e `bash ${CLAUDE_PLUGIN_ROOT}/skills/shared/scripts/snaps-coverage.sh snaps/componentes/*.md` e corrija o que apontarem.
 
 ## 6. Fechamento
 
-1. Resuma o que foi criado (tokens, componentes, páginas, docs, snapshots) e o que ficou em aberto. Inclua a **evidência de TDD** (vermelho confirmado por componente) e os **números de cobertura** contra o mínimo (`../shared/tdd-e-cobertura.md`, seção 4).
+1. Resuma o que foi criado (tokens, componentes, páginas, docs, snaps) e o que ficou em aberto. Inclua a **evidência de TDD** (vermelho confirmado por componente) e os **números de cobertura** contra o mínimo (`../shared/tdd-e-cobertura.md`, seção 4).
 2. Liste as melhorias sugeridas e não adotadas, para o usuário considerar depois.
-3. Sugira a mensagem de commit e lembre que mudanças futuras de comportamento desses componentes seguem o fluxo `wbrain-std:snapshot` → `wbrain-std:tuning` (ou esta skill, para componentes novos).
+3. Sugira a mensagem de commit e lembre que mudanças futuras de comportamento desses componentes seguem o fluxo `wbrain-std:snaps` → `wbrain-std:tuning` (ou esta skill, para componentes novos).
 
 ## Limites
 
 - Não grave nada antes da aprovação da etapa 3. Branch só com o ok do usuário; não faça commit nem push.
-- Atue só no frontend (`packages/ui`, `apps/design-system`, uso pontual nos apps quando combinado), em `docs/frontend/` e em `snapshots/componentes/` + link em `snapshots/snapshots.md`. Não altere backend nem snapshots de domínio. A exceção é o ambiente Docker (compose, Dockerfiles, Makefile, nginx, `.env.example`, `.gitignore`), só no escopo de `../shared/ambiente-docker.md` e com o ok do usuário; não toque em `deploy/`.
+- Atue só no frontend (`packages/ui`, `apps/design-system`, uso pontual nos apps quando combinado), em `docs/frontend/` e em `snaps/componentes/` + link em `snaps/snaps.md`. Não altere backend nem snaps de domínio. A exceção é o ambiente Docker (compose, Dockerfiles, Makefile, nginx, `.env.example`, `.gitignore`), só no escopo de `../shared/ambiente-docker.md` e com o ok do usuário; não toque em `deploy/`.
 - Não troque a stack (Shadcn, Tailwind, Remix Icon) sem o usuário pedir.
 - Nenhum arquivo de implementação (componente ou página) antes do seu teste, nem entrega sem a cobertura conferida.

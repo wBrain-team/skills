@@ -1,6 +1,6 @@
 # TDD e cobertura: os `docs/` são a lei
 
-Regra comum às skills que gravam código (`design-system`, `tuning`, `loop`). **Como** desenvolver está em `docs/`, e a skill o segue com rigor: a skill define o fluxo da conversa, mas nunca afrouxa o que `docs/` exige. Em conflito entre o texto da skill e `docs/guidelines/tdd.md` ou `docs/testing/`, vale o mais rigoroso. As restrições próprias de cada skill (ex.: a `tuning` não altera `snapshots/`) continuam valendo.
+Regra comum às skills que gravam código (`design-system`, `tuning`, `loop`). **Como** desenvolver está em `docs/`, e a skill o segue com rigor: a skill define o fluxo da conversa, mas nunca afrouxa o que `docs/` exige. Em conflito entre o texto da skill e `docs/guidelines/tdd.md` ou `docs/testing/`, vale o mais rigoroso. As restrições próprias de cada skill (ex.: a `tuning` não altera `snaps/`) continuam valendo.
 
 ## 1. Antes da primeira linha de código
 Leia `docs/guidelines/tdd.md`, `docs/guidelines/agent-behavior.md`, `docs/testing/testing.md` e o doc da camada (`backend-*.md`, `frontend.md`, `fixtures-factories.md`). Anote para si: o comando de teste pontual, o comando de cobertura e os **mínimos de cobertura** que esses docs fixam. Nada disso é inventado pela skill.

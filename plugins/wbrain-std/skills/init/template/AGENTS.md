@@ -1,7 +1,7 @@
 
 Protocolo:
-- A `fonte da verdade` deste projeto está em `./snapshots` e o ponto de partida é o arquivo `./snapshots/snapshots.md`.
-- `snapshots/` diz **o que** a aplicação faz (negócio); `docs/` diz **como** ela é construída (técnica).
+- A `fonte da verdade` deste projeto está em `./snaps` e o ponto de partida é o arquivo `./snaps/snaps.md`.
+- `snaps/` diz **o que** a aplicação faz (negócio); `docs/` diz **como** ela é construída (técnica).
 - Um agente só pode modificar a `fonte da verdade` com aprovação explícita do tutor humano.
 - Skills específicas podem impor restrições próprias: siga sempre as instruções da skill em execução.
 

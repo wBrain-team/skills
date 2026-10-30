@@ -1,9 +1,9 @@
-# Guia de escrita de snapshots
+# Guia de escrita de snaps
 
-Cola para o agente consultar e citar ao orientar o tutor. As regras completas (e o que a tuning bloqueia) estão em `../shared/snapshot-lint.md`; este guia não as substitui.
+Cola para o agente consultar e citar ao orientar o tutor. As regras completas (e o que a tuning bloqueia) estão em `../shared/snaps-lint.md`; este guia não as substitui.
 
 ## A ideia em uma frase
-Um snapshot diz **o que a aplicação faz agora**, em um arquivo pequeno, com regras que um teste consegue verificar.
+Um snap diz **o que a aplicação faz agora**, em um arquivo pequeno, com regras que um teste consegue verificar.
 
 ## Errado e certo
 
@@ -41,33 +41,33 @@ Uma linha dizendo o que é e para quem.
 ```
 
 Notas sobre o esqueleto:
-- A linha `Extends:` só entra se o snapshot herda de outra, e fica sempre na **primeira linha**, sozinha.
-- A linha `Sobrescreve:` só existe em snapshot filho, para cada regra do pai que ela muda.
+- A linha `Extends:` só entra se o snap herda de outra, e fica sempre na **primeira linha**, sozinha.
+- A linha `Sobrescreve:` só existe em snap filho, para cada regra do pai que ela muda.
 - Os blocos `Casos de borda e erro`, `Permissões` e `Veja também` entram quando houver conteúdo real. Nunca como espaço reservado.
 
-## Perguntas que destravam um snapshot em branco
+## Perguntas que destravam um snap em branco
 - Qual é o uso mais simples possível, do começo ao fim?
 - O que acontece quando dá errado?
 - Quem não pode fazer isso?
 - Qual é o número (limite, prazo, tamanho) por trás de "rápido", "muitos", "grande"?
-- Existe outro snapshot que já define parte disso? (Então use um link.)
+- Existe outro snap que já define parte disso? (Então use um link.)
 
-## Como organizar `snapshots/`
+## Como organizar `snaps/`
 
 A árvore segue o modelo mental de quem conhece a aplicação: qualquer pessoa que conhece o sistema deve achar onde cada detalhe está descrito.
 
 - **Domínio de negócio no primeiro nível.** Uma pasta por domínio (`pedidos/`, `catalogo/`, `faturamento/`), não por camada técnica (`frontend/`, `backend/`).
-- **Um eixo dentro do domínio, escolhido por projeto:** telas (aplicação com interface), endpoints ou recursos (microsserviço de API), eventos ou jobs (workers e filas). O eixo escolhido fica declarado no topo de `snapshots/snapshots.md`.
-- **A regra de negócio vive uma vez, no domínio.** Snapshots de tela e de endpoint apontam para ela com link em vez de repeti-la.
-- **Transversais em pastas próprias:** `base/` (pais de `Extends`), `permissoes/`, e no frontend `componentes/`, com um snapshot por componente visual.
+- **Um eixo dentro do domínio, escolhido por projeto:** telas (aplicação com interface), endpoints ou recursos (microsserviço de API), eventos ou jobs (workers e filas). O eixo escolhido fica declarado no topo de `snaps/snaps.md`.
+- **A regra de negócio vive uma vez, no domínio.** Snaps de tela e de endpoint apontam para ela com link em vez de repeti-la.
+- **Transversais em pastas próprias:** `base/` (pais de `Extends`), `permissoes/`, e no frontend `componentes/`, com um snap por componente visual.
 - **Nomes vêm do glossário.** Se o negócio diz "pedido", a pasta é `pedidos/`.
 - **Teste de descoberta:** quem conhece o sistema chega à regra a partir do índice em até dois cliques.
 
 ## Árvore de exemplo
 
 ```
-snapshots/
-├── snapshots.md                 # índice: eixo de organização + links por domínio
+snaps/
+├── snaps.md                 # índice: eixo de organização + links por domínio
 ├── base/
 │   └── data-list.md         # comportamento comum das listas
 ├── componentes/
@@ -87,7 +87,7 @@ Num microsserviço, o mesmo domínio teria `pedidos/criar-pedido.md` e `pedidos/
 
 ## Lembretes
 - Um termo para um conceito (não alterne "cliente", "usuário", "comprador").
-- Cada regra vive em um só lugar; os outros snapshots apontam com link.
-- Toda snapshot é alcançável a partir de `snapshots/snapshots.md`.
-- Snapshot de implementação (ex.: refactor) começa com "Snapshot técnica: ..." e só então pode falar de como.
-- Quem grava o snapshot é o tutor. O agente sugere no chat.
+- Cada regra vive em um só lugar; os outros snaps apontam com link.
+- Toda snap é alcançável a partir de `snaps/snaps.md`.
+- Snap de implementação (ex.: refactor) começa com "Snap técnica: ..." e só então pode falar de como.
+- Quem grava o snap é o tutor. O agente sugere no chat.

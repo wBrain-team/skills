@@ -54,15 +54,15 @@ Todas são de invocação manual (`disable-model-invocation`), no formato `/wbra
 | Skill | Uso |
 |---|---|
 | `init` | Inicializa um projeto a partir do template padrão |
-| `snapshot` | Escrita de snapshots |
+| `snaps` | Escrita de snaps |
 | `loop` | Desenvolvimento padrão: entrevista, fatiamento, plano e implementação em TDD |
-| `tuning` | Ajuste fino da aplicação guiado pelo diff de snapshot |
+| `tuning` | Ajuste fino da aplicação guiado pelo diff de snap |
 | `onboard` | Onboarding/migração de projetos existentes |
 | `design-system` | Fundação do design system e desenho de componentes novos |
 
-**STD = Source-of-Truth-Driven.** A fonte da verdade do projeto são os **snapshots** em `snapshots/`: arquivos pequenos, por domínio, que descrevem no presente o que a aplicação faz agora, com regras verificáveis por teste. Um snapshot não é proposta de mudança: a mudança é o diff dele.
+**STD = Source-of-Truth-Driven.** A fonte da verdade do projeto são os **snaps** em `snaps/`: arquivos pequenos, por domínio, que descrevem no presente o que a aplicação faz agora, com regras verificáveis por teste. Um snap não é proposta de mudança: a mudança é o diff dele.
 
-**Tuning ou loop?** Use a `tuning` quando a mudança já está escrita em `snapshots/`: o snapshot é a entrada, e ela só roda numa branch cujo diff contra a `main` é apenas de `snapshots/`. Use a `loop` para pedidos em linguagem natural: o snapshot é a saída, escrito junto com o código.
+**Tuning ou loop?** Use a `tuning` quando a mudança já está escrita em `snaps/`: o snap é a entrada, e ela só roda numa branch cujo diff contra a `main` é apenas de `snaps/`. Use a `loop` para pedidos em linguagem natural: o snap é a saída, escrito junto com o código.
 
 As skills dependem umas das outras (caminhos relativos), por isso são distribuídas juntas em um único plugin.
 
@@ -72,7 +72,7 @@ As skills dependem umas das outras (caminhos relativos), por isso são distribu�
 .claude-plugin/marketplace.json     # catálogo
 plugins/wbrain-std/
 ├── .claude-plugin/plugin.json
-└── skills/{init,snapshot,loop,tuning,onboard,design-system,shared}/
+└── skills/{init,snaps,loop,tuning,onboard,design-system,shared}/
 ```
 
 ## Contribuindo

@@ -11,7 +11,7 @@ Situação do projeto em relação ao fluxo wbrain-std (Source-of-Truth-Driven) 
 |---|---|---|---|
 | Harness | <nível> | <nível> | <uma linha> |
 | Documentação | | | |
-| Snapshots | | | |
+| Snaps | | | |
 | Docker | | | |
 | Testes | | | |
 | Comandos | | | |
@@ -38,11 +38,11 @@ Em ordem de prioridade.
 ## Pendências do tutor
 - [ ] <item> — <por que só o tutor resolve>
 
-## Gaps (mudanças futuras de snapshot)
-Diferenças entre o que existe e o que o tutor deseja. Não estão nos snapshots, que descrevem só o que existe: viram mudanças de snapshot feitas pelo tutor e implementadas pela `wbrain-std:tuning`.
+## Gaps (mudanças futuras de snap)
+Diferenças entre o que existe e o que o tutor deseja. Não estão nos snaps, que descrevem só o que existe: viram mudanças de snap feitas pelo tutor e implementadas pela `wbrain-std:tuning`.
 - <comportamento atual> → <comportamento desejado>
 
-## Áreas sem snapshot
+## Áreas sem snap
 - <área> — <motivo>
 
 ## Sugestões de testes
@@ -50,4 +50,4 @@ Só para projetos sem testes automáticos. O tutor decide se e quando.
 - <regra crítica> — <tipo de teste sugerido>
 
 ## Próximo passo
-<ex.: revisar e commitar a base, integrar à `main` e rodar a `wbrain-std:tuning` na próxima mudança de snapshot>
+<ex.: revisar e commitar a base, integrar à `main` e rodar a `wbrain-std:tuning` na próxima mudança de snap>

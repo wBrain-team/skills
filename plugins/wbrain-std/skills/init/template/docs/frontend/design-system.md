@@ -29,7 +29,7 @@ Páginas funcionam em claro, escuro e largura de celular, com textos realistas d
 | Componente | Página do showcase | Quando usar |
 |---|---|---|
 
-O comportamento de cada componente fica em `snapshots/componentes/<componente>.md`.
+O comportamento de cada componente fica em `snaps/componentes/<componente>.md`.
 
 ---
 

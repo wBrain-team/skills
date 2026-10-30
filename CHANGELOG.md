@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+- "snapshot" é abreviado para **snap**, no mesmo estilo de `docs/`: a pasta `snapshots/` vira `snaps/` (e `snapshots/snapshots.md` vira `snaps/snaps.md`), a skill `snapshot` vira `snaps` (`/wbrain-std:snaps`), `snapshot-lint.md` vira `snaps-lint.md`, `snapshot-coverage.sh` vira `snaps-coverage.sh` e o marcador de teste `# snapshot:` vira `# snap:`. Os "snapshots" de infraestrutura do template (backup do volume na AWS) não mudam.
+- Projetos existentes precisam renomear `snapshots/` para `snaps/` (e `snapshots.md` para `snaps.md`) e os marcadores `snapshot:` dos testes para `snap:`.
+
 ## 0.8.0
 - Nova regra compartilhada `shared/ambiente-docker.md`: antes de gravar código, `design-system`, `tuning` e `loop` verificam o ambiente Docker de desenvolvimento (compose, Dockerfiles, Makefile, healthchecks). Se estiver ausente ou incompleto, propõem montá-lo (na `design-system`, guarda 4 da etapa 0, com o ok do usuário; na `tuning` e na `loop`, como tarefa 1 do plano). A `init` continua criando só documentação.
 - `node_modules` do frontend passa a viver em volumes Docker, um na raiz e um por workspace, com instalação só no container (`make install`). Template: ADR-0006, seção em `docs/stack/infrastructure.md`, `makefile.md`, `folder-structure.md` e `node_modules/` no `.gitignore`. `onboard` ganha a seção no `docker-migration.md`.

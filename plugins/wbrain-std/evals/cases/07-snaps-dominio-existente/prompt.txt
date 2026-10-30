@@ -1,0 +1,1 @@
+/wbrain-std:snaps Quero especificar o cancelamento de pedido pelo cliente, com prazo de 24h após a compra. Já estou evoluindo algo que existe; proponha direto em quais arquivos de snaps/ isso entra.
