@@ -1,0 +1,12 @@
+// Captura direta de UMA página (sem escrever código): `make screenshot route=/acoes/botao sizes=all`.
+// Parâmetros chegam por variáveis SHOT_* (o Makefile monta).
+import { test } from "../../fixtures"
+
+const route = process.env.SHOT_ROUTE
+
+test.skip(!route, "Defina SHOT_ROUTE (use `make screenshot route=/acoes/botao`).")
+
+test(`pagina ${route ?? ""}`, async ({ open, shot }) => {
+  await open(route!)
+  await shot("pagina", { fullPage: !process.env.SHOT_VIEWPORT_ONLY })
+})

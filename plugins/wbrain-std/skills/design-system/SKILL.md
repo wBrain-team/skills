@@ -96,7 +96,7 @@ Só com a aprovação da etapa 3 e fora da branch base: se ainda estiver nela, p
 3. **Componentes, um por vez, em TDD** (`../shared/tdd-e-cobertura.md`, seção 2): (a) **teste primeiro** (Vitest + RTL, `docs/testing/frontend.md`): estados, interação por teclado, `aria-*`, disabled, variantes; (b) rode e **confirme o vermelho**; (c) só então gere (`make shadcn component=<nome>`, quando houver equivalente) e implemente: imports relativos, customização, exports em `packages/ui/src/index.ts`; peças compostas em `components/common/`; (d) verde; (e) refactor. Nunca crie o arquivo do componente antes do arquivo de teste.
 4. **Showcase:** uma página por componente (e uma por fundamento) em `apps/design-system/`, seguindo `anatomia-pagina.md`, com entrada na navegação. Também em TDD: teste de renderização da página antes dela.
 5. **Revisão de detalhe:** passe cada página e componente pela lista "Detalhes que evidenciam descuido" de `direcao-visual.md` e compare com os vizinhos (padding, raio, alturas, foco, cores de texto). Corrija antes de seguir.
-6. **Validação:** rode lint, build e a suíte do frontend pelos comandos do `AGENTS.md`/`Makefile`, e depois a **cobertura** (`../shared/tdd-e-cobertura.md`, seção 3). Abaixo do mínimo dos `docs/` → escreva os testes que faltam. Se os `docs/` não definem comando ou mínimo para o frontend, reporte o medido e proponha o texto para `docs/testing/`. Se possível, abra o showcase e confira claro/escuro e largura de celular.
+6. **Validação:** rode lint, build e a suíte do frontend pelos comandos do `AGENTS.md`/`Makefile`, e depois a **cobertura** (`../shared/tdd-e-cobertura.md`, seção 3). Abaixo do mínimo dos `docs/` → escreva os testes que faltam. Se os `docs/` não definem comando ou mínimo para o frontend, reporte o medido e proponha o texto para `docs/testing/`. Depois, a **validação visual**: se `PW_TEST_CONNECT_WS_ENDPOINT` existir, é **obrigatória** (`../shared/ambiente-docker.md`, seção 4; processo em `docs/guidelines/visual-validation.md`). Gere as capturas (`make screenshot route=...`, claro/escuro; em mudança de layout, `sizes=all`), **abra as imagens**, confira os sinais e a lista de `direcao-visual.md`, corrija e gere de novo. Sem o ambiente, diga que não foi possível.
 
 Mudança grande (fundação inteira): divida em blocos (tokens → formulário → feedback → overlays), mostre o resultado de cada bloco e siga.
 
@@ -111,7 +111,7 @@ Depois do código validado:
 
 ## 6. Fechamento
 
-1. Resuma o que foi criado (tokens, componentes, páginas, docs, snaps) e o que ficou em aberto. Inclua a **evidência de TDD** (vermelho confirmado por componente) e os **números de cobertura** contra o mínimo (`../shared/tdd-e-cobertura.md`, seção 4).
+1. Resuma o que foi criado (tokens, componentes, páginas, docs, snaps) e o que ficou em aberto. Inclua a **evidência de TDD** (vermelho confirmado por componente) e os **números de cobertura** contra o mínimo (`../shared/tdd-e-cobertura.md`, seção 4). Cite o que foi verificado visualmente (rotas, temas, tamanhos) e o que **não** foi.
 2. Liste as melhorias sugeridas e não adotadas, para o usuário considerar depois.
 3. Sugira a mensagem de commit e lembre que mudanças futuras de comportamento desses componentes seguem o fluxo `wbrain-std:snaps` → `wbrain-std:tuning` (ou esta skill, para componentes novos).
 

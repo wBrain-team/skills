@@ -11,6 +11,7 @@ O desenvolvimento segue TDD estrito (ver [TDD](../guidelines/tdd.md)).
 | [test-database.md](test-database.md) | Container `db-test`, isolamento por rollback, `conftest.py`, execução paralela |
 | [fixtures-factories.md](fixtures-factories.md) | `factory_boy`, `bind_factories`, `auth_headers` |
 | [frontend.md](frontend.md) | Vitest + React Testing Library |
+| [visual.md](visual.md) | Playwright: verificação visual (screenshots) e jornadas E2E |
 
 ## Tipos de teste e responsabilidades
 

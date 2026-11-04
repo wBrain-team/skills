@@ -1,0 +1,46 @@
+// Playwright Test REMOTO. A conexão vem das variáveis nativas do framework:
+//   PW_TEST_CONNECT_WS_ENDPOINT       (ex.: ws://playwright:3000/)
+//   PW_TEST_CONNECT_EXPOSE_NETWORK=*  (o navegador usa a rede deste container: baseURL é um nome do compose)
+// A versão de @playwright/test DEVE ser igual à do servidor remoto (ver package.json: versão EXATA, sem ^).
+// O Makefile escolhe os tamanhos: `--project=visual-<tamanho>` (um por tamanho), `--project=matrix` ou `--project=journeys`.
+import { defineConfig } from "@playwright/test"
+
+export const SIZES = {
+  mobile: { width: 375, height: 812 },
+  tablet: { width: 768, height: 1024 },
+  small: { width: 1024, height: 768 },
+  laptop: { width: 1280, height: 800 },
+  desktop: { width: 1536, height: 864 },
+  wide: { width: 1920, height: 1080 },
+} as const
+export type SizeName = keyof typeof SIZES
+
+const TEMP = process.env.E2E_TEMP || "/temp"
+
+export default defineConfig({
+  testDir: "./tests",
+  outputDir: `${TEMP}/test-results`,
+  reporter: [["list"], ["html", { outputFolder: `${TEMP}/report`, open: "never" }]],
+  fullyParallel: true,
+  retries: 0,
+  timeout: 30_000,
+  expect: { timeout: 5_000 },
+  use: {
+    baseURL: process.env.E2E_BASE_URL || "http://nginx:2381" // ADAPTAR: nome do nginx no compose e porta,
+    reducedMotion: "reduce",
+    trace: "retain-on-failure",
+  },
+  projects: [
+    // Verificação visual: gera imagens. Um project por tamanho; o Makefile escolhe quais rodar.
+    ...(Object.keys(SIZES) as SizeName[]).map((size) => ({
+      name: `visual-${size}`,
+      testMatch: /(visual|scratch)\/.*\.spec\.ts$/,
+      testIgnore: /matrix\.spec\.ts$/,
+      use: { viewport: SIZES[size] },
+    })),
+    // Matriz ampla (todas as páginas × tema × tamanho): um único teste longo.
+    { name: "matrix", testMatch: /visual\/matrix\.spec\.ts$/, timeout: 900_000, use: { viewport: SIZES.laptop } },
+    // Jornadas E2E (passa/falha): poucas, macro, ligadas a um snap.
+    { name: "journeys", testMatch: /journeys\/.*\.spec\.ts$/, use: { viewport: SIZES.laptop } },
+  ],
+})

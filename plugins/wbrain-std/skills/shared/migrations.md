@@ -16,6 +16,13 @@ Toda versão do plugin que exija mudança em projetos existentes **adiciona uma 
 
 ---
 
+## 0.11.0 — Testes de navegador com Playwright (guiada)
+
+- **Sintoma:** projeto com frontend e `docs/` sem `docs/guidelines/visual-validation.md` e `docs/testing/visual.md`, sem `temp/` no `.gitignore` e/ou sem os alvos `screenshot`, `visual`, `e2e` no `docs/stack/makefile.md`.
+- **Ação:** não altere nada sozinho (a camada é opcional e depende do ambiente do projeto). Liste as pendências para o usuário: (1) existe `PW_TEST_CONNECT_WS_ENDPOINT`? Se não, nada a fazer; (2) copiar `visual-validation.md` e `visual.md` de `${CLAUDE_PLUGIN_ROOT}/skills/init/template/docs/` adaptando rotas, chaves de `localStorage`, host do nginx e porta, com as linhas nos índices `guidelines.md` e `testing.md` e os alvos em `makefile.md`; (3) `temp/` no `.gitignore`; (4) montar o serviço `e2e` e o cliente `src-frontend/e2e/` (esqueletos em `${CLAUDE_PLUGIN_ROOT}/skills/shared/templates/e2e/`, a adaptar) (`../shared/ambiente-docker.md`, seção 4). Sugira tratá-las com a `wbrain-std:loop`.
+- **Varrer:** nada.
+- **Falsos positivos:** projetos sem frontend não têm o sintoma.
+
 ## 0.10.0 — `.std/config.json` (automática)
 
 - **Sintoma:** `.std/config.json` ausente.

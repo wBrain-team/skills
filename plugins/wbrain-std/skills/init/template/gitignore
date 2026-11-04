@@ -9,3 +9,4 @@ workspace
 scheduled_tasks.lock
 .coverage
 .std/
+temp/

@@ -137,6 +137,7 @@ O fluxo STD exige que tudo rode em containers (desenvolvimento e testes). Esta e
   - **Viável para o agente** (dependências visíveis e reproduzíveis em container, ou mockáveis): com aprovação, execute a migração. Se há testes, eles devem passar no Docker antes de dar a etapa como concluída. Compare com o resultado fora do Docker quando possível.
   - **Não viável** (dependências opacas, credenciais ou ambientes que o agente não acessa, complexidade alta): o plano fica documentado e os itens viram **pendências do tutor** no relatório. Execute só a parte que não depende delas.
 - Se há frontend com `node_modules`, ele vai em volumes Docker (raiz e um por workspace), seguindo `../shared/ambiente-docker.md` (seção 3) e `docs/stack/infrastructure.md`.
+- Frontend com `PW_TEST_CONNECT_WS_ENDPOINT` disponível → ofereça a camada opcional de testes de navegador (`../shared/ambiente-docker.md`, seção 4; docs `visual-validation.md` e `visual.md` do template, `temp/` no `.gitignore`). Sem o ok do usuário, vira pendência.
 - Atualize `docs/stack/infrastructure.md` e `docs/stack/makefile.md` com o que ficou valendo.
 
 ## 7. Deploy

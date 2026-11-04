@@ -1,0 +1,101 @@
+import { mkdirSync, readdirSync, rmSync } from "node:fs"
+import path from "node:path"
+import { expect, test as base, type Page } from "@playwright/test"
+
+// ADAPTAR: chaves de localStorage do app para tema, densidade e idioma.
+export const KEYS = { theme: "theme", density: "density", lang: "lang" }
+const SHOTS = path.join(process.env.E2E_TEMP || "/temp", "screenshot")
+const hostPath = (p: string) => p.replace(/^\/temp\//, "./temp/")
+
+export const slug = (s: string) =>
+  s
+    .replace(/^#?\/?/, "")
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .replace(/[^a-z0-9]+/gi, "-")
+    .replace(/^-|-$/g, "") || "home"
+
+type Options = { theme: "dark" | "light"; density: "comfortable" | "compact"; lang: string }
+type Fixtures = {
+  /** Sinais objetivos coletados durante o teste (erro de JS, console.error, requisição falha, overflow). */
+  signals: string[]
+  /** Navega para uma rota (HashRouter: /#/rota) e espera o conteúdo e as fontes. */
+  open: (route: string) => Promise<void>
+  /** Tira um screenshot numerado em ./temp/screenshot/<nome>/. */
+  shot: (label: string, options?: { fullPage?: boolean }) => Promise<string>
+  setup: void
+}
+
+export const hasOverflow = (page: Page) =>
+  page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth)
+
+export const test = base.extend<Fixtures & Options>({
+  theme: [(process.env.SHOT_THEME as Options["theme"]) || "dark", { option: true }],
+  density: [(process.env.SHOT_DENSITY as Options["density"]) || "comfortable", { option: true }],
+  lang: [process.env.SHOT_LANG || "pt-BR", { option: true }],
+
+  // Tema, densidade e idioma vivem no localStorage. `||`, não `??`: o Makefile repassa SHOT_THEME="" (vazio).
+  setup: [
+    async ({ context, theme, density, lang }, use) => {
+      await context.addInitScript(
+        ([keys, t, d, l]) => {
+          try {
+            // Só define se ainda não existir: recarregar a página não pode desfazer a escolha do usuário.
+            if (localStorage.getItem(keys.theme) === null) localStorage.setItem(keys.theme, t)
+            if (localStorage.getItem(keys.density) === null) localStorage.setItem(keys.density, d)
+            if (localStorage.getItem(keys.lang) === null) localStorage.setItem(keys.lang, l)
+          } catch {
+            // localStorage indisponível: o app cai nos padrões.
+          }
+        },
+        [KEYS, theme, density, lang] as const,
+      )
+      await use()
+    },
+    { auto: true },
+  ],
+
+  signals: [
+    async ({ page }, use, testInfo) => {
+      const list: string[] = []
+      page.on("pageerror", (e) => list.push(`erro de JS: ${e.message}`))
+      page.on("console", (m) => m.type() === "error" && list.push(`console.error: ${m.text().slice(0, 200)}`))
+      page.on("requestfailed", (r) => {
+        if (!r.failure()?.errorText.includes("ERR_ABORTED")) list.push(`requisição falhou: ${r.url()}`)
+      })
+      await use(list)
+      const unique = [...new Set(list)]
+      if (unique.length) console.log(`\nSinais a investigar (${testInfo.project.name}):\n${unique.map((s) => `  ! ${s}`).join("\n")}`)
+      expect(unique, "sinais objetivos de problema (overflow, erro de JS, console.error, requisição falha)").toEqual([])
+    },
+    { auto: true },
+  ],
+
+  open: async ({ page }, use) => {
+    await use(async (route) => {
+      await page.goto(`/#${route}`)
+      await page.waitForSelector("main h1, main h2, #root h1") // ADAPTAR: seletor do conteúdo principal
+      await page.evaluate(() => document.fonts.ready)
+    })
+  },
+
+  shot: async ({ page, signals }, use, testInfo) => {
+    const name = process.env.SHOT_NAME || slug(testInfo.title)
+    const dir = path.join(SHOTS, name)
+    const width = page.viewportSize()?.width ?? 0
+    const prefix = `${testInfo.project.name.replace(/^visual-/, "")}-${width}`
+    mkdirSync(dir, { recursive: true })
+    // Cada project só apaga os próprios arquivos da pasta (projects rodam em paralelo).
+    for (const f of readdirSync(dir)) if (f.startsWith(`${prefix}-`)) rmSync(path.join(dir, f))
+    let n = 0
+    await use(async (label, options) => {
+      const file = path.join(dir, `${prefix}-${String(++n).padStart(2, "0")}-${slug(label)}.png`)
+      await page.screenshot({ path: file, fullPage: options?.fullPage ?? true })
+      if (await hasOverflow(page)) signals.push(`overflow horizontal no passo "${label}" (${testInfo.project.name})`)
+      console.log("  -", hostPath(file))
+      return file
+    })
+  },
+})
+
+export { expect }

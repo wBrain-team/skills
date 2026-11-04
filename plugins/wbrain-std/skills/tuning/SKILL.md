@@ -235,6 +235,9 @@ Ao longo da implementação (ao fim de cada tarefa ou grupo de tarefas), revise 
 Só agora, com tudo implementado, rode a **suíte completa** uma única vez (`make test`, mais os testes de frontend se existirem) e o lint (`make lint`). Depois rode a **cobertura** definida em `docs/` (`make test-coverage` e o equivalente do frontend, se existir) e compare com os mínimos (`../shared/tdd-e-cobertura.md`, seção 3); abaixo do mínimo → escreva os testes que faltam (conta nas 5 rodadas).
 - Se algo falhar → corrija usando testes pontuais e rode a suíte completa de novo só no fim. Respeite o limite de 5 rodadas.
 
+**Validação visual (só se a mudança toca interface):** com verde, cobertura e lint, e **se `PW_TEST_CONNECT_WS_ENDPOINT` existir**, ela é **obrigatória**. Siga `docs/guidelines/visual-validation.md` e `docs/testing/visual.md` (ambiente: `../shared/ambiente-docker.md`, seção 4): gere o mínimo de capturas (`make screenshot ...`), **abra as imagens**, leia os sinais, corrija (com teste antes se for comportamento) e gere de novo. Sem o ambiente, diga no relatório que **não foi possível**; nunca finja. Cite o que verificou (rotas, fluxos, temas, tamanhos) e o que **não** verificou.
+- **Jornadas E2E** (`make e2e`) são raras e reprovam de verdade; cada uma é ligada a um snap (`// snap: snaps/<caminho>.md` na primeira linha). **Criar uma jornada exige aprovação do tutor**; se cabe num teste unitário, não é jornada.
+
 ## 10. Revisão independente (subagente revisor)
 
 Dispare um subagente `general-purpose` **somente leitura** (instrua-o a não editar arquivos nem fazer commits) com: a base do preflight, o resumo da modificação, o plano do arquivo de estado e a instrução de seguir `${CLAUDE_PLUGIN_ROOT}/skills/tuning/review.md`. O revisor compara o diff de `snaps/` com o diff de código, testes e docs, e devolve os achados no formato do guia.

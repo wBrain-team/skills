@@ -1,0 +1,16 @@
+// ADAPTAR rota, rótulos e botão. Fluxo visual versionado (molde): abre o Dialog no celular, fotografa e fecha com Esc.
+// Roteiros descartáveis do agente ficam em ./temp/flows/*.spec.ts (não vão para o git).
+import { test, expect } from "../../../fixtures"
+
+test.use({ theme: "dark", density: "comfortable", viewport: { width: 375, height: 812 } })
+
+test("dialog", async ({ page, open, shot }) => {
+  await open("/sobreposicoes/dialog")
+  await shot("pagina-dialog")
+  await page.locator("main button").first().click()
+  await expect(page.getByRole("dialog")).toBeVisible()
+  await shot("dialog-aberto")
+  await page.keyboard.press("Escape")
+  await expect(page.getByRole("dialog")).toBeHidden()
+  await shot("dialog-fechado")
+})

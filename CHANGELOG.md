@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+- Nova camada de **testes de navegador** com `@playwright/test` (TypeScript) contra um Playwright server remoto (`PW_TEST_CONNECT_WS_ENDPOINT`), para **verificação visual** (screenshots + sinais objetivos; o agente abre as imagens e julga) e **jornadas E2E** (raras, ligadas a snaps, criação com aprovação do tutor).
+- `shared/ambiente-docker.md` ganha a seção 4 "Navegador remoto (Playwright)": serviço `e2e` (perfil opcional, como root, sem chmod/UID), volume de `node_modules`, as 12 armadilhas validadas (versão exata, `extra_hosts`, `allowedHosts` do Vite, HSTS, `||` vs `??`...) e roteiro de validação da conexão.
+- `tuning` (validação final) e `design-system` (etapa de validação) passam a exigir a validação visual quando a mudança toca interface e o ambiente existe; sem ele, declaram que não foi possível. Fechamento cita o que foi e o que não foi verificado.
+- Esqueletos `*.example` do cliente em `shared/templates/e2e/` (config, fixtures, specs molde), derivados de um projeto real, a adaptar (rotas, chaves de `localStorage`, seletores). `docs/guidelines/visual-validation.md`, `docs/testing/visual.md`, alvos no `makefile.md`, linhas nos índices e `temp/` no `.gitignore`. Pendências declaradas: autenticação e dados de teste para apps com backend.
+- Projetos existentes precisam (opcional, guiado) adicionar os docs, os alvos do Makefile, `temp/` no `.gitignore` e o cliente `e2e`; a `config` lista as pendências.
+
 ## 0.10.0
 - Nova skill `config` (`/wbrain-std:config`): entrevista o usuário e grava `.std/config.json` com a **branch base** das comparações de diff, e **migra projetos existentes** para a versão atual do plugin (renomeia pastas e arquivos e corrige as referências no conteúdo: `AGENTS.md`, `README.md`, `docs/`, `snaps/`...), com plano mostrado e ok antes de aplicar. Pode ser chamada a qualquer momento. O arquivo é local de cada pessoa (`.std/` continua no `.gitignore`).
 - A `main` deixa de ser fixa: `tuning`, `loop`, `snaps`, `design-system` e `onboard` leem a base de `.std/config.json` (via `shared/scripts/std-config.sh`) e nunca produzem nela (nem em `main`/`master`). O `preflight.sh` da `tuning` compara contra a base configurada (`--base REF` continua valendo). **Sem `.std/config.json` as skills recusam** e orientam a rodar `/wbrain-std:config`.

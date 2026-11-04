@@ -12,3 +12,4 @@ Regras de trabalho que valem para todo o projeto.
 | [accessibility.md](accessibility.md) | `aria-label`, `title`, botões sem destino |
 | [security.md](security.md) | Segredos, `.env.example`, validação, stack traces |
 | [git.md](git.md) | Conventional Commits e branches |
+| [visual-validation.md](visual-validation.md) | Validação visual de interface antes de encerrar a mudança |

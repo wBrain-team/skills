@@ -21,6 +21,10 @@
 | `make logs` | Exibe logs dos containers |
 | `make shell-back` / `make shell-front` | Shell no container do backend / frontend |
 | `make shadcn component=<nome>` | Adiciona componente Shadcn |
+| `make screenshot route=<rota> [theme= density= size= sizes= lang= name= viewport-only=1]` / `make screenshot flow=<nome>` | Screenshots para verificação visual (Playwright remoto, perfil `e2e`); saída em `./temp/screenshot/` — ver [Testes visuais](../testing/visual.md) |
+| `make visual [filter=<trecho>]` | Matriz de páginas × tema × tamanho (muitas imagens) |
+| `make e2e [grep=<texto>]` | Jornadas E2E (passa/falha) |
+| `make e2e-install` / `make e2e-version-check` | Instala dependências do cliente no volume / confere a versão do cliente contra o servidor Playwright |
 | `make clean` | Remove containers, volumes (inclusive `node_modules`) e imagens; rode `make install` depois |
 
 **Operações dev-only** (ex.: `make charge`) só executam com `APP_ENV=development` (igualdade exata) e nunca rodam automaticamente.

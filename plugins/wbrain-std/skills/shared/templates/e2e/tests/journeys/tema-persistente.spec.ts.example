@@ -1,0 +1,21 @@
+// snap: snaps/<caminho>.md  (ADAPTAR: toda jornada é ligada a um snap)
+//
+// JORNADA-MOLDE (passa/falha). Jornadas são raras e caras: só entram fluxos macros que, se quebrarem, o usuário
+// percebe, e SEMPRE amarradas a um snap (linha acima). Criar uma jornada exige aprovação do tutor.
+// Esta existe para provar o formato; as jornadas reais virão com os apps de negócio.
+import { test, expect } from "../../fixtures"
+
+test("a escolha de tema sobrevive a recarregar a página", async ({ page, open }) => {
+  await open("/acoes/botao")
+  const toggle = page.getByRole("button", { name: "Tema escuro" })
+  await expect(page.locator("html")).toHaveClass(/dark/)
+  await expect(toggle).toHaveAttribute("aria-pressed", "true")
+
+  await toggle.click()
+  await expect(page.locator("html")).not.toHaveClass(/dark/)
+  await expect(toggle).toHaveAttribute("aria-pressed", "false")
+
+  await page.reload()
+  await expect(page.locator("html")).not.toHaveClass(/dark/)
+  await expect(page.getByRole("button", { name: "Tema escuro" })).toHaveAttribute("aria-pressed", "false")
+})
