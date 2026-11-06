@@ -62,7 +62,7 @@ Camada de **testes de navegador** com `@playwright/test` (TypeScript), usada pel
 
 **Pergunte ao usuário antes de montar:**
 - Existe `PW_TEST_CONNECT_WS_ENDPOINT` no ambiente? (ex.: `ws://playwright:3000/`). Sem ele, a camada não é montada e as skills declaram que a validação visual não foi possível.
-- Qual a **versão do servidor** Playwright? (se não souber, descubra pela mensagem do erro 428 de uma conexão de teste, seção 4.3).
+- Qual a **versão do servidor** Playwright? **Leia `PLAYWRIGHT_VERSION` do ambiente** (`echo $PLAYWRIGHT_VERSION`): ela indica a versão disponível e é a fonte da versão exata do cliente. Só se a variável não existir, pergunte ou descubra pela mensagem do erro 428 de uma conexão de teste (seção 4.3).
 - Qual o **nome do nginx e a porta** no compose (ex.: `http://nginx:2381`)?
 
 ### 4.1 Arquitetura
@@ -83,6 +83,7 @@ services:
       nginx: { condition: service_healthy }
     environment:
       PW_TEST_CONNECT_WS_ENDPOINT: ${PW_TEST_CONNECT_WS_ENDPOINT}
+      PLAYWRIGHT_VERSION: ${PLAYWRIGHT_VERSION}
       PW_TEST_CONNECT_EXPOSE_NETWORK: "*"
       E2E_BASE_URL: http://nginx:2381
       E2E_TEMP: /temp
@@ -104,7 +105,7 @@ No Makefile, os alvos `screenshot`, `visual`, `e2e`, `e2e-install` e `e2e-versio
 
 ### 4.2 Armadilhas (documente cada uma no projeto)
 
-1. **Versão exata:** `@playwright/test` e o servidor precisam da **mesma versão**; senão, `428 Precondition Required` ("Playwright version mismatch ... server version vX / client version vY"). Fixe a versão exata no `package.json` (sem `^`). Servidor atualizado? Atualize a versão e rode `make e2e-install`. `make e2e-version-check` conecta e avisa a divergência.
+1. **Versão exata:** `@playwright/test` e o servidor precisam da **mesma versão**; senão, `428 Precondition Required` ("Playwright version mismatch ... server version vX / client version vY"). Fixe no `package.json` a versão exata de `PLAYWRIGHT_VERSION` (sem `^`; o serviço `e2e` recebe a variável por `environment`, e `make e2e-install` instala `@playwright/test@$PLAYWRIGHT_VERSION`). Servidor atualizado? Atualize a versão e rode `make e2e-install`. `make e2e-version-check` conecta e avisa a divergência.
 2. **O cliente não resolve o nome do servidor Playwright** na rede do compose: use `extra_hosts` com o IP (acima). É o único nome que precisa disso.
 3. **Vite bloqueia hosts desconhecidos** (HTTP 403, "Blocked request. This host is not allowed"). Com o túnel o `Host` é o nome do compose (ex.: `nginx`): acrescente-o em `server.allowedHosts` do `vite.config.ts`. Sintoma útil: o teste "conecta" e chega ao Vite, mas não acha o conteúdo.
 4. **Sem o túnel** (IP ou nome do container do dev), o Chrome força HTTPS para hosts como `dev` (TLD `.dev` na lista HSTS): `net::ERR_SSL_PROTOCOL_ERROR`. Use `EXPOSE_NETWORK` e um nome do compose.
@@ -119,7 +120,7 @@ No Makefile, os alvos `screenshot`, `visual`, `e2e`, `e2e-install` e `e2e-versio
 
 ### 4.3 Validar a conexão (antes de montar tudo)
 
-Container descartável `node:22-alpine` na rede do compose, com `--add-host <host-do-endpoint>:<ip>`, `npm i @playwright/test@<versão>` e um spec de 5 linhas: `page.goto('/')`, `expect(heading).toBeVisible()`, `screenshot`, com `PW_TEST_CONNECT_WS_ENDPOINT` e `PW_TEST_CONNECT_EXPOSE_NETWORK='*'`. Diagnóstico por erro:
+Container descartável `node:22-alpine` na rede do compose, com `--add-host <host-do-endpoint>:<ip>`, `npm i @playwright/test@$PLAYWRIGHT_VERSION` e um spec de 5 linhas: `page.goto('/')`, `expect(heading).toBeVisible()`, `screenshot`, com `PW_TEST_CONNECT_WS_ENDPOINT` e `PW_TEST_CONNECT_EXPOSE_NETWORK='*'`. Diagnóstico por erro:
 
 | Erro | Causa |
 |---|---|

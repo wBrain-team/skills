@@ -4,6 +4,6 @@ Derivado de um projeto real (monorepo React + Vite atrás de nginx, em Docker) o
 
 Copie para `src-frontend/e2e/` removendo o sufixo `.example`.
 
-- `package.json.example`: `@playwright/test` com versão **exata** do servidor (o `1.64.1` é só o exemplo do projeto de origem; sem `^`). Descubra a do servidor pelo erro 428 de uma conexão de teste.
+- `package.json.example`: `@playwright/test` com versão **exata** do servidor (o `1.64.1` é só o exemplo do projeto de origem; sem `^`). Use o valor de `PLAYWRIGHT_VERSION` do ambiente; só se ela não existir, descubra a do servidor pelo erro 428 de uma conexão de teste.
 - Tamanhos: o Makefile escolhe os projects (`--project=visual-<tamanho>`, `matrix`, `journeys`); `tests/scratch/` recebe o bind mount de `./temp/flows` (fica no `.gitignore`).
 - ESLint: desligue `react-hooks/rules-of-hooks` só para `e2e/**` e configure `globals` de Node e navegador. Rode também `npx tsc --noEmit` em `e2e/`.

@@ -7,6 +7,7 @@ Camada de testes de navegador com `@playwright/test` (TypeScript). Processo para
 ## Como funciona
 
 - O navegador roda num **Playwright server remoto** (container fora do projeto), indicado por `PW_TEST_CONNECT_WS_ENDPOINT`. O `@playwright/test` lê a variável (e `PW_TEST_CONNECT_EXPOSE_NETWORK`, `PW_TEST_CONNECT_HEADERS`): não há código de conexão.
+- `PLAYWRIGHT_VERSION` (variável do ambiente) indica a versão do Playwright disponível no servidor: o `@playwright/test` do cliente usa **exatamente** essa versão. Antes de instalar ou atualizar o cliente, leia a variável.
 - `PW_TEST_CONNECT_EXPOSE_NETWORK=*` usa a rede do cliente (túnel): o app é acessado por nome do compose (ex.: `http://nginx:2381`).
 - O cliente é o serviço `e2e` do compose (perfil `e2e`), código em `src-frontend/e2e/`, `node_modules` em volume nomeado. Nada é instalado no host.
 - Cobre hoje apps **sem backend** (showcase). **Pendências:** autenticação e dados de teste para apps com backend; `make e2e` com backend e banco de teste.

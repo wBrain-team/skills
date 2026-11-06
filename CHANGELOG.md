@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.12.1
+- Playwright: o ambiente expõe `PLAYWRIGHT_VERSION` com a versão disponível. `shared/ambiente-docker.md` (seção 4), `docs/testing/visual.md`, o README dos esqueletos `e2e`, `tuning` e `design-system` passam a mandar ler a variável e fixar `@playwright/test` exatamente nessa versão (o erro 428 vira só o plano B quando a variável não existe). O serviço `e2e` do compose repassa a variável.
+
 ## 0.12.0
 - Validação visual: o agente principal continua julgando as imagens, mas, com **muitas** (`make visual`, `sizes=all` em várias rotas), um subagente faz a **triagem** e devolve só suspeitas (caminho + o que parece errado, sem veredito). O principal abre ao menos as suspeitas e uma amostra (um tamanho estreito e um largo) e informa no fechamento o que viu e o que veio só da triagem. Até 6 imagens: o principal abre todas.
 - `docs/guidelines/visual-validation.md` ganha a seção "Quem olha as imagens"; `tuning` e `design-system` apontam para ela.
