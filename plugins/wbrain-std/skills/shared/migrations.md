@@ -16,6 +16,13 @@ Toda versão do plugin que exija mudança em projetos existentes **adiciona uma 
 
 ---
 
+## 0.12.0 — Triagem de imagens por subagente na validação visual (guiada)
+
+- **Sintoma:** `docs/guidelines/visual-validation.md` existe e não tem a seção "Quem olha as imagens".
+- **Ação:** não altere nada sozinho (o arquivo pode ter sido adaptado ao projeto). Mostre a seção nova de `${CLAUDE_PLUGIN_ROOT}/skills/init/template/docs/guidelines/visual-validation.md` e proponha incorporá-la, junto com o passo 3 e a regra de imagens ajustados. Sem o arquivo, a entrada não se aplica (vale a 0.11.0). Sugira tratar com a `wbrain-std:loop`.
+- **Varrer:** nada.
+- **Falsos positivos:** projetos sem frontend ou sem a camada de testes de navegador.
+
 ## 0.11.0 — Testes de navegador com Playwright (guiada)
 
 - **Sintoma:** projeto com frontend e `docs/` sem `docs/guidelines/visual-validation.md` e `docs/testing/visual.md`, sem `temp/` no `.gitignore` e/ou sem os alvos `screenshot`, `visual`, `e2e` no `docs/stack/makefile.md`.

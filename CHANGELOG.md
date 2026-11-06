@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.0
+- Validação visual: o agente principal continua julgando as imagens, mas, com **muitas** (`make visual`, `sizes=all` em várias rotas), um subagente faz a **triagem** e devolve só suspeitas (caminho + o que parece errado, sem veredito). O principal abre ao menos as suspeitas e uma amostra (um tamanho estreito e um largo) e informa no fechamento o que viu e o que veio só da triagem. Até 6 imagens: o principal abre todas.
+- `docs/guidelines/visual-validation.md` ganha a seção "Quem olha as imagens"; `tuning` e `design-system` apontam para ela.
+- Projetos existentes precisam (guiado) incorporar a seção "Quem olha as imagens" ao seu `docs/guidelines/visual-validation.md`; a `config` lista a pendência.
+
 ## 0.11.0
 - Nova camada de **testes de navegador** com `@playwright/test` (TypeScript) contra um Playwright server remoto (`PW_TEST_CONNECT_WS_ENDPOINT`), para **verificação visual** (screenshots + sinais objetivos; o agente abre as imagens e julga) e **jornadas E2E** (raras, ligadas a snaps, criação com aprovação do tutor).
 - `shared/ambiente-docker.md` ganha a seção 4 "Navegador remoto (Playwright)": serviço `e2e` (perfil opcional, como root, sem chmod/UID), volume de `node_modules`, as 12 armadilhas validadas (versão exata, `extra_hosts`, `allowedHosts` do Vite, HSTS, `||` vs `??`...) e roteiro de validação da conexão.
